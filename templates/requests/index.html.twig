@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Requests index{% endblock %}
+
+{% block body %}
+    <h1>Requests index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for request in requests %}
+            <tr>
+                <td>{{ request.id }}</td>
+                <td>
+                    <a href="{{ path('app_requests_show', {'id': request.id}) }}">show</a>
+                    <a href="{{ path('app_requests_edit', {'id': request.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_requests_new') }}">Create new</a>
+{% endblock %}

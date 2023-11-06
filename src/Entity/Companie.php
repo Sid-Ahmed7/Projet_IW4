@@ -64,17 +64,20 @@ class Companie
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
 
-    #[ORM\OneToMany(mappedBy: 'companie', targetEntity: Request::class)]
-    private Collection $requests;
+
 
     #[ORM\OneToMany(mappedBy: 'companie', targetEntity: Devis::class)]
     private Collection $devis;
 
+    #[ORM\OneToMany(mappedBy: 'companie', targetEntity: Requests::class)]
+    private Collection $requests;
+
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
-        $this->requests = new ArrayCollection();
         $this->devis = new ArrayCollection();
+        $this->requests = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -103,7 +106,6 @@ class Companie
     public function removeUser(user $user): static
     {
         if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
             if ($user->getCompanie() === $this) {
                 $user->setCompanie(null);
             }
@@ -273,36 +275,7 @@ class Companie
         return $this;
     }
 
-    /**
-     * @return Collection<int, Request>
-     */
-    public function getRequests(): Collection
-    {
-        return $this->requests;
-    }
-
-    public function addRequest(Request $request): static
-    {
-        if (!$this->requests->contains($request)) {
-            $this->requests->add($request);
-            $request->setCompanie($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRequest(Request $request): static
-    {
-        if ($this->requests->removeElement($request)) {
-            // set the owning side to null (unless already changed)
-            if ($request->getCompanie() === $this) {
-                $request->setCompanie(null);
-            }
-        }
-
-        return $this;
-    }
-
+   
     /**
      * @return Collection<int, Devis>
      */
@@ -324,7 +297,6 @@ class Companie
     public function removeDevi(Devis $devi): static
     {
         if ($this->devis->removeElement($devi)) {
-            // set the owning side to null (unless already changed)
             if ($devi->getCompanie() === $this) {
                 $devi->setCompanie(null);
             }
@@ -332,4 +304,36 @@ class Companie
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Requests>
+     */
+    public function getRequests(): Collection
+    {
+        return $this->requests;
+    }
+
+    public function addRequest(Requests $request): static
+    {
+        if (!$this->requests->contains($request)) {
+            $this->requests->add($request);
+            $request->setCompanie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRequest(Requests $request): static
+    {
+        if ($this->requests->removeElement($request)) {
+            // set the owning side to null (unless already changed)
+            if ($request->getCompanie() === $this) {
+                $request->setCompanie(null);
+            }
+        }
+
+        return $this;
+    }
+
+   
 }

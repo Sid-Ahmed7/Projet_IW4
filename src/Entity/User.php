@@ -77,17 +77,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToOne(inversedBy: 'users')]
     private ?UserPlan $userPlan = null;
 
-    #[ORM\ManyToMany(targetEntity: Request::class, mappedBy: 'users')]
-    private Collection $requests;
-
+   
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: Devis::class)]
     private Collection $devis;
+
+    #[ORM\OneToMany(mappedBy: 'users', targetEntity: Requests::class)]
+    private Collection $requests;
 
     public function __construct()
     {
         $this->plans = new ArrayCollection();
-        $this->requests = new ArrayCollection();
         $this->devis = new ArrayCollection();
+        $this->requests = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -329,36 +330,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Request>
-     */
-    public function getRequests(): Collection
-    {
-        return $this->requests;
-    }
-
-    public function addRequest(Request $request): static
-    {
-        if (!$this->requests->contains($request)) {
-            $this->requests->add($request);
-            $request->addUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRequest(Request $request): static
-    {
-        if ($this->requests->removeElement($request)) {
-            $request->removeUser($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Devis>
-     */
+    
     public function getDevis(): Collection
     {
         return $this->devis;
@@ -380,6 +352,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($devi->getUsers() === $this) {
                 $devi->setUsers(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Requests>
+     */
+    public function getRequests(): Collection
+    {
+        return $this->requests;
+    }
+
+    public function addRequest(Requests $request): static
+    {
+        if (!$this->requests->contains($request)) {
+            $this->requests->add($request);
+            $request->setUsers($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRequest(Requests $request): static
+    {
+        if ($this->requests->removeElement($request)) {
+            // set the owning side to null (unless already changed)
+            if ($request->getUsers() === $this) {
+                $request->setUsers(null);
             }
         }
 

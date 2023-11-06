@@ -2,27 +2,22 @@
 
 namespace App\Entity;
 
-use App\Repository\RequestRepository;
+use App\Repository\RequestsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 
-use Doctrine\ORM\Mapping as ORM;
-
-#[ORM\Entity(repositoryClass: RequestRepository::class)]
-class Request
+#[ORM\Entity(repositoryClass: RequestsRepository::class)]
+class Requests
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToMany(targetEntity: user::class, inversedBy: 'requests')]
-    private Collection $users;
-
-    #[ORM\ManyToOne(inversedBy: 'requests')]
-    private ?companie $companie = null;
+    
 
     #[ORM\Column(length: 50)]
     private ?string $category = null;
@@ -59,51 +54,18 @@ class Request
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
 
-    public function __construct()
-    {
-        $this->users = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(inversedBy: 'requests')]
+    private ?companie $companie = null;
+
+    #[ORM\ManyToOne(inversedBy: 'requests')]
+    private ?User $users = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return Collection<int, user>
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
-    public function addUser(user $user): static
-    {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(user $user): static
-    {
-        $this->users->removeElement($user);
-
-        return $this;
-    }
-
-    public function getCompanie(): ?companie
-    {
-        return $this->companie;
-    }
-
-    public function setCompanie(?companie $companie): static
-    {
-        $this->companie = $companie;
-
-        return $this;
-    }
+   
 
     public function getUuid(): ?string
     {
@@ -225,6 +187,30 @@ class Request
     public function setSlug(?string $slug): static
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getCompanie(): ?companie
+    {
+        return $this->companie;
+    }
+
+    public function setCompanie(?companie $companie): static
+    {
+        $this->companie = $companie;
+
+        return $this;
+    }
+
+    public function getUsers(): ?User
+    {
+        return $this->users;
+    }
+
+    public function setUsers(?User $users): static
+    {
+        $this->users = $users;
 
         return $this;
     }
