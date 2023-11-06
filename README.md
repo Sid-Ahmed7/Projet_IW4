@@ -7,7 +7,7 @@ Création d'un site internet permettant de gérer les évènements des entrepris
 
 Dans ce site internet, il sera possible en fonction du rôle de :
 
-- S'inscire et se connecter sur le site
+- S'inscrire et se connecter sur le site
 - Créer, Modifier et Supprimer des Devis et des Factures 
 - Gérer des Clients
 - Gérer des Produits et des Catégories
