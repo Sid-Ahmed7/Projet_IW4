@@ -37,6 +37,17 @@ Dans ce site internet, il sera possible en fonction du rôle de :
 - Fin projet => 05/03/2024
 
 ## RÔLES DE L'EQUIPE :
-Arthur VALENTIM => https://github.com/Valentin460
-- Ajout du profil utilisateur
-- Ajout des différents plans
+Arthur Valentim => https://github.com/Valentin460
+- Ajout page profil utilisateur
+- Ajout page des différents plans
+
+Hicham Sagout => https://github.com/SagoutiHicham
+- Ajout page création d'une organisation
+
+Moussi Sid-Ahmed => https://github.com/Sid-Ahmed7
+- Ajout page demande de devis
+- Ajout page upload images/documents
+
+Leonce Yopa => https://github.com/zaengetsu
+- Ajout page d'inscription et de connexion
+- Ajout page gestion des médias
