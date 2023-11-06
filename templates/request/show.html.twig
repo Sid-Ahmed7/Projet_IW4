@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Request{% endblock %}
+
+{% block body %}
+    <h1>Request</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ request.id }}</td>
+            </tr>
+            <tr>
+                <th>Category</th>
+                <td>{{ request.category }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ request.description }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ request.status }}</td>
+            </tr>
+            <tr>
+                <th>Uuid</th>
+                <td>{{ request.uuid }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ request.createdAt ? request.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>EvenDate</th>
+                <td>{{ request.evenDate ? request.evenDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Response</th>
+                <td>{{ request.response }}</td>
+            </tr>
+            <tr>
+                <th>DevisAmont</th>
+                <td>{{ request.devisAmont }}</td>
+            </tr>
+            <tr>
+                <th>EventLocation</th>
+                <td>{{ request.eventLocation }}</td>
+            </tr>
+            <tr>
+                <th>MaxBudget</th>
+                <td>{{ request.maxBudget }}</td>
+            </tr>
+            <tr>
+                <th>Slug</th>
+                <td>{{ request.slug }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_request_index') }}">back to list</a>
+
+    <a href="{{ path('app_request_edit', {'id': request.id}) }}">edit</a>
+
+    {{ include('request/_delete_form.html.twig') }}
+{% endblock %}

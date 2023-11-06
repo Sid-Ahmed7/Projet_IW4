@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    volumes:
+      - .:/var/www/symfony
+    working_dir: /var/www/symfony
+    command: php -S 0.0.0.0:8000 -t public
+    depends_on:
+      - database
+    environment:
+      DATABASE_URL: "pgsql://root:root@database:5432/stackT1"
+    ports:
+      - "8000:8000"
+
+  database:
+    image: postgres:16-alpine
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: stackT1
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+
+  composer:
+    image: composer:latest
+    volumes:
+      - .:/app
+    command: install
+    depends_on:
+      - web
+
+volumes:
+  pg_data: {}

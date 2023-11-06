@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Devis index{% endblock %}
+
+{% block body %}
+    <h1>Devis index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Content</th>
+                <th>State</th>
+                <th>IsNegotiable</th>
+                <th>CreatedAt</th>
+                <th>DeletedAt</th>
+                <th>Uuid</th>
+                <th>UpdatedAt</th>
+                <th>Slug</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for devi in devis %}
+            <tr>
+                <td>{{ devi.id }}</td>
+                <td>{{ devi.content }}</td>
+                <td>{{ devi.state }}</td>
+                <td>{{ devi.isNegotiable ? 'Yes' : 'No' }}</td>
+                <td>{{ devi.createdAt ? devi.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ devi.deletedAt ? devi.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ devi.uuid }}</td>
+                <td>{{ devi.updatedAt ? devi.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ devi.slug }}</td>
+                <td>
+                    <a href="{{ path('app_devis_show', {'id': devi.id}) }}">show</a>
+                    <a href="{{ path('app_devis_edit', {'id': devi.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_devis_new') }}">Create new</a>
+{% endblock %}

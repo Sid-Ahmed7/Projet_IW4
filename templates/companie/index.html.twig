@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Companie index{% endblock %}
+
+{% block body %}
+    <h1>Companie index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Logo</th>
+                <th>Banner</th>
+                <th>Email</th>
+                <th>PhoneNumber</th>
+                <th>TaxNumber</th>
+                <th>SiretNumber</th>
+                <th>Likes</th>
+                <th>UpdatedAt</th>
+                <th>CreatedAt</th>
+                <th>State</th>
+                <th>Uuid</th>
+                <th>Slug</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for companie in companies %}
+            <tr>
+                <td>{{ companie.id }}</td>
+                <td>{{ companie.name }}</td>
+                <td>{{ companie.address }}</td>
+                <td>{{ companie.logo }}</td>
+                <td>{{ companie.banner }}</td>
+                <td>{{ companie.email }}</td>
+                <td>{{ companie.phoneNumber }}</td>
+                <td>{{ companie.taxNumber }}</td>
+                <td>{{ companie.siretNumber }}</td>
+                <td>{{ companie.likes }}</td>
+                <td>{{ companie.updatedAt ? companie.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ companie.createdAt ? companie.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ companie.state }}</td>
+                <td>{{ companie.uuid }}</td>
+                <td>{{ companie.slug }}</td>
+                <td>
+                    <a href="{{ path('app_companie_show', {'id': companie.id}) }}">show</a>
+                    <a href="{{ path('app_companie_edit', {'id': companie.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="16">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_companie_new') }}">Create new</a>
+{% endblock %}
