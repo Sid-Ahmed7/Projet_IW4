@@ -72,12 +72,19 @@ class Companie
     #[ORM\OneToMany(mappedBy: 'companie', targetEntity: Requests::class)]
     private Collection $requests;
 
+    #[ORM\Column]
+    private ?bool $verified = null;
+
+    #[ORM\OneToMany(mappedBy: 'companie', targetEntity: Negotiation::class)]
+    private Collection $negotiations;
+
 
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->devis = new ArrayCollection();
         $this->requests = new ArrayCollection();
+        $this->negotiations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -329,6 +336,48 @@ class Companie
             // set the owning side to null (unless already changed)
             if ($request->getCompanie() === $this) {
                 $request->setCompanie(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isVerified(): ?bool
+    {
+        return $this->verified;
+    }
+
+    public function setVerified(bool $verified): static
+    {
+        $this->verified = $verified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Negotiation>
+     */
+    public function getNegotiations(): Collection
+    {
+        return $this->negotiations;
+    }
+
+    public function addNegotiation(Negotiation $negotiation): static
+    {
+        if (!$this->negotiations->contains($negotiation)) {
+            $this->negotiations->add($negotiation);
+            $negotiation->setCompanie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNegotiation(Negotiation $negotiation): static
+    {
+        if ($this->negotiations->removeElement($negotiation)) {
+            // set the owning side to null (unless already changed)
+            if ($negotiation->getCompanie() === $this) {
+                $negotiation->setCompanie(null);
             }
         }
 

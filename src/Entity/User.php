@@ -84,11 +84,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: Requests::class)]
     private Collection $requests;
 
+    #[ORM\Column]
+    private ?bool $verified = null;
+
+    #[ORM\OneToMany(mappedBy: 'senderID', targetEntity: Message::class)]
+    private Collection $messages;
+
+    #[ORM\OneToMany(mappedBy: 'users', targetEntity: Notification::class)]
+    private Collection $notifications;
+
+    #[ORM\OneToMany(mappedBy: 'users', targetEntity: ConversationUser::class)]
+    private Collection $conversationUsers;
+
     public function __construct()
     {
         $this->plans = new ArrayCollection();
         $this->devis = new ArrayCollection();
         $this->requests = new ArrayCollection();
+        $this->messages = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
+        $this->conversationUsers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -382,6 +397,108 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($request->getUsers() === $this) {
                 $request->setUsers(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isVerified(): ?bool
+    {
+        return $this->verified;
+    }
+
+    public function setVerified(bool $verified): static
+    {
+        $this->verified = $verified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Message>
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): static
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setSenderID($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): static
+    {
+        if ($this->messages->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getSenderID() === $this) {
+                $message->setSenderID(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): static
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->setUsers($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            // set the owning side to null (unless already changed)
+            if ($notification->getUsers() === $this) {
+                $notification->setUsers(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ConversationUser>
+     */
+    public function getConversationUsers(): Collection
+    {
+        return $this->conversationUsers;
+    }
+
+    public function addConversationUser(ConversationUser $conversationUser): static
+    {
+        if (!$this->conversationUsers->contains($conversationUser)) {
+            $this->conversationUsers->add($conversationUser);
+            $conversationUser->setUsers($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConversationUser(ConversationUser $conversationUser): static
+    {
+        if ($this->conversationUsers->removeElement($conversationUser)) {
+            // set the owning side to null (unless already changed)
+            if ($conversationUser->getUsers() === $this) {
+                $conversationUser->setUsers(null);
             }
         }
 

@@ -22,7 +22,7 @@ class RequestsRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Requests[] Returns an array of Requests objects
+//     * @return Request[] Returns an array of Request objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -36,7 +36,7 @@ class RequestsRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Requests
+//    public function findOneBySomeField($value): ?Request
 //    {
 //        return $this->createQueryBuilder('r')
 //            ->andWhere('r.exampleField = :val')
