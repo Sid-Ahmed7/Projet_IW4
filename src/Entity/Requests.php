@@ -17,8 +17,6 @@ class Requests
     #[ORM\Column]
     private ?int $id = null;
 
-    
-
     #[ORM\Column(length: 50)]
     private ?string $category = null;
 
@@ -71,6 +69,7 @@ class Requests
     {
         return $this->uuid->toString();
     }
+    
     public function getCategory(): ?string
     {
         return $this->category;
