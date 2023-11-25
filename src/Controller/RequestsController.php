@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Requests;
+use App\Entity\User;
 use App\Form\RequestsType;
 use App\Repository\RequestsRepository;
+use App\Repository\UserRepository;
+use App\Repository\CompanieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,24 +27,48 @@ class RequestsController extends AbstractController
 
     
     #[Route('/new', name: 'app_requests_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $manager, CompanieRepository $companieRepository, UserRepository $userRepository): Response
     {
         $demande = new Requests();
         $form = $this->createForm(RequestsType::class, $demande);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($demande);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_requests_index', [], Response::HTTP_SEE_OTHER);
+            $userFirstname = $form->get('firstname')->getData();
+            $userLastname = $form->get('lastname')->getData();
+        
+            // Recherche de l'utilisateur en fonction du prénom et du nom
+            $user = $userRepository->findOneBy(['firstname' => $userFirstname, 'lastname' => $userLastname]);
+        
+            // Si l'utilisateur n'existe pas, vous pouvez choisir de le créer
+            if (!$user) {
+                $user = new User();
+                $user->setEmail($form->get('email')->getData()); // Use the email from the form
+                $user->setFirstname($userFirstname);
+                $user->setLastname($userLastname);
+                $manager->persist($user);
+            }
+    
+            $demande->setStatus('en cours');
+            $demande->setCreatedAt(new \DateTimeImmutable());
+            $demande->setUsers($user);
+    
+            // Persister l'entité dans la base de données
+            $manager->persist($demande);
+            $manager->flush();
+    
+            $this->addFlash('success', 'Votre demande a été envoyée avec succès.');
+    
+            return $this->redirectToRoute('app_requests_index');
         }
-
+    
+        // Si le formulaire n'est pas valide ou s'il y a une erreur, afficher le formulaire
         return $this->render('requests/new.html.twig', [
-            'request' => $request,
-            'form' => $form,
+          
+            'form' => $form
         ]);
-    }
+    
+}
 
     #[Route('/{id}', name: 'app_requests_show', methods: ['GET'])]
     public function show(Requests $request): Response
