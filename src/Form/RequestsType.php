@@ -57,11 +57,11 @@ class RequestsType extends AbstractType
         ])
 
         ->add('eventLocation', TextType::class, [
-            'label' => 'Event Location',
+            'label' => 'Lieu de l\'évenement',
             'required' => true
         ])
         ->add('maxBudget', MoneyType::class, [
-            'label' => 'Max Budget',
+            'label' => 'Budget maximum',
             'currency' => 'EUR',
             'required' => true,
         ]);
