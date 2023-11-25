@@ -22,7 +22,7 @@ class Devis
     private ?Companie $companie = null;
 
     #[ORM\ManyToOne(inversedBy: 'devis')]
-    private ?user $users = null;
+    private ?User $users = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
