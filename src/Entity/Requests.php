@@ -53,7 +53,7 @@ class Requests
     private ?string $slug = null;
 
     #[ORM\ManyToOne(inversedBy: 'requests')]
-    private ?companie $companie = null;
+    private ?Companie $companie = null;
 
     #[ORM\ManyToOne(inversedBy: 'requests')]
     private ?User $users = null;

@@ -26,12 +26,12 @@ class RequestsController extends AbstractController
     #[Route('/new', name: 'app_requests_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $request = new Requests();
-        $form = $this->createForm(RequestsType::class, $request);
+        $demande = new Requests();
+        $form = $this->createForm(RequestsType::class, $demande);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($request);
+            $entityManager->persist($demande);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_requests_index', [], Response::HTTP_SEE_OTHER);
