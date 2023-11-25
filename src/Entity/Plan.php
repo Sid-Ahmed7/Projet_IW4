@@ -19,7 +19,7 @@ class Plan
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'plans')]
-    private ?user $author = null;
+    private ?User $author = null;
 
     #[ORM\Column(length: 50)]
     private ?string $name = null;
