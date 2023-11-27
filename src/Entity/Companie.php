@@ -100,7 +100,7 @@ class Companie
         return $this->users;
     }
 
-    public function addUser(user $user): static
+    public function addUser(User $user): static
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
@@ -110,7 +110,7 @@ class Companie
         return $this;
     }
 
-    public function removeUser(user $user): static
+    public function removeUser(User $user): static
     {
         if ($this->users->removeElement($user)) {
             if ($user->getCompanie() === $this) {
