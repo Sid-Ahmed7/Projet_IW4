@@ -8,21 +8,29 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
+
 
 
 #[ORM\Entity(repositoryClass: DevisRepository::class)]
 class Devis
 {
+
+    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
+    private $uuid;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'devis')]
-    private ?companie $companie = null;
+    private ?Companie $companie = null;
 
     #[ORM\ManyToOne(inversedBy: 'devis')]
-    private ?user $users = null;
+    private ?User $users = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
@@ -39,10 +47,7 @@ class Devis
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $deletedAt = null;
 
-    #[ORM\Column(type: 'uuid', unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    private $uuid;
+   
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
@@ -106,7 +111,7 @@ class Devis
 
     public function getUuid(): ?string
     {
-        return $this->uuid->toString();
+        return $this->uuid instanceof UuidInterface && $this->uuid->toString() ? $this->uuid->toString() : null;
     }
 
     public function setState(string $state): static
