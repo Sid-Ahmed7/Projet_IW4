@@ -45,9 +45,9 @@ final class Version20231109170808 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_B6BD307F6061F7CF ON message (sender_id_id)');
         $this->addSql('COMMENT ON COLUMN message.created_at IS \'(DC2Type:datetime_immutable)\'');
         $this->addSql('COMMENT ON COLUMN message.deleted_at IS \'(DC2Type:datetime_immutable)\'');
-        $this->addSql('CREATE TABLE negotiation (id INT NOT NULL, devis_id INT DEFAULT NULL, companie_id INT DEFAULT NULL, initial_price NUMERIC(10, 0) NOT NULL, preview_price NUMERIC(10, 0) DEFAULT NULL, final_price NUMERIC(10, 0) DEFAULT NULL, status VARCHAR(50) NOT NULL, expiration_time_left VARCHAR(255) NOT NULL, message TEXT DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE negotiation (id INT NOT NULL, devis_id INT DEFAULT NULL, Company_id INT DEFAULT NULL, initial_price NUMERIC(10, 0) NOT NULL, preview_price NUMERIC(10, 0) DEFAULT NULL, final_price NUMERIC(10, 0) DEFAULT NULL, status VARCHAR(50) NOT NULL, expiration_time_left VARCHAR(255) NOT NULL, message TEXT DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_1798959841DEFADA ON negotiation (devis_id)');
-        $this->addSql('CREATE INDEX IDX_179895989DC4CE1F ON negotiation (companie_id)');
+        $this->addSql('CREATE INDEX IDX_179895989DC4CE1F ON negotiation (Company_id)');
         $this->addSql('COMMENT ON COLUMN negotiation.expiration_time_left IS \'(DC2Type:dateinterval)\'');
         $this->addSql('COMMENT ON COLUMN negotiation.created_at IS \'(DC2Type:datetime_immutable)\'');
         $this->addSql('COMMENT ON COLUMN negotiation.updated_at IS \'(DC2Type:datetime_immutable)\'');
@@ -62,7 +62,7 @@ final class Version20231109170808 extends AbstractMigration
         $this->addSql('ALTER TABLE invoice ADD CONSTRAINT FK_9065174441DEFADA FOREIGN KEY (devis_id) REFERENCES devis (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE message ADD CONSTRAINT FK_B6BD307F6061F7CF FOREIGN KEY (sender_id_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE negotiation ADD CONSTRAINT FK_1798959841DEFADA FOREIGN KEY (devis_id) REFERENCES devis (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('ALTER TABLE negotiation ADD CONSTRAINT FK_179895989DC4CE1F FOREIGN KEY (companie_id) REFERENCES companie (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE negotiation ADD CONSTRAINT FK_179895989DC4CE1F FOREIGN KEY (Company_id) REFERENCES Company (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE notification ADD CONSTRAINT FK_BF5476CA67B3B43D FOREIGN KEY (users_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE user_preferences ADD CONSTRAINT FK_402A6F6067B3B43D FOREIGN KEY (users_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
     }

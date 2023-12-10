@@ -58,7 +58,7 @@ class RequestControllerTest extends WebTestCase
             'request[maxBudget]' => 'Testing',
             'request[slug]' => 'Testing',
             'request[users]' => 'Testing',
-            'request[companie]' => 'Testing',
+            'request[Company]' => 'Testing',
         ]);
 
         self::assertResponseRedirects('/request/');
@@ -82,7 +82,7 @@ class RequestControllerTest extends WebTestCase
         $fixture->setMaxBudget('My Title');
         $fixture->setSlug('My Title');
         $fixture->setUsers('My Title');
-        $fixture->setCompanie('My Title');
+        $fixture->setCompany('My Title');
 
         $this->manager->persist($fixture);
         $this->manager->flush();
@@ -111,7 +111,7 @@ class RequestControllerTest extends WebTestCase
         $fixture->setMaxBudget('My Title');
         $fixture->setSlug('My Title');
         $fixture->setUsers('My Title');
-        $fixture->setCompanie('My Title');
+        $fixture->setCompany('My Title');
 
         $this->manager->persist($fixture);
         $this->manager->flush();
@@ -131,7 +131,7 @@ class RequestControllerTest extends WebTestCase
             'request[maxBudget]' => 'Something New',
             'request[slug]' => 'Something New',
             'request[users]' => 'Something New',
-            'request[companie]' => 'Something New',
+            'request[Company]' => 'Something New',
         ]);
 
         self::assertResponseRedirects('/request/');
@@ -150,7 +150,7 @@ class RequestControllerTest extends WebTestCase
         self::assertSame('Something New', $fixture[0]->getMaxBudget());
         self::assertSame('Something New', $fixture[0]->getSlug());
         self::assertSame('Something New', $fixture[0]->getUsers());
-        self::assertSame('Something New', $fixture[0]->getCompanie());
+        self::assertSame('Something New', $fixture[0]->getCompany());
     }
 
     public function testRemove(): void
@@ -172,7 +172,7 @@ class RequestControllerTest extends WebTestCase
         $fixture->setMaxBudget('My Title');
         $fixture->setSlug('My Title');
         $fixture->setUsers('My Title');
-        $fixture->setCompanie('My Title');
+        $fixture->setCompany('My Title');
 
         $this->manager->persist($fixture);
         $this->manager->flush();

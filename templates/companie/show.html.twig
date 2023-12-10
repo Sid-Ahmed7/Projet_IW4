@@ -1,78 +1,78 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Companie{% endblock %}
+{% block title %}Company{% endblock %}
 
 {% block body %}
-    <h1>Companie</h1>
+    <h1>Company</h1>
 
     <table class="table">
         <tbody>
             <tr>
                 <th>Id</th>
-                <td>{{ companie.id }}</td>
+                <td>{{ Company.id }}</td>
             </tr>
             <tr>
                 <th>Name</th>
-                <td>{{ companie.name }}</td>
+                <td>{{ Company.name }}</td>
             </tr>
             <tr>
                 <th>Address</th>
-                <td>{{ companie.address }}</td>
+                <td>{{ Company.address }}</td>
             </tr>
             <tr>
                 <th>Logo</th>
-                <td>{{ companie.logo }}</td>
+                <td>{{ Company.logo }}</td>
             </tr>
             <tr>
                 <th>Banner</th>
-                <td>{{ companie.banner }}</td>
+                <td>{{ Company.banner }}</td>
             </tr>
             <tr>
                 <th>Email</th>
-                <td>{{ companie.email }}</td>
+                <td>{{ Company.email }}</td>
             </tr>
             <tr>
                 <th>PhoneNumber</th>
-                <td>{{ companie.phoneNumber }}</td>
+                <td>{{ Company.phoneNumber }}</td>
             </tr>
             <tr>
                 <th>TaxNumber</th>
-                <td>{{ companie.taxNumber }}</td>
+                <td>{{ Company.taxNumber }}</td>
             </tr>
             <tr>
                 <th>SiretNumber</th>
-                <td>{{ companie.siretNumber }}</td>
+                <td>{{ Company.siretNumber }}</td>
             </tr>
             <tr>
                 <th>Likes</th>
-                <td>{{ companie.likes }}</td>
+                <td>{{ Company.likes }}</td>
             </tr>
             <tr>
                 <th>UpdatedAt</th>
-                <td>{{ companie.updatedAt ? companie.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ Company.updatedAt ? Company.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
                 <th>CreatedAt</th>
-                <td>{{ companie.createdAt ? companie.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ Company.createdAt ? Company.createdAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
                 <th>State</th>
-                <td>{{ companie.state }}</td>
+                <td>{{ Company.state }}</td>
             </tr>
             <tr>
                 <th>Uuid</th>
-                <td>{{ companie.uuid }}</td>
+                <td>{{ Company.uuid }}</td>
             </tr>
             <tr>
                 <th>Slug</th>
-                <td>{{ companie.slug }}</td>
+                <td>{{ Company.slug }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('app_companie_index') }}">back to list</a>
+    <a href="{{ path('app_Company_index') }}">back to list</a>
 
-    <a href="{{ path('app_companie_edit', {'id': companie.id}) }}">edit</a>
+    <a href="{{ path('app_Company_edit', {'id': Company.id}) }}">edit</a>
 
-    {{ include('companie/_delete_form.html.twig') }}
+    {{ include('Company/_delete_form.html.twig') }}
 {% endblock %}

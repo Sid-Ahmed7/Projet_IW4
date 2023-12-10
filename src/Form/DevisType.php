@@ -20,7 +20,7 @@ class DevisType extends AbstractType
             ->add('uuid')
             ->add('updatedAt')
             ->add('slug')
-            ->add('companie')
+            ->add('Company')
             ->add('users')
         ;
     }

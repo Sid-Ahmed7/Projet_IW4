@@ -25,7 +25,7 @@ class UserType extends AbstractType
             ->add('updateAt')
             ->add('deletedAt')
             ->add('slug')
-            ->add('companie')
+            ->add('Company')
             ->add('userPlan')
             ->add('requests')
         ;

@@ -46,7 +46,7 @@ class RequestsControllerTest extends WebTestCase
         self::assertResponseStatusCodeSame(200);
 
         $this->client->submitForm('Save', [
-            'request[companie]' => 'Testing',
+            'request[Company]' => 'Testing',
         ]);
 
         self::assertResponseRedirects('/requests/');
@@ -58,7 +58,7 @@ class RequestsControllerTest extends WebTestCase
     {
         $this->markTestIncomplete();
         $fixture = new Requests();
-        $fixture->setCompanie('My Title');
+        $fixture->setCompany('My Title');
 
         $this->manager->persist($fixture);
         $this->manager->flush();
@@ -75,7 +75,7 @@ class RequestsControllerTest extends WebTestCase
     {
         $this->markTestIncomplete();
         $fixture = new Requests();
-        $fixture->setCompanie('My Title');
+        $fixture->setCompany('My Title');
 
         $this->manager->persist($fixture);
         $this->manager->flush();
@@ -83,14 +83,14 @@ class RequestsControllerTest extends WebTestCase
         $this->client->request('GET', sprintf('%s%s/edit', $this->path, $fixture->getId()));
 
         $this->client->submitForm('Update', [
-            'request[companie]' => 'Something New',
+            'request[Company]' => 'Something New',
         ]);
 
         self::assertResponseRedirects('/requests/');
 
         $fixture = $this->repository->findAll();
 
-        self::assertSame('Something New', $fixture[0]->getCompanie());
+        self::assertSame('Something New', $fixture[0]->getCompany());
     }
 
     public function testRemove(): void
@@ -100,7 +100,7 @@ class RequestsControllerTest extends WebTestCase
         $originalNumObjectsInRepository = count($this->repository->findAll());
 
         $fixture = new Requests();
-        $fixture->setCompanie('My Title');
+        $fixture->setCompany('My Title');
 
         $this->manager->persist($fixture);
         $this->manager->flush();

@@ -12,7 +12,7 @@ class RequestsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('companie')
+            ->add('Company')
         ;
     }
 

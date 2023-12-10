@@ -2,80 +2,80 @@
 
 namespace App\Controller;
 
-use App\Entity\Companie;
-use App\Form\CompanieType;
-use App\Repository\CompanieRepository;
+use App\Entity\Company;
+use App\Form\CompanyType;
+use App\Repository\CompanyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/companie')]
-class CompanieController extends AbstractController
+#[Route('/Company')]
+class CompanyController extends AbstractController
 {
-    #[Route('/', name: 'app_companie_index', methods: ['GET'])]
-    public function index(CompanieRepository $companieRepository): Response
+    #[Route('/', name: 'app_Company_index', methods: ['GET'])]
+    public function index(CompanyRepository $CompanyRepository): Response
     {
-        return $this->render('companie/index.html.twig', [
-            'companies' => $companieRepository->findAll(),
+        return $this->render('Company/index.html.twig', [
+            'Companys' => $CompanyRepository->findAll(),
         ]);
     }
 
-    #[Route('/new', name: 'app_companie_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'app_Company_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $companie = new Companie();
-        $form = $this->createForm(CompanieType::class, $companie);
+        $Company = new Company();
+        $form = $this->createForm(CompanyType::class, $Company);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($companie);
+            $entityManager->persist($Company);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_companie_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_Company_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('companie/new.html.twig', [
-            'companie' => $companie,
+        return $this->render('Company/new.html.twig', [
+            'Company' => $Company,
             'form' => $form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_companie_show', methods: ['GET'])]
-    public function show(Companie $companie): Response
+    #[Route('/{id}', name: 'app_Company_show', methods: ['GET'])]
+    public function show(Company $Company): Response
     {
-        return $this->render('companie/show.html.twig', [
-            'companie' => $companie,
+        return $this->render('Company/show.html.twig', [
+            'Company' => $Company,
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_companie_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Companie $companie, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/edit', name: 'app_Company_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Company $Company, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(CompanieType::class, $companie);
+        $form = $this->createForm(CompanyType::class, $Company);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_companie_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_Company_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('companie/edit.html.twig', [
-            'companie' => $companie,
+        return $this->render('Company/edit.html.twig', [
+            'Company' => $Company,
             'form' => $form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_companie_delete', methods: ['POST'])]
-    public function delete(Request $request, Companie $companie, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}', name: 'app_Company_delete', methods: ['POST'])]
+    public function delete(Request $request, Company $Company, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$companie->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($companie);
+        if ($this->isCsrfTokenValid('delete'.$Company->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($Company);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_companie_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_Company_index', [], Response::HTTP_SEE_OTHER);
     }
 }

@@ -55,7 +55,7 @@ class Requests
     private ?string $slug = null;
 
     #[ORM\ManyToOne(inversedBy: 'requests')]
-    private ?companie $companie = null;
+    private ?Company $Company = null;
 
     #[ORM\ManyToOne(inversedBy: 'requests')]
     private ?User $users = null;
@@ -191,14 +191,14 @@ class Requests
         return $this;
     }
 
-    public function getCompanie(): ?companie
+    public function getCompany(): ?Company
     {
-        return $this->companie;
+        return $this->Company;
     }
 
-    public function setCompanie(?companie $companie): static
+    public function setCompany(?Company $Company): static
     {
-        $this->companie = $companie;
+        $this->Company = $Company;
 
         return $this;
     }
