@@ -11,49 +11,49 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/Company')]
+#[Route('/company')]
 class CompanyController extends AbstractController
 {
-    #[Route('/', name: 'app_Company_index', methods: ['GET'])]
-    public function index(CompanyRepository $CompanyRepository): Response
+    #[Route('/', name: 'app_company_index', methods: ['GET'])]
+    public function index(CompanyRepository $companyRepository): Response
     {
-        return $this->render('Company/index.html.twig', [
-            'Companys' => $CompanyRepository->findAll(),
+        return $this->render('company/index.html.twig', [
+            'companys' => $companyRepository->findAll(),
         ]);
     }
 
-    #[Route('/new', name: 'app_Company_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'app_company_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $Company = new Company();
-        $form = $this->createForm(CompanyType::class, $Company);
+        $company = new Company();
+        $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($Company);
+            $entityManager->persist($company);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_Company_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('Company/new.html.twig', [
-            'Company' => $Company,
+            'Company' => $company,
             'form' => $form,
         ]);
     }
 
     #[Route('/{id}', name: 'app_Company_show', methods: ['GET'])]
-    public function show(Company $Company): Response
+    public function show(Company $company): Response
     {
         return $this->render('Company/show.html.twig', [
-            'Company' => $Company,
+            'Company' => $company,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_Company_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Company $Company, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(CompanyType::class, $Company);
+        $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -63,16 +63,16 @@ class CompanyController extends AbstractController
         }
 
         return $this->render('Company/edit.html.twig', [
-            'Company' => $Company,
+            'Company' => $company,
             'form' => $form,
         ]);
     }
 
     #[Route('/{id}', name: 'app_Company_delete', methods: ['POST'])]
-    public function delete(Request $request, Company $Company, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$Company->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($Company);
+        if ($this->isCsrfTokenValid('delete'.$company->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($company);
             $entityManager->flush();
         }
 

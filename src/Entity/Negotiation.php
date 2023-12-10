@@ -18,7 +18,7 @@ class Negotiation
     private ?Devis $devis = null;
 
     #[ORM\ManyToOne(inversedBy: 'negotiations')]
-    private ?Company $Company = null;
+    private ?Company $company = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0')]
     private ?string $initialPrice = null;
@@ -63,12 +63,12 @@ class Negotiation
 
     public function getCompany(): ?Company
     {
-        return $this->Company;
+        return $this->company;
     }
 
-    public function setCompany(?Company $Company): static
+    public function setCompany(?Company $company): static
     {
-        $this->Company = $Company;
+        $this->company = $company;
 
         return $this;
     }
