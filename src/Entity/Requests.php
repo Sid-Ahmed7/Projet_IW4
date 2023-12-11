@@ -193,12 +193,12 @@ class Requests
 
     public function getCompany(): ?Company
     {
-        return $this->Company;
+        return $this->company;
     }
 
     public function setCompany(?Company $company): static
     {
-        $this->Company = $company;
+        $this->company = $company;
 
         return $this;
     }
