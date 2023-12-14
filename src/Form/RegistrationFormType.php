@@ -6,20 +6,44 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextType; 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
+
 
 class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('username', TextType::class, [
+                'label' => 'Nom d\'utilisateur',
+                'required' => true,
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z0-9\-_]+$/',
+                        'message' => 'Le nom d\'utilisateur ne peut contenir que des lettres, des chiffres, des tirets (-) et des underscores (_).',
+                    ]),
+                ],
+            ])
+            ->add('lastname', TextType::class, [
+                'label' => 'Nom',
+                'required' => true
+            ])
+            ->add('firstname', TextType::class, [
+                'label' => 'Prénom',
+                'required' => true
+            ])
             ->add('email')
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
+                'attr' => [
+                    'placeholder' => 'user@example.com',
+                ] ,
                 'constraints' => [
                     new IsTrue([
                         'message' => 'You should agree to our terms.',
@@ -32,6 +56,10 @@ class RegistrationFormType extends AbstractType
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
+                    new Regex([
+                        'pattern' => '/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/',
+                        'message' => 'Le mot de passe doit contenir au moins une lettre, un chiffre et un caractère spécial.',
+                    ]),
                     new NotBlank([
                         'message' => 'Please enter a password',
                     ]),
@@ -42,8 +70,7 @@ class RegistrationFormType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
