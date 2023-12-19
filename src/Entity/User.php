@@ -71,7 +71,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $slug = null;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
-    private ?Companie $companie = null;
+    private ?Company $company = null;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Plan::class)]
     private Collection $plans;
@@ -296,14 +296,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getCompanie(): ?Companie
+    public function getCompany(): ?Company
     {
-        return $this->companie;
+        return $this->Company;
     }
 
-    public function setCompanie(?Companie $companie): static
+    public function setCompany(?Company $company): static
     {
-        $this->companie = $companie;
+        $this->Company = $company;
 
         return $this;
     }

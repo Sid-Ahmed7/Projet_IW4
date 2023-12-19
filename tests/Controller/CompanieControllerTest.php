@@ -2,23 +2,23 @@
 
 namespace App\Test\Controller;
 
-use App\Entity\Companie;
-use App\Repository\CompanieRepository;
+use App\Entity\Company;
+use App\Repository\CompanyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class CompanieControllerTest extends WebTestCase
+class CompanyControllerTest extends WebTestCase
 {
     private KernelBrowser $client;
-    private CompanieRepository $repository;
-    private string $path = '/companie/';
+    private CompanyRepository $repository;
+    private string $path = '/Company/';
     private EntityManagerInterface $manager;
 
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        $this->repository = static::getContainer()->get('doctrine')->getRepository(Companie::class);
+        $this->repository = static::getContainer()->get('doctrine')->getRepository(Company::class);
 
         foreach ($this->repository->findAll() as $object) {
             $this->manager->remove($object);
@@ -30,7 +30,7 @@ class CompanieControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', $this->path);
 
         self::assertResponseStatusCodeSame(200);
-        self::assertPageTitleContains('Companie index');
+        self::assertPageTitleContains('Company index');
 
         // Use the $crawler to perform additional assertions e.g.
         // self::assertSame('Some text on the page', $crawler->filter('.p')->first());
@@ -46,23 +46,23 @@ class CompanieControllerTest extends WebTestCase
         self::assertResponseStatusCodeSame(200);
 
         $this->client->submitForm('Save', [
-            'companie[name]' => 'Testing',
-            'companie[address]' => 'Testing',
-            'companie[logo]' => 'Testing',
-            'companie[banner]' => 'Testing',
-            'companie[email]' => 'Testing',
-            'companie[phoneNumber]' => 'Testing',
-            'companie[taxNumber]' => 'Testing',
-            'companie[siretNumber]' => 'Testing',
-            'companie[likes]' => 'Testing',
-            'companie[updatedAt]' => 'Testing',
-            'companie[createdAt]' => 'Testing',
-            'companie[state]' => 'Testing',
-            'companie[uuid]' => 'Testing',
-            'companie[slug]' => 'Testing',
+            'Company[name]' => 'Testing',
+            'Company[address]' => 'Testing',
+            'Company[logo]' => 'Testing',
+            'Company[banner]' => 'Testing',
+            'Company[email]' => 'Testing',
+            'Company[phoneNumber]' => 'Testing',
+            'Company[taxNumber]' => 'Testing',
+            'Company[siretNumber]' => 'Testing',
+            'Company[likes]' => 'Testing',
+            'Company[updatedAt]' => 'Testing',
+            'Company[createdAt]' => 'Testing',
+            'Company[state]' => 'Testing',
+            'Company[uuid]' => 'Testing',
+            'Company[slug]' => 'Testing',
         ]);
 
-        self::assertResponseRedirects('/companie/');
+        self::assertResponseRedirects('/Company/');
 
         self::assertSame($originalNumObjectsInRepository + 1, count($this->repository->findAll()));
     }
@@ -70,7 +70,7 @@ class CompanieControllerTest extends WebTestCase
     public function testShow(): void
     {
         $this->markTestIncomplete();
-        $fixture = new Companie();
+        $fixture = new Company();
         $fixture->setName('My Title');
         $fixture->setAddress('My Title');
         $fixture->setLogo('My Title');
@@ -92,7 +92,7 @@ class CompanieControllerTest extends WebTestCase
         $this->client->request('GET', sprintf('%s%s', $this->path, $fixture->getId()));
 
         self::assertResponseStatusCodeSame(200);
-        self::assertPageTitleContains('Companie');
+        self::assertPageTitleContains('Company');
 
         // Use assertions to check that the properties are properly displayed.
     }
@@ -100,7 +100,7 @@ class CompanieControllerTest extends WebTestCase
     public function testEdit(): void
     {
         $this->markTestIncomplete();
-        $fixture = new Companie();
+        $fixture = new Company();
         $fixture->setName('My Title');
         $fixture->setAddress('My Title');
         $fixture->setLogo('My Title');
@@ -122,23 +122,23 @@ class CompanieControllerTest extends WebTestCase
         $this->client->request('GET', sprintf('%s%s/edit', $this->path, $fixture->getId()));
 
         $this->client->submitForm('Update', [
-            'companie[name]' => 'Something New',
-            'companie[address]' => 'Something New',
-            'companie[logo]' => 'Something New',
-            'companie[banner]' => 'Something New',
-            'companie[email]' => 'Something New',
-            'companie[phoneNumber]' => 'Something New',
-            'companie[taxNumber]' => 'Something New',
-            'companie[siretNumber]' => 'Something New',
-            'companie[likes]' => 'Something New',
-            'companie[updatedAt]' => 'Something New',
-            'companie[createdAt]' => 'Something New',
-            'companie[state]' => 'Something New',
-            'companie[uuid]' => 'Something New',
-            'companie[slug]' => 'Something New',
+            'Company[name]' => 'Something New',
+            'Company[address]' => 'Something New',
+            'Company[logo]' => 'Something New',
+            'Company[banner]' => 'Something New',
+            'Company[email]' => 'Something New',
+            'Company[phoneNumber]' => 'Something New',
+            'Company[taxNumber]' => 'Something New',
+            'Company[siretNumber]' => 'Something New',
+            'Company[likes]' => 'Something New',
+            'Company[updatedAt]' => 'Something New',
+            'Company[createdAt]' => 'Something New',
+            'Company[state]' => 'Something New',
+            'Company[uuid]' => 'Something New',
+            'Company[slug]' => 'Something New',
         ]);
 
-        self::assertResponseRedirects('/companie/');
+        self::assertResponseRedirects('/Company/');
 
         $fixture = $this->repository->findAll();
 
@@ -164,7 +164,7 @@ class CompanieControllerTest extends WebTestCase
 
         $originalNumObjectsInRepository = count($this->repository->findAll());
 
-        $fixture = new Companie();
+        $fixture = new Company();
         $fixture->setName('My Title');
         $fixture->setAddress('My Title');
         $fixture->setLogo('My Title');
@@ -189,6 +189,6 @@ class CompanieControllerTest extends WebTestCase
         $this->client->submitForm('Delete');
 
         self::assertSame($originalNumObjectsInRepository, count($this->repository->findAll()));
-        self::assertResponseRedirects('/companie/');
+        self::assertResponseRedirects('/Company/');
     }
 }

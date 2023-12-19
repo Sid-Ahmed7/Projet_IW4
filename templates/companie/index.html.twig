@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Companie index{% endblock %}
+{% block title %}Company index{% endblock %}
 
 {% block body %}
-    <h1>Companie index</h1>
+    <h1>Company index</h1>
 
     <table class="table">
         <thead>
@@ -27,26 +27,26 @@
             </tr>
         </thead>
         <tbody>
-        {% for companie in companies %}
+        {% for Company in Companys %}
             <tr>
-                <td>{{ companie.id }}</td>
-                <td>{{ companie.name }}</td>
-                <td>{{ companie.address }}</td>
-                <td>{{ companie.logo }}</td>
-                <td>{{ companie.banner }}</td>
-                <td>{{ companie.email }}</td>
-                <td>{{ companie.phoneNumber }}</td>
-                <td>{{ companie.taxNumber }}</td>
-                <td>{{ companie.siretNumber }}</td>
-                <td>{{ companie.likes }}</td>
-                <td>{{ companie.updatedAt ? companie.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ companie.createdAt ? companie.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ companie.state }}</td>
-                <td>{{ companie.uuid }}</td>
-                <td>{{ companie.slug }}</td>
+                <td>{{ Company.id }}</td>
+                <td>{{ Company.name }}</td>
+                <td>{{ Company.address }}</td>
+                <td>{{ Company.logo }}</td>
+                <td>{{ Company.banner }}</td>
+                <td>{{ Company.email }}</td>
+                <td>{{ Company.phoneNumber }}</td>
+                <td>{{ Company.taxNumber }}</td>
+                <td>{{ Company.siretNumber }}</td>
+                <td>{{ Company.likes }}</td>
+                <td>{{ Company.updatedAt ? Company.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ Company.createdAt ? Company.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ Company.state }}</td>
+                <td>{{ Company.uuid }}</td>
+                <td>{{ Company.slug }}</td>
                 <td>
-                    <a href="{{ path('app_companie_show', {'id': companie.id}) }}">show</a>
-                    <a href="{{ path('app_companie_edit', {'id': companie.id}) }}">edit</a>
+                    <a href="{{ path('app_Company_show', {'id': Company.id}) }}">show</a>
+                    <a href="{{ path('app_Company_edit', {'id': Company.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -57,5 +57,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_companie_new') }}">Create new</a>
+    <a href="{{ path('app_Company_new') }}">Create new</a>
 {% endblock %}

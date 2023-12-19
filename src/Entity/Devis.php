@@ -8,18 +8,27 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
+use Ramsey\Uuid\UuidInterface;
+
 
 
 #[ORM\Entity(repositoryClass: DevisRepository::class)]
 class Devis
 {
+
+    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
+    private $uuid;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'devis')]
-    private ?Companie $companie = null;
+
+    private ?Company $company = null;
 
     #[ORM\ManyToOne(inversedBy: 'devis')]
     private ?User $users = null;
@@ -39,10 +48,7 @@ class Devis
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $deletedAt = null;
 
-    #[ORM\Column(type: 'uuid', unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    private $uuid;
+   
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
@@ -63,24 +69,24 @@ class Devis
         return $this->id;
     }
 
-    public function getCompanie(): ?companie
+    public function getCompany(): ?Company
     {
-        return $this->companie;
+        return $this->company;
     }
 
-    public function setCompanie(?companie $companie): static
+    public function setCompany(?Company $company): static
     {
-        $this->companie = $companie;
+        $this->company = $company;
 
         return $this;
     }
 
-    public function getUsers(): ?user
+    public function getUsers(): ?User
     {
         return $this->users;
     }
 
-    public function setUsers(?user $users): static
+    public function setUsers(?User $users): static
     {
         $this->users = $users;
 
@@ -106,7 +112,7 @@ class Devis
 
     public function getUuid(): ?string
     {
-        return $this->uuid->toString();
+        return $this->uuid instanceof UuidInterface && $this->uuid->toString() ? $this->uuid->toString() : null;
     }
 
     public function setState(string $state): static

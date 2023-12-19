@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Companie;
+use App\Entity\Company;
 use App\Entity\Requests;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -17,9 +17,10 @@ class RequestsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('companie', EntityType::class, [
-            'class' => Companie::class,
-            'label' => 'Companie',
+
+        ->add('company', EntityType::class, [
+            'class' => Company::class,
+            'label' => 'Company',
             'choice_label' => 'name'
         ])
         ->add('email', TextType::class, [
@@ -66,6 +67,7 @@ class RequestsType extends AbstractType
             'currency' => 'EUR',
             'required' => true,
         ]);
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void

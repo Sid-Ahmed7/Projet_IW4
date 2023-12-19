@@ -2,22 +2,23 @@
 
 namespace App\Entity;
 
-use App\Repository\CompanieRepository;
+use App\Repository\CompanyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 
-#[ORM\Entity(repositoryClass: CompanieRepository::class)]
-class Companie
+#[ORM\Entity(repositoryClass: CompanyRepository::class)]
+class Company
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToMany(mappedBy: 'companie', targetEntity: User::class)]
+
+    #[ORM\OneToMany(mappedBy: 'Company', targetEntity: user::class)]
     private Collection $users;
 
     #[ORM\Column(length: 50)]
@@ -66,16 +67,16 @@ class Companie
 
 
 
-    #[ORM\OneToMany(mappedBy: 'companie', targetEntity: Devis::class)]
+    #[ORM\OneToMany(mappedBy: 'Company', targetEntity: Devis::class)]
     private Collection $devis;
 
-    #[ORM\OneToMany(mappedBy: 'companie', targetEntity: Requests::class)]
+    #[ORM\OneToMany(mappedBy: 'Company', targetEntity: Requests::class)]
     private Collection $requests;
 
     #[ORM\Column]
     private ?bool $verified = null;
 
-    #[ORM\OneToMany(mappedBy: 'companie', targetEntity: Negotiation::class)]
+    #[ORM\OneToMany(mappedBy: 'Company', targetEntity: Negotiation::class)]
     private Collection $negotiations;
 
 
@@ -104,7 +105,7 @@ class Companie
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
-            $user->setCompanie($this);
+            $user->setCompany($this);
         }
 
         return $this;
@@ -113,8 +114,8 @@ class Companie
     public function removeUser(User $user): static
     {
         if ($this->users->removeElement($user)) {
-            if ($user->getCompanie() === $this) {
-                $user->setCompanie(null);
+            if ($user->getCompany() === $this) {
+                $user->setCompany(null);
             }
         }
 
@@ -295,7 +296,7 @@ class Companie
     {
         if (!$this->devis->contains($devi)) {
             $this->devis->add($devi);
-            $devi->setCompanie($this);
+            $devi->setCompany($this);
         }
 
         return $this;
@@ -304,8 +305,8 @@ class Companie
     public function removeDevi(Devis $devi): static
     {
         if ($this->devis->removeElement($devi)) {
-            if ($devi->getCompanie() === $this) {
-                $devi->setCompanie(null);
+            if ($devi->getCompany() === $this) {
+                $devi->setCompany(null);
             }
         }
 
@@ -324,7 +325,7 @@ class Companie
     {
         if (!$this->requests->contains($request)) {
             $this->requests->add($request);
-            $request->setCompanie($this);
+            $request->setCompany($this);
         }
 
         return $this;
@@ -334,8 +335,8 @@ class Companie
     {
         if ($this->requests->removeElement($request)) {
             // set the owning side to null (unless already changed)
-            if ($request->getCompanie() === $this) {
-                $request->setCompanie(null);
+            if ($request->getCompany() === $this) {
+                $request->setCompany(null);
             }
         }
 
@@ -366,7 +367,7 @@ class Companie
     {
         if (!$this->negotiations->contains($negotiation)) {
             $this->negotiations->add($negotiation);
-            $negotiation->setCompanie($this);
+            $negotiation->setCompany($this);
         }
 
         return $this;
@@ -376,8 +377,8 @@ class Companie
     {
         if ($this->negotiations->removeElement($negotiation)) {
             // set the owning side to null (unless already changed)
-            if ($negotiation->getCompanie() === $this) {
-                $negotiation->setCompanie(null);
+            if ($negotiation->getCompany() === $this) {
+                $negotiation->setCompany(null);
             }
         }
 
