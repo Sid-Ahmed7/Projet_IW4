@@ -18,6 +18,7 @@ class Negotiation
     private ?Devis $devis = null;
 
     #[ORM\ManyToOne(inversedBy: 'negotiations')]
+
     private ?Company $company = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0')]

@@ -27,6 +27,7 @@ class Devis
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'devis')]
+
     private ?Company $company = null;
 
     #[ORM\ManyToOne(inversedBy: 'devis')]

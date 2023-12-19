@@ -17,6 +17,7 @@ class Company
     #[ORM\Column]
     private ?int $id = null;
 
+
     #[ORM\OneToMany(mappedBy: 'Company', targetEntity: user::class)]
     private Collection $users;
 
@@ -100,7 +101,7 @@ class Company
         return $this->users;
     }
 
-    public function addUser(user $user): static
+    public function addUser(User $user): static
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
@@ -110,7 +111,7 @@ class Company
         return $this;
     }
 
-    public function removeUser(user $user): static
+    public function removeUser(User $user): static
     {
         if ($this->users->removeElement($user)) {
             if ($user->getCompany() === $this) {
