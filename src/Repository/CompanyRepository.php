@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Companie;
+use App\Entity\Company;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,11 +14,11 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Companie[]    findAll()
  * @method Companie[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CompanieRepository extends ServiceEntityRepository
+class CompanyRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Companie::class);
+        parent::__construct($registry, Company::class);
     }
 
 //    /**

@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Repository\CompanieRepository;
 use App\Repository\CompanyRepository;
 use ContainerOfhkJvc\getCompanyRepositoryService;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -293,7 +292,7 @@ class Company
         return $this->devis;
     }
 
-    public function addDevi(Devis $devi): static
+    public function addDevis(Devis $devi): static
     {
         if (!$this->devis->contains($devi)) {
             $this->devis->add($devi);
