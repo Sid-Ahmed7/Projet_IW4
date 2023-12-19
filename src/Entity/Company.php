@@ -18,7 +18,7 @@ class Company
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToMany(mappedBy: 'company', targetEntity: user::class)]
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: User::class)]
     private Collection $users;
 
     #[ORM\Column(length: 50)]

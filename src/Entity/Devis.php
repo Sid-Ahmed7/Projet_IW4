@@ -19,7 +19,7 @@ class Devis
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'devis')]
-    private ?company $companie = null;
+    private ?company $company = null;
 
     #[ORM\ManyToOne(inversedBy: 'devis')]
     private ?user $users = null;
@@ -65,12 +65,12 @@ class Devis
 
     public function getCompany(): ?company
     {
-        return $this->companie;
+        return $this->company;
     }
 
-    public function setCompany(?company $companie): static
+    public function setCompany(?company $company): static
     {
-        $this->companie = $companie;
+        $this->company = $company;
 
         return $this;
     }
