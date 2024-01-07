@@ -24,7 +24,6 @@ class CompanyType extends AbstractType
             ->add('updatedAt')
             ->add('createdAt')
             ->add('state')
-            ->add('uuid')
             ->add('slug')
         ;
     }

@@ -21,6 +21,11 @@ class Company
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: User::class)]
     private Collection $users;
 
+    // #[ORM\Column(type: 'uuid', unique: true)]
+    // #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    // #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
+    // private $uuid;
+
     #[ORM\Column(length: 50)]
     private ?string $name = null;
 
@@ -57,10 +62,7 @@ class Company
     #[ORM\Column(length: 50)]
     private ?string $state = null;
 
-    #[ORM\Column(type: 'uuid', unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    private $uuid;
+    
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
@@ -266,10 +268,10 @@ class Company
         return $this;
     }
 
-    public function getUuid(): ?string
-    {
-        return $this->uuid->toString();
-    }
+    // public function getUuid(): ?string
+    // {
+    //     return $this->uuid->toString();
+    // }
     
     public function getSlug(): ?string
     {
