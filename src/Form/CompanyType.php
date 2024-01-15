@@ -20,11 +20,9 @@ class CompanyType extends AbstractType
             ->add('phoneNumber')
             ->add('taxNumber')
             ->add('siretNumber')
-            ->add('likes')
-            ->add('updatedAt')
-            ->add('createdAt')
-            ->add('state')
-            ->add('slug')
+            
+        
+           
         ;
     }
 

@@ -30,6 +30,8 @@ class PlanController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $now = new \DateTimeImmutable(); 
+            $plan->setCreatedAt($now); 
             $entityManager->persist($plan);
             $entityManager->flush();
 

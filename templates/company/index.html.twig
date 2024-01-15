@@ -21,7 +21,6 @@
                 <th>UpdatedAt</th>
                 <th>CreatedAt</th>
                 <th>State</th>
-                <th>Uuid</th>
                 <th>Slug</th>
                 <th>actions</th>
             </tr>
@@ -42,7 +41,6 @@
                 <td>{{ company.updatedAt ? company.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ company.createdAt ? company.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ company.state }}</td>
-                <td>{{ company.uuid }}</td>
                 <td>{{ company.slug }}</td>
                 <td>
                     <a href="{{ path('app_company_show', {'id': company.id}) }}">show</a>
