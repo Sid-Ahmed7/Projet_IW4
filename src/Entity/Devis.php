@@ -13,16 +13,25 @@ use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 #[ORM\Entity(repositoryClass: DevisRepository::class)]
 class Devis
 {
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $deletedAt = null;
+
+    // #[ORM\Column(type: 'uuid', unique: true)]
+    // #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    // #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
+    // private $uuid;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'devis')]
-    private ?company $companie = null;
+    private ?Company $company = null;
 
     #[ORM\ManyToOne(inversedBy: 'devis')]
-    private ?user $users = null;
+    private ?User $users = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
@@ -36,13 +45,7 @@ class Devis
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $deletedAt = null;
-
-    #[ORM\Column(type: 'uuid', unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    private $uuid;
+    
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
@@ -65,12 +68,12 @@ class Devis
 
     public function getCompany(): ?company
     {
-        return $this->companie;
+        return $this->company;
     }
 
-    public function setCompany(?company $companie): static
+    public function setCompany(?company $company): static
     {
-        $this->companie = $companie;
+        $this->company = $company;
 
         return $this;
     }
@@ -104,10 +107,10 @@ class Devis
         return $this->state;
     }
 
-    public function getUuid(): ?string
-    {
-        return $this->uuid->toString();
-    }
+    // public function getUuid(): ?string
+    // {
+    //     return $this->uuid->toString();
+    // }
 
     public function setState(string $state): static
     {

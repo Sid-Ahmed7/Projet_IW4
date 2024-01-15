@@ -19,7 +19,7 @@ class Plan
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'plans')]
-    private ?user $author = null;
+    private ?User $author = null;
 
     #[ORM\Column(length: 50)]
     private ?string $name = null;
@@ -63,12 +63,12 @@ class Plan
         return $this->id;
     }
 
-    public function getAuthor(): ?user
+    public function getAuthor(): ?User
     {
         return $this->author;
     }
 
-    public function setAuthor(?user $author): static
+    public function setAuthor(?User $author): static
     {
         $this->author = $author;
 
