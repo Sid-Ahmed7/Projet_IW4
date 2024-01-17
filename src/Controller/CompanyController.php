@@ -30,6 +30,10 @@ class CompanyController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $now = new \DateTimeImmutable(); 
+            $company->setCreatedAt($now); 
+            $company->setState('Online'); 
+            $company->setVerified(false);
             $entityManager->persist($company);
             $entityManager->flush();
 
