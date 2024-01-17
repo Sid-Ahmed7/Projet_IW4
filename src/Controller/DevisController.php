@@ -32,6 +32,8 @@ class DevisController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $now = new \DateTimeImmutable(); 
             $devi->setCreatedAt($now); 
+
+            
             $entityManager->flush();
         
             return $this->redirectToRoute('app_devis_index', [], Response::HTTP_SEE_OTHER);
