@@ -56,6 +56,12 @@ class Devis
     #[ORM\OneToMany(mappedBy: 'devis', targetEntity: Invoice::class)]
     private Collection $invoices;
 
+    #[ORM\Column]
+    private ?int $price = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $title = null;
+
     public function __construct()
     {
         $this->invoices = new ArrayCollection();
@@ -205,6 +211,30 @@ class Devis
                 $invoice->setDevis(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPrice(): ?int
+    {
+        return $this->price;
+    }
+
+    public function setPrice(int $price): static
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
 
         return $this;
     }

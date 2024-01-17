@@ -13,6 +13,8 @@ use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 #[ORM\Entity(repositoryClass: PlanRepository::class)]
 class Plan
 {
+
+   
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -42,10 +44,7 @@ class Plan
     #[ORM\Column(length: 50)]
     private ?string $state = null;
 
-    #[ORM\Column(type: 'uuid', unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    private $uuid;
+    
     
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
@@ -159,10 +158,6 @@ class Plan
         return $this;
     }
 
-    public function getUuid(): ?string
-    {
-        return $this->uuid->toString();
-    }
     
 
     public function getSlug(): ?string

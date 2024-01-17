@@ -30,11 +30,15 @@ class DevisController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($devi);
-            $entityManager->flush();
+            $now = new \DateTimeImmutable(); 
+            $devi->setCreatedAt($now); 
 
+            
+            $entityManager->flush();
+        
             return $this->redirectToRoute('app_devis_index', [], Response::HTTP_SEE_OTHER);
         }
+        
 
         return $this->render('devis/new.html.twig', [
             'devi' => $devi,
