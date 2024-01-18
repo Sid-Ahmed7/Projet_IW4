@@ -16,7 +16,10 @@
                 <th>DeletedAt</th>
                 <th>UpdatedAt</th>
                 <th>Slug</th>
+                <th>Prix</th>
+                <th>Title</th>
                 <th>actions</th>
+               
             </tr>
         </thead>
         <tbody>
@@ -30,6 +33,11 @@
                 <td>{{ devi.deletedAt ? devi.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ devi.updatedAt ? devi.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ devi.slug }}</td>
+                <td>{{ devi.price}}</td>
+                <td>{{ devi.title}}</td>
+
+
+               
                 <td>
                     <a href="{{ path('app_devis_show', {'id': devi.id}) }}">show</a>
                     <a href="{{ path('app_devis_edit', {'id': devi.id}) }}">edit</a>

@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Devis;
+use IntlChar;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -32,9 +33,15 @@ class DevisType extends AbstractType
             ->add('isNegotiable', CheckboxType::class, [
                 'label' => 'Is Negotiable',
                 'required' => false, // Le champ n'est pas requis
+            ])
+            
+            ->add('price', TextType::class, [
+                'label' => 'Prix',
+                'required' => true, // Le champ n'est pas requis
+            ])
+            ->add('title', TextType::class, [
+                'label' => 'title',
             ]);
-            
-            
     }
 
     public function configureOptions(OptionsResolver $resolver): void

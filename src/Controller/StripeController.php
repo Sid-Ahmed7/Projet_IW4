@@ -2,23 +2,24 @@
 
 namespace App\Controller;
 
-use App\Repository\InvoiceRepository;
+use App\Entity\Devis;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
-use Stripe\Event;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Invoice;
-use App\Entity\Facture;
-use App\Repository\FactureRepository;
+use App\Repository\DevisRepository;
 
 class StripeController extends AbstractController
 {
 
-    #[Route('/stripe/{id}', name: 'stripe')]
-    public function stripe(Invoice $invoice): Response
+    #[Route('/stripe/{id}/{devisID}', name: 'stripe')]
+    public function stripe(Invoice $invoice,$id,$devisID, DevisRepository $devisRepository): Response
     {
+        $devis = $devisRepository->find($devisID);
+        
+
         $YOUR_DOMAIN = 'http://127.0.0.1:8000';
     
         // Créer la session de paiement Stripe
@@ -26,7 +27,7 @@ class StripeController extends AbstractController
         $checkout_session = Session::create([
             'payment_method_types' => ['card'],
             'line_items' => [[
-                'price' =>  $invoice->getstripePaymentID() *100 ,
+                'price' =>  $invoice->getStripePaymentID() ,
                 'quantity' => 1,
             ]],
             'mode' => 'payment',
