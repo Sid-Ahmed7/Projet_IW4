@@ -40,12 +40,23 @@
                 <th>Slug</th>
                 <td>{{ devi.slug }}</td>
             </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ devi.price }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ devi.title }}</td>
+            </tr>
         </tbody>
     </table>
 
     <a href="{{ path('app_devis_index') }}">back to list</a>
 
     <a href="{{ path('app_devis_edit', {'id': devi.id}) }}">edit</a>
+
+    <a href="{{ path('app_invoice_new', {'id': devi.id}) }}">Facturer</a>
+
 
     {{ include('devis/_delete_form.html.twig') }}
 {% endblock %}
