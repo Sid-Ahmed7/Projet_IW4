@@ -1,10 +1,17 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}Devis{% endblock %}
-
-{% block body %}
-    <h1>Devis</h1>
-
+{# templates/devis/devis_pdf.html.twig #}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Devis {{ devi.id }}</title>
+    <style>
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid black; padding: 8px; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>Devis {{ devi.title }}</h1>
     <table class="table">
         <tbody>
             <tr>
@@ -12,28 +19,27 @@
                 <td>{{ devi.id }}</td>
             </tr>
             <tr>
-                <th>Content</th>
+                <th>Contenu</th>
                 <td>{{ devi.content }}</td>
             </tr>
             <tr>
-                <th>State</th>
+                <th>État</th>
                 <td>{{ devi.state }}</td>
             </tr>
             <tr>
-                <th>IsNegotiable</th>
-                <td>{{ devi.isNegotiable ? 'Yes' : 'No' }}</td>
+                <th>Négociable</th>
+                <td>{{ devi.isNegotiable ? 'Oui' : 'Non' }}</td>
             </tr>
             <tr>
-                <th>CreatedAt</th>
+                <th>Créé le</th>
                 <td>{{ devi.createdAt ? devi.createdAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
-                <th>DeletedAt</th>
+                <th>Supprimé le</th>
                 <td>{{ devi.deletedAt ? devi.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
-           
             <tr>
-                <th>UpdatedAt</th>
+                <th>Mis à jour le</th>
                 <td>{{ devi.updatedAt ? devi.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
@@ -41,25 +47,10 @@
                 <td>{{ devi.slug }}</td>
             </tr>
             <tr>
-                <th>Price</th>
+                <th>Prix</th>
                 <td>{{ devi.price }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ devi.title }}</td>
             </tr>
         </tbody>
     </table>
-
-    <a href="{{ path('app_devis_index') }}">back to list</a>
-
-    <a href="{{ path('app_devis_edit', {'id': devi.id}) }}">edit</a>
-
-    <a href="{{ path('app_invoice_new', {'id': devi.id}) }}">Facturer</a>
-
-    <a href="{{ path('app_devis_pdf', {'id': devi.id}) }}"> Telecharger le PDF</a>
-
-
-
-    {{ include('devis/_delete_form.html.twig') }}
-{% endblock %}
+</body>
+</html>
