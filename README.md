@@ -51,3 +51,6 @@ Moussi Sid-Ahmed => https://github.com/Sid-Ahmed7
 Leonce Yopa => https://github.com/zaengetsu
 - Ajout page d'inscription et de connexion
 - Ajout page gestion des médias
+
+  
+docker exec -it projet_iw4-web-1 bash// acces au conteneur 
