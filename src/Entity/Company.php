@@ -81,6 +81,9 @@ class Company
     #[ORM\OneToMany(mappedBy: 'Company', targetEntity: Negotiation::class)]
     private Collection $negotiations;
 
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: UserRoles::class)]
+    private Collection $userRoles;
+
 
     public function __construct()
     {
@@ -88,6 +91,7 @@ class Company
         $this->devis = new ArrayCollection();
         $this->requests = new ArrayCollection();
         $this->negotiations = new ArrayCollection();
+        $this->userRoles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -381,6 +385,36 @@ class Company
             // set the owning side to null (unless already changed)
             if ($negotiation->getCompany() === $this) {
                 $negotiation->setCompany(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserRoles>
+     */
+    public function getUserRoles(): Collection
+    {
+        return $this->userRoles;
+    }
+
+    public function addUserRole(UserRoles $userRole): static
+    {
+        if (!$this->userRoles->contains($userRole)) {
+            $this->userRoles->add($userRole);
+            $userRole->setCompany($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserRole(UserRoles $userRole): static
+    {
+        if ($this->userRoles->removeElement($userRole)) {
+            // set the owning side to null (unless already changed)
+            if ($userRole->getCompany() === $this) {
+                $userRole->setCompany(null);
             }
         }
 

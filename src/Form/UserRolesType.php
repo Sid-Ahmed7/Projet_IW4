@@ -2,34 +2,31 @@
 
 namespace App\Form;
 
-use App\Entity\Invoice;
+use App\Entity\UserRoles;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class InvoiceType extends AbstractType
+class UserRolesType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('stripePaymentID')
-            ->add('paymentType')
-            ->add('Vat')
-            ->add('paymentDetails')
-            ->add('state')
-            ->add('updatedAt')
             ->add('createdAt')
             ->add('deletedAt')
             ->add('slug')
-            ->add('devis')
+            ->add('updatedAt')
+            ->add('users')
+            ->add('company')
+            ->add('updatedBy')
+            ->add('role')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Invoice::class,
+            'data_class' => UserRoles::class,
         ]);
     }
 }
- 

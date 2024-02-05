@@ -10,7 +10,7 @@ services:
     depends_on:
       - database
     environment:
-      DATABASE_URL: "pgsql://root:root@database:5432/stackT1"
+      DATABASE_URL: "pgsql://root:root@database:5432/stackT1" 
     ports:
       - "8000:8000"
 
