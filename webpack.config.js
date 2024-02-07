@@ -23,20 +23,11 @@ Encore
         config.corejs = '3.23';
     })
 
-<<<<<<< HEAD
+
     // enables Sass/SCSS support
     //.enableSassLoader()
     .enablePostCssLoader()
-=======
-    .enablePostCssLoader((options) => {
-        options.config = {
-            path: 'postcss.config.js',
-        };
-    })
->>>>>>> 4b75648f643350fddc58e237e93f0512b850a9b5
-
     .enableSassLoader()
-
     .autoProvidejQuery()
 ;
 
