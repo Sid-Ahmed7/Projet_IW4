@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}company{% endblock %}
+
+{% block body %}
+    <h1>company</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ company.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ company.name }}</td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td>{{ company.address }}</td>
+            </tr>
+            <tr>
+                <th>Logo</th>
+                <td>{{ company.logo }}</td>
+            </tr>
+            <tr>
+                <th>Banner</th>
+                <td>{{ company.banner }}</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ company.email }}</td>
+            </tr>
+            <tr>
+                <th>PhoneNumber</th>
+                <td>{{ company.phoneNumber }}</td>
+            </tr>
+            <tr>
+                <th>TaxNumber</th>
+                <td>{{ company.taxNumber }}</td>
+            </tr>
+            <tr>
+                <th>SiretNumber</th>
+                <td>{{ company.siretNumber }}</td>
+            </tr>
+            <tr>
+                <th>Likes</th>
+                <td>{{ company.likes }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ company.updatedAt ? company.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ company.createdAt ? company.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>State</th>
+                <td>{{ company.state }}</td>
+            {# </tr>
+            <tr>
+                <th>Uuid</th>
+                <td>{{ company.uuid }}</td>
+            </tr>
+            <tr> #}
+                <th>Slug</th>
+                <td>{{ company.slug }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_company_index') }}">back to list</a>
+
+    <a href="{{ path('app_company_edit', {'id': company.id}) }}">edit</a>
+
+    {{ include('company/_delete_form.html.twig') }}
+{% endblock %}

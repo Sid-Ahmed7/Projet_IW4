@@ -31,10 +31,7 @@
                 <th>DeletedAt</th>
                 <td>{{ devi.deletedAt ? devi.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
-            <tr>
-                <th>Uuid</th>
-                <td>{{ devi.uuid }}</td>
-            </tr>
+           
             <tr>
                 <th>UpdatedAt</th>
                 <td>{{ devi.updatedAt ? devi.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
@@ -43,12 +40,26 @@
                 <th>Slug</th>
                 <td>{{ devi.slug }}</td>
             </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ devi.price }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ devi.title }}</td>
+            </tr>
         </tbody>
     </table>
 
     <a href="{{ path('app_devis_index') }}">back to list</a>
 
     <a href="{{ path('app_devis_edit', {'id': devi.id}) }}">edit</a>
+
+    <a href="{{ path('app_invoice_new', {'id': devi.id}) }}">Facturer</a>
+
+    <a href="{{ path('app_devis_pdf', {'id': devi.id}) }}"> Telecharger le PDF</a>
+
+
 
     {{ include('devis/_delete_form.html.twig') }}
 {% endblock %}

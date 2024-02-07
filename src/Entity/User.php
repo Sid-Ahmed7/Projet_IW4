@@ -11,10 +11,16 @@ use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['username'], message: 'ce nom d utilisateur est déja utilisé veuillez en selectionner un autre')]
+#[UniqueEntity(fields: ['username'], message: 'ce nom d utilisateur est déja utilisé veuillez en selectionner un autre')]
+
+
+
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -23,8 +29,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     
     private ?int $id = null;
 
-
-   
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
@@ -40,23 +44,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $lastname = null;
 
-    #[ORM\Column(length: 50, nullable: true)]
+    #[ORM\Column(length: 50, nullable: true)] 
     private ?string $firstname = null;
 
     #[ORM\Column(length: 50)]
     private ?string $username = null;
 
-    #[ORM\Column(type: 'uuid', unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    private $uuid;
+    // #[ORM\Column(type: 'uuid', unique: true)]
+    // #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    // #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
+    // private $uuid;
     
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $picture = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $signupDate = null;
+    private ?\DateTimeInterface $signupDate ;
 
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $state = null;
@@ -71,7 +75,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $slug = null;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
-    private ?Companie $companie = null;
+    private ?Company $company = null;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Plan::class)]
     private Collection $plans;
@@ -86,9 +90,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: Requests::class)]
     private Collection $requests;
 
-    #[ORM\Column]
-    private ?bool $verified = null;
-
     #[ORM\OneToMany(mappedBy: 'senderID', targetEntity: Message::class)]
     private Collection $messages;
 
@@ -101,6 +102,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $birthdate = null;
+
+    #[ORM\OneToMany(mappedBy: 'users', targetEntity: UserRoles::class)]
+    private Collection $userRoles;
+
+    #[ORM\OneToMany(mappedBy: 'updatedBy', targetEntity: UserRoles::class)]
+    private Collection $userRoleUpdateBy;
+
     public function __construct()
     {
         $this->plans = new ArrayCollection();
@@ -109,6 +119,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->messages = new ArrayCollection();
         $this->notifications = new ArrayCollection();
         $this->conversationUsers = new ArrayCollection();
+        $this->userRoles = new ArrayCollection();
+        $this->userRoleUpdateBy = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -186,10 +198,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lastname;
     }
 
-    public function getUuid(): ?string
-    {
-        return $this->uuid->toString();
-    }
+    // public function getUuid(): ?string
+    // {
+    //     return $this->uuid->toString();
+    // }
 
     
 
@@ -241,7 +253,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->signupDate;
     }
 
-    public function setSignupDate(\DateTimeInterface $signupDate): static
+    public function setSignupDate(\DateTimeInterface $signupDate): self
     {
         $this->signupDate = $signupDate;
 
@@ -296,14 +308,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getCompanie(): ?Companie
+    public function getCompany(): ?Company
     {
-        return $this->companie;
+        return $this->company;
     }
 
-    public function setCompanie(?Companie $companie): static
+    public function setCompany(?Company $company): static
     {
-        $this->companie = $companie;
+        $this->company = $company;
 
         return $this;
     }
@@ -408,18 +420,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isVerified(): ?bool
-    {
-        return $this->verified;
-    }
-
-    public function setVerified(bool $verified): static
-    {
-        $this->verified = $verified;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Message>
      */
@@ -513,6 +513,78 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getBirthdate(): ?\DateTimeInterface
+    {
+        return $this->birthdate;
+    }
+
+    public function setBirthdate(?\DateTimeInterface $birthdate): static
+    {
+        $this->birthdate = $birthdate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserRoles>
+     */
+    public function getUserRoles(): Collection
+    {
+        return $this->userRoles;
+    }
+
+    public function addUserRole(UserRoles $userRole): static
+    {
+        if (!$this->userRoles->contains($userRole)) {
+            $this->userRoles->add($userRole);
+            $userRole->setUsers($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserRole(UserRoles $userRole): static
+    {
+        if ($this->userRoles->removeElement($userRole)) {
+            // set the owning side to null (unless already changed)
+            if ($userRole->getUsers() === $this) {
+                $userRole->setUsers(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserRoles>
+     */
+    public function getUserRoleUpdateBy(): Collection
+    {
+        return $this->userRoleUpdateBy;
+    }
+
+    public function addUserRoleUpdateBy(UserRoles $userRoleUpdateBy): static
+    {
+        if (!$this->userRoleUpdateBy->contains($userRoleUpdateBy)) {
+            $this->userRoleUpdateBy->add($userRoleUpdateBy);
+            $userRoleUpdateBy->setUpdatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserRoleUpdateBy(UserRoles $userRoleUpdateBy): static
+    {
+        if ($this->userRoleUpdateBy->removeElement($userRoleUpdateBy)) {
+            // set the owning side to null (unless already changed)
+            if ($userRoleUpdateBy->getUpdatedBy() === $this) {
+                $userRoleUpdateBy->setUpdatedBy(null);
+            }
+        }
 
         return $this;
     }

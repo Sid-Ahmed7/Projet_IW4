@@ -10,13 +10,18 @@
         "doctrine/doctrine-bundle": "^2.10",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.16",
+        "dompdf/dompdf": "^2.0",
+        "stripe/stripe-php": "^13.9",
         "symfony/console": "6.3.*",
         "symfony/dotenv": "6.3.*",
+        "symfony/filesystem": "6.3.*",
         "symfony/flex": "^2",
         "symfony/form": "6.3.*",
         "symfony/framework-bundle": "6.3.*",
+        "symfony/google-mailer": "6.3.*",
         "symfony/mailer": "6.3.*",
         "symfony/messenger": "6.3.*",
+        "symfony/mime": "6.3.*",
         "symfony/runtime": "6.3.*",
         "symfony/security-bundle": "6.3.*",
         "symfony/twig-bundle": "6.3.*",
@@ -65,6 +70,7 @@
         "post-update-cmd": [
             "@auto-scripts"
         ]
+
     },
     "conflict": {
         "symfony/symfony": "*"

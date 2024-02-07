@@ -13,16 +13,25 @@ use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 #[ORM\Entity(repositoryClass: DevisRepository::class)]
 class Devis
 {
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $deletedAt = null;
+
+    // #[ORM\Column(type: 'uuid', unique: true)]
+    // #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    // #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
+    // private $uuid;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'devis')]
-    private ?companie $companie = null;
+    private ?Company $company = null;
 
     #[ORM\ManyToOne(inversedBy: 'devis')]
-    private ?user $users = null;
+    private ?User $users = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
@@ -36,13 +45,7 @@ class Devis
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $deletedAt = null;
-
-    #[ORM\Column(type: 'uuid', unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    private $uuid;
+    
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
@@ -52,6 +55,12 @@ class Devis
 
     #[ORM\OneToMany(mappedBy: 'devis', targetEntity: Invoice::class)]
     private Collection $invoices;
+
+    #[ORM\Column]
+    private ?int $price = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $title = null;
 
     public function __construct()
     {
@@ -63,14 +72,14 @@ class Devis
         return $this->id;
     }
 
-    public function getCompanie(): ?companie
+    public function getCompany(): ?company
     {
-        return $this->companie;
+        return $this->company;
     }
 
-    public function setCompanie(?companie $companie): static
+    public function setCompany(?company $company): static
     {
-        $this->companie = $companie;
+        $this->company = $company;
 
         return $this;
     }
@@ -104,10 +113,10 @@ class Devis
         return $this->state;
     }
 
-    public function getUuid(): ?string
-    {
-        return $this->uuid->toString();
-    }
+    // public function getUuid(): ?string
+    // {
+    //     return $this->uuid->toString();
+    // }
 
     public function setState(string $state): static
     {
@@ -202,6 +211,30 @@ class Devis
                 $invoice->setDevis(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPrice(): ?int
+    {
+        return $this->price;
+    }
+
+    public function setPrice(int $price): static
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
 
         return $this;
     }

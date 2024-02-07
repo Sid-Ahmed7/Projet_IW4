@@ -35,12 +35,8 @@
                 <td>{{ user.lastname }}</td>
                 <td>{{ user.firstname }}</td>
                 <td>{{ user.username }}</td>
-                <td>{{ user.uuid }}</td>
                 <td>{{ user.picture }}</td>
                 <td>{{ user.signupDate ? user.signupDate|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ user.state }}</td>
-                <td>{{ user.updateAt ? user.updateAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ user.deletedAt ? user.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ user.slug }}</td>
                 <td>
                     <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>

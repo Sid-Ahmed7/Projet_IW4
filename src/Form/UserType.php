@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,19 +14,20 @@ class UserType extends AbstractType
     {
         $builder
             ->add('email')
-            ->add('roles')
             ->add('password')
             ->add('lastname')
             ->add('firstname')
             ->add('username')
             ->add('uuid')
-            ->add('picture')
+            ->add('picture', FileType::class, [
+                'label' => 'Banner (image)',
+                'required' => false, // Le logo n'est pas obligatoire lors de la creation
+            ])
             ->add('signupDate')
-            ->add('state')
             ->add('updateAt')
             ->add('deletedAt')
             ->add('slug')
-            ->add('companie')
+            ->add('company')
             ->add('userPlan')
             ->add('requests')
         ;

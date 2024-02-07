@@ -13,13 +13,15 @@ use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 #[ORM\Entity(repositoryClass: PlanRepository::class)]
 class Plan
 {
+
+   
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'plans')]
-    private ?user $author = null;
+    private ?User $author = null;
 
     #[ORM\Column(length: 50)]
     private ?string $name = null;
@@ -42,10 +44,7 @@ class Plan
     #[ORM\Column(length: 50)]
     private ?string $state = null;
 
-    #[ORM\Column(type: 'uuid', unique: true)]
-    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    private $uuid;
+    
     
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
@@ -63,12 +62,12 @@ class Plan
         return $this->id;
     }
 
-    public function getAuthor(): ?user
+    public function getAuthor(): ?User
     {
         return $this->author;
     }
 
-    public function setAuthor(?user $author): static
+    public function setAuthor(?User $author): static
     {
         $this->author = $author;
 
@@ -159,10 +158,6 @@ class Plan
         return $this;
     }
 
-    public function getUuid(): ?string
-    {
-        return $this->uuid->toString();
-    }
     
 
     public function getSlug(): ?string

@@ -1,0 +1,56 @@
+{# templates/devis/devis_pdf.html.twig #}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Devis {{ devi.id }}</title>
+    <style>
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid black; padding: 8px; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>Devis {{ devi.title }}</h1>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ devi.id }}</td>
+            </tr>
+            <tr>
+                <th>Contenu</th>
+                <td>{{ devi.content }}</td>
+            </tr>
+            <tr>
+                <th>État</th>
+                <td>{{ devi.state }}</td>
+            </tr>
+            <tr>
+                <th>Négociable</th>
+                <td>{{ devi.isNegotiable ? 'Oui' : 'Non' }}</td>
+            </tr>
+            <tr>
+                <th>Créé le</th>
+                <td>{{ devi.createdAt ? devi.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Supprimé le</th>
+                <td>{{ devi.deletedAt ? devi.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Mis à jour le</th>
+                <td>{{ devi.updatedAt ? devi.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Slug</th>
+                <td>{{ devi.slug }}</td>
+            </tr>
+            <tr>
+                <th>Prix</th>
+                <td>{{ devi.price }}</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

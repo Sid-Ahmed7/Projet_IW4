@@ -6,8 +6,10 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Util\Filesystem;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
@@ -32,28 +34,44 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
-                    $form->get('plainPassword')->getData()
+                    $form->get('password')->getData()
                 )
             );
+
+            $user->setSignupDate(new \DateTime());
+
+            // Gestion du picture
+            $pictureFile = $form->get('picture')->getData();
+            if ($pictureFile instanceof UploadedFile) {
+                $filesystem = new Filesystem();
+                $pictureFileName = md5(uniqid()) . '.' . $pictureFile->guessExtension();
+                $pictureFile->move($this->getParameter('profilePicture_directory'), $pictureFileName);
+                $user->setPicture($pictureFileName);
+            } else {
+                // si l'utilisateur ne souhaite pas mettre de pp cel rest à voir !!
+                $defaultPictureFileName = $this->getParameter('profilePicture_directory') . '/no-user.jpg';
+                $user->setPicture($defaultPictureFileName);
+            }
 
             $entityManager->persist($user);
             $entityManager->flush();
 
             // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            $this->emailVerifier->sendEmailConfirmation(
+                'app_verify_email',
+                $user,
                 (new TemplatedEmail())
-                    ->from(new Address('yopaleonce@gmail.Com', 'Haze'))
+                    ->from(new Address('ibrahim60200@gmail.Com', 'Haze'))
                     ->to($user->getEmail())
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
             // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('app_companie_index');
+            return $this->redirectToRoute('app_company_index');
         }
 
         return $this->render('registration/register.html.twig', [

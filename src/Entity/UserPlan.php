@@ -20,19 +20,19 @@ class UserPlan
     private $uuid;
 
     #[ORM\ManyToOne(inversedBy: 'userPlans')]
-    private ?plan $plan = null;
+    private ?Plan $plan = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getPlan(): ?plan
+    public function getPlan(): ?Plan
     {
         return $this->plan;
     }
 
-    public function setPlan(?plan $plan): static
+    public function setPlan(?Plan $plan): static
     {
         $this->plan = $plan;
 

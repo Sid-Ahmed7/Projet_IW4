@@ -15,7 +15,7 @@ class Invoice
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'invoices')]
-    private ?devis $devis = null;
+    private ?Devis $devis = null;
 
     #[ORM\Column(length: 255)]
     private ?string $stripePaymentID = null;
