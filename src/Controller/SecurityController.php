@@ -7,14 +7,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
+
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
-
 use Doctrine\ORM\EntityManagerInterface; // Ajoutez cette ligne
 use Symfony\Component\Uid\Uuid;
-
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class SecurityController extends AbstractController
 {
@@ -79,8 +80,9 @@ public function reset(Request $request, MailerInterface $mailer, UserRepository 
     return $this->render('security/reset.html.twig');
 }
 
+
 #[Route('/reset-password', name: 'app_reset_password')]
-public function resetPassword(Request $request, UserRepository $userRepository): Response
+public function resetPassword(Request $request, UserRepository $userRepository, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
 {
     $token = $request->query->get('token');
     // Vérifier le token et obtenir l'utilisateur correspondant
@@ -92,15 +94,39 @@ public function resetPassword(Request $request, UserRepository $userRepository):
         return $this->redirectToRoute('app_login');
     }
 
-    // Afficher le formulaire de saisie du nouveau mot de passe
-    // (N'oubliez pas de créer le template correspondant)
+    if ($request->isMethod('POST')) {
+        $password = $request->request->get('password');
+        $confirmPassword = $request->request->get('confirm_password');
+
+        if ($password !== $confirmPassword) {
+            $this->addFlash('error', 'Passwords do not match.');
+            return $this->redirectToRoute('app_reset_password', ['token' => $token]);
+        }
+
+        // Réinitialiser le mot de passe
+        $hashedPassword = $passwordHasher->hashPassword($user, $password);
+        $user->setPassword($hashedPassword);
+        $user->setResetToken(null);
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        // Ajouter un message flash pour indiquer que le mot de passe a été changé avec succès
+        $this->addFlash('success', 'Your password has been successfully changed.');
+
+        // Rediriger vers la page de connexion avec le message flash
+        return $this->redirectToRoute('app_login');
+    }
+
+    // Afficher le formulaire de réinitialisation du mot de passe
     return $this->render('security/reset_password.html.twig', [
         'token' => $token,
     ]); 
 }
 
+
+
     #[Route(path: '/logout', name: 'app_logout')]
-    public function logout(): void
+public function logout(): void
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
