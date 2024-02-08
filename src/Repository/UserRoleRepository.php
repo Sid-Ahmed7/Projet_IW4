@@ -2,27 +2,27 @@
 
 namespace App\Repository;
 
-use App\Entity\UserRoles;
+use App\Entity\UserRole;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<UserRoles>
+ * @extends ServiceEntityRepository<UserRole>
  *
- * @method UserRoles|null find($id, $lockMode = null, $lockVersion = null)
- * @method UserRoles|null findOneBy(array $criteria, array $orderBy = null)
- * @method UserRoles[]    findAll()
- * @method UserRoles[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method UserRole|null find($id, $lockMode = null, $lockVersion = null)
+ * @method UserRole|null findOneBy(array $criteria, array $orderBy = null)
+ * @method UserRole[]    findAll()
+ * @method UserRole[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UserRolesRepository extends ServiceEntityRepository
+class UserRoleRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, UserRoles::class);
+        parent::__construct($registry, UserRole::class);
     }
 
 //    /**
-//     * @return UserRoles[] Returns an array of UserRoles objects
+//     * @return UserRole[] Returns an array of UserRole objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -36,7 +36,7 @@ class UserRolesRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?UserRoles
+//    public function findOneBySomeField($value): ?UserRole
 //    {
 //        return $this->createQueryBuilder('u')
 //            ->andWhere('u.exampleField = :val')

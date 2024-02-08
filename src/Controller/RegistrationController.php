@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Notification;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
@@ -51,13 +52,35 @@ class RegistrationController extends AbstractController
                 $pictureFile->move($this->getParameter('profilePicture_directory'), $pictureFileName);
                 $user->setPicture($pictureFileName);
             } else {
-                // si l'utilisateur ne souhaite pas mettre de pp cel rest à voir !!
+                // si l'utilisateur ne souhaite pas mettre de pp cela rest à voir !!
                 $defaultPictureFileName = $this->getParameter('profilePicture_directory') . '/no-user.jpg';
                 $user->setPicture($defaultPictureFileName);
             }
 
             $entityManager->persist($user);
+
+            $usr= $this->getUser();
+
+            // Notification
+            $notification = new Notification();
+            $now = new \DateTimeImmutable();
+
+            $notification->setUsers($usr); // ID de l'utilisateur
+            $notification->setNotificationTemplate(1); // template de bienvenu ici donc 
+            $notification->setType('Systeme'); // Quel type de notification c'est 
+            $notification->setTitle('Bienvenu !'); // ducoup le titre mais je pense que je vais enlever la table notification template ce sera moins compliqué 
+            $notification->setMessage('Bienvenu sur WeEvent !'); 
+            $notification->setIsRead(false);
+            $notification->setCreatedAt($now); 
+
+
+
+
+            $entityManager->persist($notification);
+
             $entityManager->flush();
+
+
 
             // generate a signed url and email it to the user
             $this->emailVerifier->sendEmailConfirmation(

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New NotificationTemplate{% endblock %}
+
+{% block body %}
+    <h1>Create new NotificationTemplate</h1>
+
+    {{ include('notification_template/_form.html.twig') }}
+
+    <a href="{{ path('app_notification_template_index') }}">back to list</a>
+{% endblock %}
