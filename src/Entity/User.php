@@ -87,9 +87,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: Devis::class)]
     private Collection $devis;
 
-    #[ORM\OneToMany(mappedBy: 'users', targetEntity: Requests::class)]
-    private Collection $requests;
-
     #[ORM\OneToMany(mappedBy: 'senderID', targetEntity: Message::class)]
     private Collection $messages;
 
@@ -105,16 +102,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $birthdate = null;
 
+    #[ORM\OneToMany(mappedBy: 'usr', targetEntity: Reque::class)]
+    private Collection $reques;
+
    
 
     public function __construct()
     {
         $this->plans = new ArrayCollection();
         $this->devis = new ArrayCollection();
-        $this->requests = new ArrayCollection();
         $this->messages = new ArrayCollection();
         $this->notifications = new ArrayCollection();
         $this->conversationUsers = new ArrayCollection();
+        $this->reques = new ArrayCollection();
        
     }
 
@@ -384,37 +384,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, Requests>
-     */
-    public function getRequests(): Collection
-    {
-        return $this->requests;
-    }
-
-    public function addRequest(Requests $request): static
-    {
-        if (!$this->requests->contains($request)) {
-            $this->requests->add($request);
-            $request->setUsers($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRequest(Requests $request): static
-    {
-        if ($this->requests->removeElement($request)) {
-            // set the owning side to null (unless already changed)
-            if ($request->getUsers() === $this) {
-                $request->setUsers(null);
-            }
-        }
-
-        return $this;
-    }
-
+   
     /**
      * @return Collection<int, Message>
      */
@@ -524,6 +494,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return Collection<int, Reque>
+     */
+    public function getReques(): Collection
+    {
+        return $this->reques;
+    }
+
+   
    
 
    

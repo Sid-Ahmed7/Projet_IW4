@@ -62,6 +62,9 @@ class Devis
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $operatorID = null;
+
     public function __construct()
     {
         $this->invoices = new ArrayCollection();
@@ -235,6 +238,18 @@ class Devis
     public function setTitle(string $title): static
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getOperatorID(): ?int
+    {
+        return $this->operatorID;
+    }
+
+    public function setOperatorID(?int $operatorID): static
+    {
+        $this->operatorID = $operatorID;
 
         return $this;
     }

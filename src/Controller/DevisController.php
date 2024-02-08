@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Devis;
+use App\Entity\Notification;
 use App\Form\DevisType;
 use App\Repository\DevisRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,20 +24,45 @@ class DevisController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_devis_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new/{userID}', name: 'app_devis_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager,$userID, UserRepository $userRepository): Response
     {
         $devi = new Devis();
         $form = $this->createForm(DevisType::class, $devi);
         $form->handleRequest($request);
-
+        $usr = $userRepository->findOneBy(['id' => $userID]);
+// dd($id);
         if ($form->isSubmitted() && $form->isValid()) {
             $now = new \DateTimeImmutable(); 
             $devi->setCreatedAt($now); 
+            $devi->setUpdatedAt($now); 
+            $devi->setUsers($usr);
+
+            $entityManager->persist($devi);
 
             
-            $entityManager->flush();
         
+            $user = $devi->getUsers();
+       
+            // Notification
+            $notification = new Notification();
+            $now = new \DateTimeImmutable();
+            $devi->getId();
+            $notification->setUsers($devi->getUsers()); // ID du devis
+            $notification->setNotificationTemplate(1); // je pense que nous n'aurons plus besoin du notification template mais je laisse au cas ou 
+            $notification->setType('Systeme'); // Quel type de notification c'est 
+            $notification->setTitle('Votre devis est disponible '); 
+            if ($user) {
+                $username = $user->getUsername(); // Récupérez le nom d'utilisateur
+                $notification->setMessage("Salut {$username}, votre devis est disponible."); 
+            }   $notification->setIsRead(false);
+            $notification->setCreatedAt($now);
+            // dd($notification);
+    
+            $entityManager->persist($notification);
+    
+    
+            $entityManager->flush();
             return $this->redirectToRoute('app_devis_index', [], Response::HTTP_SEE_OTHER);
         }
         

@@ -61,7 +61,7 @@ class RegistrationController extends AbstractController
 
             $usr= $this->getUser();
 
-            // Créez une nouvelle instance de Notification
+            // Notification
             $notification = new Notification();
             $now = new \DateTimeImmutable();
 

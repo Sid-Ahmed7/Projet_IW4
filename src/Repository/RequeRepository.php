@@ -2,27 +2,27 @@
 
 namespace App\Repository;
 
-use App\Entity\Requests;
+use App\Entity\Reque;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Requests>
+ * @extends ServiceEntityRepository<Reque>
  *
- * @method Requests|null find($id, $lockMode = null, $lockVersion = null)
- * @method Requests|null findOneBy(array $criteria, array $orderBy = null)
- * @method Requests[]    findAll()
- * @method Requests[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Reque|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Reque|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Reque[]    findAll()
+ * @method Reque[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class RequestsRepository extends ServiceEntityRepository
+class RequeRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Requests::class);
+        parent::__construct($registry, Reque::class);
     }
 
 //    /**
-//     * @return Request[] Returns an array of Request objects
+//     * @return Reque[] Returns an array of Reque objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -36,7 +36,7 @@ class RequestsRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Request
+//    public function findOneBySomeField($value): ?Reque
 //    {
 //        return $this->createQueryBuilder('r')
 //            ->andWhere('r.exampleField = :val')
