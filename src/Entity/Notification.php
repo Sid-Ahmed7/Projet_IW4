@@ -38,6 +38,9 @@ class Notification
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $notificationTemplate = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -135,6 +138,18 @@ class Notification
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getNotificationTemplate(): ?int
+    {
+        return $this->notificationTemplate;
+    }
+
+    public function setNotificationTemplate(?int $notificationTemplate): static
+    {
+        $this->notificationTemplate = $notificationTemplate;
 
         return $this;
     }
