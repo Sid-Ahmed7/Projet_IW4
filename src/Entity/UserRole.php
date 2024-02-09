@@ -31,6 +31,9 @@ class UserRole
     #[ORM\Column(length: 30)]
     private ?string $state = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,6 +107,18 @@ class UserRole
     public function setState(string $state): static
     {
         $this->state = $state;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
