@@ -72,6 +72,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private  ?string $emailVerificationToken;
+
+    public function getEmailVerificationToken(): ?string
+    {
+        return $this->emailVerificationToken;
+    }
+
+    public function setEmailVerificationToken(string $emailVerificationToken): self
+    {
+        $this->emailVerificationToken = $emailVerificationToken;
+
+        return $this;
+    }
 
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -139,6 +153,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->conversationUsers = new ArrayCollection();
         $this->userRoles = new ArrayCollection();
         $this->userRoleUpdateBy = new ArrayCollection();
+        $this->emailVerificationToken = null;
+
     }
 
     public function getId(): ?int

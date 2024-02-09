@@ -6,8 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-
-
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use App\Repository\UserRepository;
@@ -16,19 +14,30 @@ use Doctrine\ORM\EntityManagerInterface; // Ajoutez cette ligne
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use Symfony\Component\Security\Core\Security;
+
 
 class SecurityController extends AbstractController
 {
     #[Route(path: '/login', name: 'app_login')]
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(AuthenticationUtils $authenticationUtils, Request $request, UserRepository $userRepository): Response
     {
         if ($this->getUser()) {
             return $this->redirectToRoute('app_devis_index');
         }
+    
         $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
-
+    
+        if ($lastUsername) {
+            $user = $userRepository->findOneByEmail($lastUsername); // Utilisez la méthode appropriée pour obtenir l'utilisateur par email
+            if ($user && !$user->isVerified()) {
+                // L'utilisateur n'a pas vérifié son e-mail
+                $error = new CustomUserMessageAuthenticationException('Please verify your email address before logging in.');
+            }
+        }
+    
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
@@ -82,7 +91,7 @@ public function reset(Request $request, MailerInterface $mailer, UserRepository 
 
 
 #[Route('/reset-password', name: 'app_reset_password')]
-public function resetPassword(Request $request, UserRepository $userRepository, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+public function resetPassword(Request $request, UserRepository $userRepository, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, MailerInterface $mailer): Response
 {
     $token = $request->query->get('token');
     // Vérifier le token et obtenir l'utilisateur correspondant
@@ -110,6 +119,17 @@ public function resetPassword(Request $request, UserRepository $userRepository, 
         $entityManager->persist($user);
         $entityManager->flush();
 
+
+        // Envoyer un e-mail de confirmation
+        $email = (new Email())
+        ->from('ibrahim60200@gmail.com')
+        ->to($user->getEmail())
+        ->subject('Confirmation de changement de mot de passe')
+        ->text('Votre mot de passe a été changé avec succès.')
+        ->html('<p>Votre mot de passe a été changé avec succès.</p>');
+    
+        $mailer->send($email);
+    
         // Ajouter un message flash pour indiquer que le mot de passe a été changé avec succès
         $this->addFlash('success', 'Your password has been successfully changed.');
 
