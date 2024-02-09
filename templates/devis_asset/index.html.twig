@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DevisAsset index{% endblock %}
+
+{% block body %}
+    <h1>DevisAsset index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>State</th>
+                <th>Size</th>
+                <th>Description</th>
+                <th>Picture1</th>
+                <th>Picture2</th>
+                <th>Picture3</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for devis_asset in devis_assets %}
+            <tr>
+                <td>{{ devis_asset.id }}</td>
+                <td>{{ devis_asset.name }}</td>
+                <td>{{ devis_asset.price }}</td>
+                <td>{{ devis_asset.createdAt ? devis_asset.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ devis_asset.updatedAt ? devis_asset.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ devis_asset.state }}</td>
+                <td>{{ devis_asset.size }}</td>
+                <td>{{ devis_asset.description }}</td>
+                <td>{{ devis_asset.picture1 }}</td>
+                <td>{{ devis_asset.picture2 }}</td>
+                <td>{{ devis_asset.picture3 }}</td>
+                <td>
+                    <a href="{{ path('app_devis_asset_show', {'id': devis_asset.id}) }}">show</a>
+                    <a href="{{ path('app_devis_asset_edit', {'id': devis_asset.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
