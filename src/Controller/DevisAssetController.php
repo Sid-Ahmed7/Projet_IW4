@@ -69,6 +69,8 @@ class DevisAssetController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $totalPrice = $devisAsset->getSize() * $devisAsset->getUnitPrice();
+            $devisAsset->setPrice($totalPrice); 
             $now = new \DateTimeImmutable(); 
             $devisAsset->setUpdatedAt($now); 
             $entityManager->flush();
