@@ -21,7 +21,7 @@ class InvoiceType extends AbstractType
             ->add('createdAt')
             ->add('deletedAt')
             ->add('slug')
-            ->add('devis')
+            
         ;
     }
 

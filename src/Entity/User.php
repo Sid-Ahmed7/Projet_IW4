@@ -54,26 +54,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     // #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     // private $uuid;
     
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private  ?string $resetToken;
-
-    // Les getters et setters...
-    public function getResetToken(): ?string
-    {
-        return $this->resetToken;
-    }
-
-    public function setResetToken(?string $resetToken): self
-    {
-        $this->resetToken = $resetToken;
-        return $this;
-    }
-
-
-
-
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $picture = null;
 
