@@ -35,10 +35,7 @@ class DevisType extends AbstractType
                 'required' => false, // Le champ n'est pas requis
             ])
             
-            ->add('price', TextType::class, [
-                'label' => 'Prix',
-                'required' => true, // Le champ n'est pas requis
-            ])
+        
             ->add('title', TextType::class, [
                 'label' => 'title',
             ]);

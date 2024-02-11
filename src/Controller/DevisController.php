@@ -36,12 +36,10 @@ class DevisController extends AbstractController
             $now = new \DateTimeImmutable(); 
             $devi->setCreatedAt($now); 
             $devi->setUpdatedAt($now); 
+            $devi->setPrice('0'); 
             $devi->setUsers($usr);
 
             $entityManager->persist($devi);
-
-            
-        
             $user = $devi->getUsers();
        
             // Notification

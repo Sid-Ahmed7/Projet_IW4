@@ -54,7 +54,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     // #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     // #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     // private $uuid;
-    
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $picture = null;

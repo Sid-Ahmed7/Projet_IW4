@@ -43,6 +43,8 @@ class RegistrationController extends AbstractController
             );
 
             $user->setSignupDate(new \DateTime());
+            $user->setState('online');
+
 
             // Gestion du picture
             $pictureFile = $form->get('picture')->getData();
