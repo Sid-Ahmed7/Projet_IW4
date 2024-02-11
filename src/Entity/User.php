@@ -54,6 +54,41 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     // #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     // #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     // private $uuid;
+    
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private  ?string $resetToken;
+
+    // Les getters et setters...
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): self
+    {
+        $this->resetToken = $resetToken;
+        return $this;
+    }
+
+
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private  ?string $emailVerificationToken;
+
+    public function getEmailVerificationToken(): ?string
+    {
+        return $this->emailVerificationToken;
+    }
+
+    public function setEmailVerificationToken(string $emailVerificationToken): self
+    {
+        $this->emailVerificationToken = $emailVerificationToken;
+
+        return $this;
+    }
+
+
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $picture = null;
@@ -113,8 +148,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->messages = new ArrayCollection();
         $this->notifications = new ArrayCollection();
         $this->conversationUsers = new ArrayCollection();
-        $this->reques = new ArrayCollection();
-       
+        $this->userRoles = new ArrayCollection();
+        $this->userRoleUpdateBy = new ArrayCollection();
+        $this->emailVerificationToken = null;
+
+
     }
 
     public function getId(): ?int
