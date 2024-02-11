@@ -20,6 +20,7 @@ use Symfony\Component\Uid\Uuid;
 #[UniqueEntity(fields: ['username'], message: 'ce nom d utilisateur est déja utilisé veuillez en selectionner un autre')]
 
 
+
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -88,6 +89,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
 
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $picture = null;
 
@@ -119,9 +121,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'users', targetEntity: Devis::class)]
     private Collection $devis;
 
-    #[ORM\OneToMany(mappedBy: 'users', targetEntity: Requests::class)]
-    private Collection $requests;
-
     #[ORM\OneToMany(mappedBy: 'senderID', targetEntity: Message::class)]
     private Collection $messages;
 
@@ -137,23 +136,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $birthdate = null;
 
-    #[ORM\OneToMany(mappedBy: 'users', targetEntity: UserRoles::class)]
-    private Collection $userRoles;
+    #[ORM\OneToMany(mappedBy: 'usr', targetEntity: Reque::class)]
+    private Collection $reques;
 
-    #[ORM\OneToMany(mappedBy: 'updatedBy', targetEntity: UserRoles::class)]
-    private Collection $userRoleUpdateBy;
+   
 
     public function __construct()
     {
         $this->plans = new ArrayCollection();
         $this->devis = new ArrayCollection();
-        $this->requests = new ArrayCollection();
         $this->messages = new ArrayCollection();
         $this->notifications = new ArrayCollection();
         $this->conversationUsers = new ArrayCollection();
         $this->userRoles = new ArrayCollection();
         $this->userRoleUpdateBy = new ArrayCollection();
         $this->emailVerificationToken = null;
+
 
     }
 
@@ -423,37 +421,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, Requests>
-     */
-    public function getRequests(): Collection
-    {
-        return $this->requests;
-    }
-
-    public function addRequest(Requests $request): static
-    {
-        if (!$this->requests->contains($request)) {
-            $this->requests->add($request);
-            $request->setUsers($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRequest(Requests $request): static
-    {
-        if ($this->requests->removeElement($request)) {
-            // set the owning side to null (unless already changed)
-            if ($request->getUsers() === $this) {
-                $request->setUsers(null);
-            }
-        }
-
-        return $this;
-    }
-
+   
     /**
      * @return Collection<int, Message>
      */
@@ -564,62 +532,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, UserRoles>
+     * @return Collection<int, Reque>
      */
-    public function getUserRoles(): Collection
+    public function getReques(): Collection
     {
-        return $this->userRoles;
+        return $this->reques;
     }
 
-    public function addUserRole(UserRoles $userRole): static
-    {
-        if (!$this->userRoles->contains($userRole)) {
-            $this->userRoles->add($userRole);
-            $userRole->setUsers($this);
-        }
+   
+   
 
-        return $this;
-    }
-
-    public function removeUserRole(UserRoles $userRole): static
-    {
-        if ($this->userRoles->removeElement($userRole)) {
-            // set the owning side to null (unless already changed)
-            if ($userRole->getUsers() === $this) {
-                $userRole->setUsers(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, UserRoles>
-     */
-    public function getUserRoleUpdateBy(): Collection
-    {
-        return $this->userRoleUpdateBy;
-    }
-
-    public function addUserRoleUpdateBy(UserRoles $userRoleUpdateBy): static
-    {
-        if (!$this->userRoleUpdateBy->contains($userRoleUpdateBy)) {
-            $this->userRoleUpdateBy->add($userRoleUpdateBy);
-            $userRoleUpdateBy->setUpdatedBy($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserRoleUpdateBy(UserRoles $userRoleUpdateBy): static
-    {
-        if ($this->userRoleUpdateBy->removeElement($userRoleUpdateBy)) {
-            // set the owning side to null (unless already changed)
-            if ($userRoleUpdateBy->getUpdatedBy() === $this) {
-                $userRoleUpdateBy->setUpdatedBy(null);
-            }
-        }
-
-        return $this;
-    }
+   
 }

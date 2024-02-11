@@ -35,10 +35,10 @@
                 <th>Username</th>
                 <td>{{ user.username }}</td>
             </tr>
-            <tr>
+            {# <tr>
                 <th>Uuid</th>
                 <td>{{ user.uuid }}</td>
-            </tr>
+            </tr> #}
             <tr>
                 <th>Picture</th>
                 <td>{{ user.picture }}</td>
@@ -69,6 +69,8 @@
     <a href="{{ path('app_user_index') }}">back to list</a>
 
     <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+
+<a href="{{ path('app_invite_user', {'companyId': app.user.company.id, 'senderId': app.user.id, 'userId': user.id}) }}">Inviter</a>
 
     {{ include('user/_delete_form.html.twig') }}
 {% endblock %}
