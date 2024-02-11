@@ -20,6 +20,7 @@ use Symfony\Component\Uid\Uuid;
 #[UniqueEntity(fields: ['username'], message: 'ce nom d utilisateur est déja utilisé veuillez en selectionner un autre')]
 
 
+
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -53,7 +54,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     // #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     // #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     // private $uuid;
-    
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $picture = null;
 
