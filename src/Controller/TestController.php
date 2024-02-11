@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/test')]
+#[Route('/accueil')]
 class TestController extends AbstractController
 {
     #[Route('/', name: 'app_test_index', methods: ['GET'])]
@@ -19,4 +19,21 @@ class TestController extends AbstractController
     {
         return $this->render('accueil.html.twig');
     }
+
+    #[Route('/reserver', name: 'app_test_index2', methods: ['GET'])]
+    public function index2(UserRepository $userRepository): Response
+    {
+        return $this->render('reservation/reserver.html.twig');
+    }
 }
+
+// #[Route('/reserver')]
+// class TestController extends AbstractController
+// {
+//     #[Route('/', name: 'app_test_index', methods: ['GET'])]
+//     public function index(UserRepository $userRepository): Response
+//     {
+//         return $this->render('accueil.html.twig');
+//     }
+// }
+

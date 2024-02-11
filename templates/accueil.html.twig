@@ -1,103 +1,29 @@
 {% extends "base.html.twig" %}
 
-{# <html lang="fr">
+{% block body %}
 
 
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Votre Site</title>
-		<style>
-			body {
-				margin: 0;
-				padding: 0;
-				overflow-x: hidden;
-				font-family: sans-serif;
-			}
+		<header class="flex justify-between items-center bg-gray-200 py-4 px-6">
+			<img src="{{ asset ('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4">
 
-			header {
-
-				display: flex;
-				justify-content: space-around;
-				background: #F9F4F4;
-				height: 86px;
-			}
-
-			button {
-				padding: 10px 20px;
-				font-size: 16px;
-				margin: 20px;
-				cursor: pointer;
-			}
-
-			#reservation-button {
-				background-color: white;
-				color: #9B47DD;
-				border: none;
-				border-radius: 14px;
-				border: 2px solid #9B47DD;
-			}
-
-			#connexion-button,
-			#inscription-button {
-				background-color: #2ecc71;
-				color: #fff;
-				border: none;
-			}
-			span {
-				font-size: 22px;
-				color: white;
-			}
-			.test {
-				background-image: url("../assets/images/pagedaccueil.png");
-				background-size: cover;
-				background-position: center;
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				justify-content: center;
-				height: 90vh;
-			}
-			.test2 {
-				display: flex;
-				margin: 53px;
-				flex-direction: column;
-				align-items: center;
-				justify-content: center;
-
-			}
-			img {
-
-				width: 80%;
-			}
-		</style>
-	</head>
-
-	<body> #}
-		{% block body %}
-			<header>
-				<h1><img style="width: 17%; border-radius: 100%;" src="../assets/images/logo2.png">
-				</h1>
-				<div>
-					<button id="connexion-button" class="text-red" style="background:#FFFAFA; border: 1px solid #80808063;">Connexion</button>
-					<button id="inscription-button" style="background:#9B47DD; color:white">Inscription</button>
-				</div>
-			</header>
-
-			<div class="test" style="text-align: center;">
-				<span>Transformez vos rêves en réalité - laissez-nous donner vie à vos événements spéciaux.</span>
-				<button id="reservation-button">Réserver</button>
+			<div class="flex space-x-4">
+				<button class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+					Connexion
+				</button>
+				<button class="inline-flex items-center px-4 py-2 bg-purple-500 border border-transparent rounded-md text-white font-medium hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+					Inscription
+				</button>
 			</div>
+		</header>
 
-			<div class="test2 w-50" style="">
+		<div class="hero flex flex-col items-center justify-center h-screen bg-cover bg-no-repeat" style="background-image: url('{{ asset('images/pagedaccueil.png') }}')">
+			<span class="text-3xl text-white font-bold mb-8">Transformez vos rêves en réalité - laissez-nous donner vie à vos événements spéciaux.</span>
+			<button class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Réserver</button>
+		</div>
 
-				<h2 style="">NOS SERVICES</h2>
+		<div class="services container mx-auto py-12">
+			<h2 class="text-3xl font-bold text-center mb-8">NOS SERVICES</h2>
+			<img src="{{ asset ('/images/dacc.png') }}" alt="Services Image" class="mx-auto">
+		</div>
 
-				<img src="../assets/images/dacc.png">
-
-
-			</div>
-		
-		{% endblock body %}
-	{# </body>
-</html> #}
+	{% endblock %}
