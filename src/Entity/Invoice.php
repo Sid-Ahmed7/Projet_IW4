@@ -44,6 +44,9 @@ class Invoice
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
 
+    #[ORM\Column]
+    private ?int $HTPrice = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -165,6 +168,18 @@ class Invoice
     public function setSlug(?string $slug): static
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getHTPrice(): ?int
+    {
+        return $this->HTPrice;
+    }
+
+    public function setHTPrice(int $HTPrice): static
+    {
+        $this->HTPrice = $HTPrice;
 
         return $this;
     }

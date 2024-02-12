@@ -79,6 +79,8 @@ class DevisController extends AbstractController
     {
         return $this->render('devis/show.html.twig', [
             'devi' => $devi,
+            'assets' => $devi->getDevisAssets() 
+
         ]);
     }
 

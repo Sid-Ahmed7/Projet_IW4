@@ -9,6 +9,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 
 #[ORM\Entity(repositoryClass: CompanyRepository::class)]
 class Company
@@ -63,8 +65,9 @@ class Company
     private ?string $state = null;
 
     
-
     #[ORM\Column(length: 255, nullable: true)]
+    #[Gedmo\Slug(fields: ['name',"id"])]
+
     private ?string $slug = null;
 
 

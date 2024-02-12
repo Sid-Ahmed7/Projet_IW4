@@ -60,7 +60,29 @@
     <a href="{{ path('app_devis_pdf', {'id': devi.id}) }}"> Telecharger le PDF</a>
 
     
-
+    <h2>Devis Assets</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prix</th>
+                <th>Quantité</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for asset in assets %}
+                <tr>
+                    <td>{{ asset.name }}</td>
+                    <td>{{ asset.price }}</td>
+                    <td>{{ asset.size }}</td>
+                    <td>
+                        <a href="{{ path('app_devis_asset_delete', {'id': asset.id}) }}" class="btn btn-danger">Supprimer</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
 
     {{ include('devis/_delete_form.html.twig') }}
