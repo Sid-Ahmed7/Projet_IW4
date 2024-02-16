@@ -28,13 +28,22 @@ class InvoiceController extends AbstractController
 
 
     #[Route('/new/{id}', name: 'app_invoice_new', methods: ['GET'])]
-    public function new(EntityManagerInterface $entityManager, DevisRepository $devisRepository, $id, InvoiceRepository $invoice): Response
+    public function new(EntityManagerInterface $entityManager, DevisRepository $devisRepository, $id, InvoiceRepository $invoice ): Response
     {
         $devis = $devisRepository->find($id);
 
         if (!$devis) {
             throw $this->createNotFoundException('Le devis avec l\'id "' . $id . '" n\'existe pas.');
         }
+
+         // Voir si une facture n'existe pas déja , je oense qu'il faut supprimer les factures existantes soit au bout d'un certain temps sans paiement soit si le devis est mofifié(meme si la facturation se fait une fois le devis validé)
+         // mise en place du paiment en plusieurs fois ou trop compliqué ? are ca pour le moment
+         $existingInvoice = $invoice->findOneBy(['devis' => $devis]);
+
+    if ($existingInvoice) {
+       // Il faut une page de redirection soit sur la page show de la facture existante 
+        return $this->redirectToRoute('app_invoice_show', ['id' => $existingInvoice->getId()]);
+    }
 
         $invoice = new Invoice();
 

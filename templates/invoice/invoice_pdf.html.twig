@@ -1,0 +1,67 @@
+{# templates/invoice/invoice_pdf.html.twig #}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Facture {{ invo.id }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        header { margin-bottom: 30px; }
+        .logo { height: 100px; /* Ajustez selon la taille de votre logo */ }
+        .invoice-header { background-color: #007BFF; color: white; padding: 10px 0; text-align: center; }
+        .invoice-header h1 { margin: 0; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background-color: #f2f2f2; color: #333; }
+        .total { font-weight: bold; background-color: #f2f2f2; }
+        .footer { margin-top: 30px; text-align: center; color: #777; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="path/to/your/logo.png" alt="Logo de l'entreprise" class="logo">
+    </header>
+
+    <div class="invoice-header">
+        <h1>Facture {{ invo.id }}</h1>
+    </div>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Type de paiement</th>
+                <td>{{ invo.paymentType }}</td>
+            </tr>
+            <tr>
+                <th>Détails du paiement</th>
+                <td>{{ invo.paymentDetails }}</td>
+            </tr>
+            <tr>
+                <th>TVA</th>
+                <td>{{ invo.Vat }} %</td>
+            </tr>
+            <tr>
+                <th>État</th>
+                <td>{{ invo.state }}</td>
+            </tr>
+            <tr>
+                <th>Créé le</th>
+                <td>{{ invo.createdAt ? invo.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Mis à jour le</th>
+                <td>{{ invo.updatedAt ? invo.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr class="total">
+                <th>Total</th>
+                {# <!-- Remplacez 'calculTotal' par la logique ou la méthode que vous utilisez pour calculer le total de la facture -->
+                <td>{{ calculTotal(invoice) }}</td> #}
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer">
+        Merci pour votre entreprise. N'hésitez pas à nous contacter pour toute question concernant cette facture.
+    </div>
+</body>
+</html>
