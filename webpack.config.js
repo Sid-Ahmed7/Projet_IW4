@@ -23,11 +23,7 @@ Encore
         config.corejs = '3.23';
     })
 
-    .enablePostCssLoader((options) => {
-        options.config = {
-            path: 'postcss.config.js',
-        };
-    })
+    .enablePostCssLoader()
 
     .enableSassLoader()
 

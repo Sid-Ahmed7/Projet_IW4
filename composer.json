@@ -9,7 +9,7 @@
         "ext-iconv": "*",
         "doctrine/doctrine-bundle": "^2.10",
         "doctrine/doctrine-migrations-bundle": "^3.2",
-        "doctrine/orm": "^2.16",
+        "doctrine/orm": "^2.18",
         "dompdf/dompdf": "^2.0",
         "stripe/stripe-php": "^13.9",
         "symfony/console": "6.3.*",
