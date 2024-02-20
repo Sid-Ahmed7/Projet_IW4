@@ -73,17 +73,20 @@ class CompanyController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_company_show', methods: ['GET'])]
-    public function show(Company $company): Response
+    #[Route('/{slug}', name: 'app_company_show', methods: ['GET'])]
+    public function show(Company $company,$slug): Response
     {
+        $slug;
+        dd($slug);
         return $this->render('company/show.html.twig', [
             'company' => $company,
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_company_edit', methods: ['GET', 'POST'])]
+    #[Route('/{slug}/edit', name: 'app_company_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
+
         $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
 

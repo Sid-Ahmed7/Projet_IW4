@@ -66,7 +66,7 @@ class Company
 
     
     #[ORM\Column(length: 255, nullable: true)]
-    #[Gedmo\Slug(fields: ['name',"id"])]
+    #[Gedmo\Slug(fields: ['name'])]
 
     private ?string $slug = null;
 
@@ -401,9 +401,20 @@ class Company
         return $this->reques;
     }
 
+    // public function getUuid(): Uuid
+    // {
+    //     return $this->uuid;
+    // }
     
    
-
+//     public function findOneBySlug($slug): ?Company
+// {
+//     return $this->createQueryBuilder('c')
+//         ->andWhere('c.slug = :slug')
+//         ->setParameter('slug', $slug)
+//         ->getQuery()
+//         ->getOneOrNullResult();
+// }
    
    
 }

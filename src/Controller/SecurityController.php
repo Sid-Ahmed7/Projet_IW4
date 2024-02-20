@@ -32,10 +32,10 @@ class SecurityController extends AbstractController
     
         if ($lastUsername) {
             $user = $userRepository->findOneByEmail($lastUsername); // Utilisez la méthode appropriée pour obtenir l'utilisateur par email
-            if ($user && !$user->isVerified()) {
-                // L'utilisateur n'a pas vérifié son e-mail
-                $error = new CustomUserMessageAuthenticationException('Please verify your email address before logging in.');
-            }
+            // if ($user && !$user->isVerified()) {
+            //     // L'utilisateur n'a pas vérifié son e-mail
+            //     $error = new CustomUserMessageAuthenticationException('Please verify your email address before logging in.');
+            // }
         }
     
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);

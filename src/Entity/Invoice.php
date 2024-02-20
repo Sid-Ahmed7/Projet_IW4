@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\InvoiceRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 
 #[ORM\Entity(repositoryClass: InvoiceRepository::class)]
 class Invoice
@@ -42,6 +44,9 @@ class Invoice
     private ?\DateTimeImmutable $deletedAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    // #[Gedmo\Slug(fields: ['name',"id"])]
+
+
     private ?string $slug = null;
 
     #[ORM\Column]

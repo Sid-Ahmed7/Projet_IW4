@@ -12,6 +12,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -106,6 +108,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeImmutable $deletedAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Gedmo\Slug(fields: ['username'])]
     private ?string $slug = null;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
@@ -148,8 +151,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->messages = new ArrayCollection();
         $this->notifications = new ArrayCollection();
         $this->conversationUsers = new ArrayCollection();
-        $this->userRoles = new ArrayCollection();
-        $this->userRoleUpdateBy = new ArrayCollection();
+        // $this->userRoles = new ArrayCollection();
+        // $this->userRoleUpdateBy = new ArrayCollection();
         $this->emailVerificationToken = null;
 
 

@@ -43,8 +43,8 @@
                 <td>{{ company.state }}</td>
                 <td>{{ company.slug }}</td>
                 <td>
-                    <a href="{{ path('app_company_show', {'id': company.id}) }}">show</a>
-                    <a href="{{ path('app_company_edit', {'id': company.id}) }}">edit</a>
+                    <a href="{{ path('app_company_show', {'slug': company.slug}) }}">show</a>
+                    <a href="{{ path('app_company_edit', {'slug': company.slug}) }}">edit</a>
                 </td>
             </tr>
         {% else %}

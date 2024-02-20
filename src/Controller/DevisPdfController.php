@@ -15,11 +15,11 @@ use Doctrine\ORM\EntityManagerInterface;
 class DevisPdfController extends AbstractController
 {
 
-    #[Route('/devis/pdf/{id}', name: 'app_devis_pdf', methods: ['GET'])]
-    public function generateDevisPdf(EntityManagerInterface $em, $id): Response
+    #[Route('/devis/pdf/{slug}', name: 'app_devis_pdf', methods: ['GET'])]
+    public function generateDevisPdf(EntityManagerInterface $em, $slug): Response
     {
 
-        $devis = $em->getRepository(Devis::class)->find($id);
+        $devis = $em->getRepository(Devis::class)->find($slug);
 
         if (!$devis) {
             throw $this->createNotFoundException('Le devis demandé n\'existe pas.');
