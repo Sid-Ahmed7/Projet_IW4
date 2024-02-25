@@ -72,8 +72,7 @@ class Company
     #[ORM\OneToMany(mappedBy: 'Company', targetEntity: Devis::class)]
     private Collection $devis;
 
-    #[ORM\OneToMany(mappedBy: 'Company', targetEntity: Requests::class)]
-    private Collection $requests;
+   
 
     #[ORM\Column]
     private ?bool $verified = null;
@@ -81,17 +80,25 @@ class Company
     #[ORM\OneToMany(mappedBy: 'Company', targetEntity: Negotiation::class)]
     private Collection $negotiations;
 
-    #[ORM\OneToMany(mappedBy: 'company', targetEntity: UserRoles::class)]
-    private Collection $userRoles;
+    #[ORM\Column]
+    private ?int $createdBy = null;
+
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: Reque::class)]
+    private Collection $usr;
+
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: Reque::class)]
+    private Collection $reques;
+
+   
 
 
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->devis = new ArrayCollection();
-        $this->requests = new ArrayCollection();
         $this->negotiations = new ArrayCollection();
-        $this->userRoles = new ArrayCollection();
+        $this->usr = new ArrayCollection();
+        $this->reques = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -319,35 +326,7 @@ class Company
         return $this;
     }
 
-    /**
-     * @return Collection<int, Requests>
-     */
-    public function getRequests(): Collection
-    {
-        return $this->requests;
-    }
-
-    public function addRequest(Requests $request): static
-    {
-        if (!$this->requests->contains($request)) {
-            $this->requests->add($request);
-            $request->setCompany($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRequest(Requests $request): static
-    {
-        if ($this->requests->removeElement($request)) {
-            // set the owning side to null (unless already changed)
-            if ($request->getCompany() === $this) {
-                $request->setCompany(null);
-            }
-        }
-
-        return $this;
-    }
+   
 
     public function isVerified(): ?bool
     {
@@ -391,35 +370,37 @@ class Company
         return $this;
     }
 
+    public function getCreatedBy(): ?int
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(int $createdBy): static
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
     /**
-     * @return Collection<int, UserRoles>
+     * @return Collection<int, Reque>
      */
-    public function getUserRoles(): Collection
+    public function getUsr(): Collection
     {
-        return $this->userRoles;
+        return $this->usr;
     }
 
-    public function addUserRole(UserRoles $userRole): static
+    /**
+     * @return Collection<int, Reque>
+     */
+    public function getReques(): Collection
     {
-        if (!$this->userRoles->contains($userRole)) {
-            $this->userRoles->add($userRole);
-            $userRole->setCompany($this);
-        }
-
-        return $this;
+        return $this->reques;
     }
 
-    public function removeUserRole(UserRoles $userRole): static
-    {
-        if ($this->userRoles->removeElement($userRole)) {
-            // set the owning side to null (unless already changed)
-            if ($userRole->getCompany() === $this) {
-                $userRole->setCompany(null);
-            }
-        }
+    
+   
 
-        return $this;
-    }
-
+   
    
 }

@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reque index{% endblock %}
+
+{% block body %}
+    <h1>Reque index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Eventdate</th>
+                <th>CreatedAt</th>
+                <th>OperatorID</th>
+                <th>EventLocation</th>
+                <th>EventCountry</th>
+                <th>EventCity</th>
+                <th>EventCode</th>
+                <th>Lastame</th>
+                <th>Firstname</th>
+                <th>PhoneNumber</th>
+                <th>MaxBudget</th>
+                <th>State</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for reque in reques %}
+            <tr>
+                <td>{{ reque.id }}</td>
+                <td>{{ reque.eventdate ? reque.eventdate|date('Y-m-d') : '' }}</td>
+                <td>{{ reque.createdAt ? reque.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ reque.operatorID }}</td>
+                <td>{{ reque.eventLocation }}</td>
+                <td>{{ reque.eventCountry }}</td>
+                <td>{{ reque.eventCity }}</td>
+                <td>{{ reque.eventCode }}</td>
+                <td>{{ reque.lastame }}</td>
+                <td>{{ reque.firstname }}</td>
+                <td>{{ reque.phoneNumber }}</td>
+                <td>{{ reque.maxBudget }}</td>
+                <td>{{ reque.state }}</td>
+                <td>
+                    <a href="{{ path('app_reque_show', {'id': reque.id}) }}">show</a>
+                    <a href="{{ path('app_reque_edit', {'id': reque.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="14">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_reque_new') }}">Create new</a>
+{% endblock %}

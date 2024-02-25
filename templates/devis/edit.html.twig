@@ -8,6 +8,7 @@
     {{ include('devis/_form.html.twig', {'button_label': 'Update'}) }}
 
     <a href="{{ path('app_devis_index') }}">back to list</a>
+    <a href="{{ path('app_devis_asset_new', {'devisId': devi.id}) }}"> Ajouter des Options</a>
 
     {{ include('devis/_delete_form.html.twig') }}
 {% endblock %}

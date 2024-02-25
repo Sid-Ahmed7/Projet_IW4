@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}NotificationTemplate{% endblock %}
+
+{% block body %}
+    <h1>NotificationTemplate</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ notification_template.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ notification_template.title }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ notification_template.description }}</td>
+            </tr>
+            <tr>
+                <th>Read</th>
+                <td>{{ notification_template.read ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ notification_template.createdAt ? notification_template.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_notification_template_index') }}">back to list</a>
+
+    <a href="{{ path('app_notification_template_edit', {'id': notification_template.id}) }}">edit</a>
+
+    {{ include('notification_template/_delete_form.html.twig') }}
+{% endblock %}

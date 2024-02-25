@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Reque{% endblock %}
+
+{% block body %}
+    <h1>Create new Reque</h1>
+
+    {{ include('reque/_form.html.twig') }}
+
+    <a href="{{ path('app_reque_index') }}">back to list</a>
+{% endblock %}

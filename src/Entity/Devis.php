@@ -62,9 +62,16 @@ class Devis
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $operatorID = null;
+
+    #[ORM\OneToMany(mappedBy: 'devis', targetEntity: DevisAsset::class)]
+    private Collection $devisAssets;
+
     public function __construct()
     {
         $this->invoices = new ArrayCollection();
+        $this->devisAssets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -235,6 +242,48 @@ class Devis
     public function setTitle(string $title): static
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getOperatorID(): ?int
+    {
+        return $this->operatorID;
+    }
+
+    public function setOperatorID(?int $operatorID): static
+    {
+        $this->operatorID = $operatorID;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DevisAsset>
+     */
+    public function getDevisAssets(): Collection
+    {
+        return $this->devisAssets;
+    }
+
+    public function addDevisAsset(DevisAsset $devisAsset): static
+    {
+        if (!$this->devisAssets->contains($devisAsset)) {
+            $this->devisAssets->add($devisAsset);
+            $devisAsset->setDevis($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDevisAsset(DevisAsset $devisAsset): static
+    {
+        if ($this->devisAssets->removeElement($devisAsset)) {
+            // set the owning side to null (unless already changed)
+            if ($devisAsset->getDevis() === $this) {
+                $devisAsset->setDevis(null);
+            }
+        }
 
         return $this;
     }
