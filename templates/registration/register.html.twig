@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{# {% extends 'base.html.twig' %}
 
 {% block title %}Register{% endblock %}
 
@@ -37,4 +37,77 @@
         </div>
         <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Register</button>
     {{ form_end(registrationForm) }}
+
+    
+{% endblock %} #}
+
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Register
+{% endblock %}
+
+{% block body %}
+	<div class="flex flex-col items-center justify-center min-h-screen py-12">
+		<div class="bg-white shadow-md rounded-lg p-8 w-full max-w-md">
+			<header class="flex justify-center items-center">
+				<img src="{{ asset ('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4" width="93">
+			</header>
+ds'
+
+			<form action="{{ path('app_register') }}" method="post">
+				{% if app.flashes('verify_email_error') %}
+					<div class="alert alert-danger">{{ app.flashes('verify_email_error')[0] }}</div>
+				{% endif %}
+
+				{% if app.user %}
+					<div class="mb-3">
+						You are logged in as
+						{{ app.user.userIdentifier }},
+						<a href="{{ path('app_logout') }}">Logout</a>
+					</div>
+				{% endif %}
+				<div class="mb-4">
+					<label for="email" class="block mb-2 text-sm font-medium">Email</label>
+					{{ form_row(registrationForm.email) }}
+				</div>
+
+				<div class="mb-4">
+					<label for="lastname" class="block mb-2 text-sm font-medium">Nom</label>
+					{{ form_row(registrationForm.lastname) }}
+				</div>
+
+				<div class="mb-4">
+					<label for="firstname" class="block mb-2 text-sm font-medium">Prénom</label>
+					{{ form_row(registrationForm.firstname) }}
+				</div>
+
+				<div class="mb-4">
+					<label for="username" class="block mb-2 text-sm font-medium">Pseudo</label>
+					{{ form_row(registrationForm.username) }}
+				</div>
+
+				<div class="mb-4">
+					<label for="birthdate" class="block mb-2 text-sm font-medium">Date de naissance</label>
+					{{ form_row(registrationForm.birthdate) }}
+				</div>
+
+				<div class="mb-4">
+					<label for="picture" class="block mb-2 text-sm font-medium">Photo de profil</label>
+					{{ form_row(registrationForm.picture) }}
+				</div>
+
+				<div class="mb-4">
+					<label for="password" class="block mb-2 text-sm font-medium">Mot de passe</label>
+					{{ form_row(registrationForm.password, {  }) }}
+				</div>
+
+				<div class="flex items-center justify-between ">
+					<button type="submit" class="bg-purple-600 mx-auto hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-md">S'inscrire</button>
+				</div>
+
+
+			</form>
+		</div>
+	</div>
 {% endblock %}

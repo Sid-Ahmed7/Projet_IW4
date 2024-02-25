@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Notification;
 use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
@@ -48,8 +47,6 @@ class RegistrationController extends AbstractController
             );
 
             $user->setSignupDate(new \DateTime());
-            $user->setState('online');
-
 
             // Gestion du picture
             $pictureFile = $form->get('picture')->getData();
@@ -59,32 +56,12 @@ class RegistrationController extends AbstractController
                 $pictureFile->move($this->getParameter('profilePicture_directory'), $pictureFileName);
                 $user->setPicture($pictureFileName);
             } else {
-                // si l'utilisateur ne souhaite pas mettre de pp cela rest à voir !!
+                // si l'utilisateur ne souhaite pas mettre de pp cel rest à voir !!
                 $defaultPictureFileName = $this->getParameter('profilePicture_directory') . '/no-user.jpg';
                 $user->setPicture($defaultPictureFileName);
             }
 
             $entityManager->persist($user);
-
-            $usr= $this->getUser();
-
-            // Notification
-            $notification = new Notification();
-            $now = new \DateTimeImmutable();
-
-            $notification->setUsers($usr); // ID de l'utilisateur
-            $notification->setNotificationTemplate(1); // template de bienvenu ici donc 
-            $notification->setType('Systeme'); // Quel type de notification c'est 
-            $notification->setTitle('Bienvenu !'); // ducoup le titre mais je pense que je vais enlever la table notification template ce sera moins compliqué 
-            $notification->setMessage('Bienvenu sur WeEvent !'); 
-            $notification->setIsRead(false);
-            $notification->setCreatedAt($now); 
-
-
-
-
-            $entityManager->persist($notification);
-
             $entityManager->flush();
 
             // Dans votre méthode register du RegistrationController
@@ -92,7 +69,7 @@ class RegistrationController extends AbstractController
                 'app_verify_email',
                 $user,
                 (new TemplatedEmail())
-                    ->from(new Address('yopaleonce@gmail.Com', 'Haze'))
+                    ->from(new Address('ibrahim60200@gmail.Com', 'Haze'))
                     ->to($user->getEmail())
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
@@ -127,12 +104,12 @@ class RegistrationController extends AbstractController
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $exception->getReason());
 
-            return $this->redirectToRoute('app_register');
+            return $this->redirectToRoute('app_login');
         }
 
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Your email address has been verified.');
 
-        return $this->redirectToRoute('app_register');
+        return $this->redirectToRoute('app_login');
     }
 }
