@@ -88,6 +88,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    
 
 
     #[ORM\Column(length: 255, nullable: true)]

@@ -59,9 +59,7 @@
 
     <a href="{{ path('app_devis_pdf', {'id': devi.id}) }}"> Telecharger le PDF</a>
 
-    
-
-
+    <a href="{{ path('app_devis_send_pdf', {'id': devi.id}) }}"> Envoyer le PDF par mail</a>
 
     {{ include('devis/_delete_form.html.twig') }}
 {% endblock %}
