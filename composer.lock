@@ -4,13 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
-    "content-hash": "0a430688929f55a9af34d99fc65f4045",
-=======
-    "content-hash": "f2140ea0d324ce09c659cf7b95771602",
-
-    //"content-hash": "b353b557e455e524715912ea52a358f5",
->>>>>>> main
+    "content-hash": "f627dc55fc036fada7d2078447fec816",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -3853,8 +3847,6 @@
             "time": "2023-10-26T18:15:14+00:00"
         },
         {
-<<<<<<< HEAD
-=======
             "name": "symfony/google-mailer",
             "version": "v6.3.12",
             "source": {
@@ -3920,7 +3912,6 @@
             "time": "2024-01-23T14:35:58+00:00"
         },
         {
->>>>>>> main
             "name": "symfony/http-client",
             "version": "v6.3.12",
             "source": {
@@ -5256,18 +5247,6 @@
         },
         {
             "name": "symfony/process",
-<<<<<<< HEAD
-            "version": "v6.3.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/process.git",
-                "reference": "0b5c29118f2e980d455d2e34a5659f4579847c54"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/0b5c29118f2e980d455d2e34a5659f4579847c54",
-                "reference": "0b5c29118f2e980d455d2e34a5659f4579847c54",
-=======
             "version": "v6.3.12",
             "source": {
                 "type": "git",
@@ -5278,7 +5257,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/process/zipball/6c5eceb88510fc6ccd7044f2bacb21a3c0993882",
                 "reference": "6c5eceb88510fc6ccd7044f2bacb21a3c0993882",
->>>>>>> main
                 "shasum": ""
             },
             "require": {
@@ -5310,11 +5288,7 @@
             "description": "Executes commands in sub-processes",
             "homepage": "https://symfony.com",
             "support": {
-<<<<<<< HEAD
                 "source": "https://github.com/symfony/process/tree/v6.3.4"
-=======
-                "source": "https://github.com/symfony/process/tree/v6.3.12"
->>>>>>> main
             },
             "funding": [
                 {
@@ -5330,11 +5304,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< HEAD
             "time": "2023-08-07T10:39:22+00:00"
-=======
-            "time": "2024-01-23T14:35:58+00:00"
->>>>>>> main
         },
         {
             "name": "symfony/property-access",
@@ -6984,16 +6954,16 @@
         },
         {
             "name": "symfonycasts/tailwind-bundle",
-            "version": "v0.5.0",
+            "version": "v0.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SymfonyCasts/tailwind-bundle.git",
-                "reference": "f313019da18d6e938f7557319ee4fcadc26f0baa"
+                "reference": "e13e544c9d0f293c3155d34c6121dcf15a827867"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SymfonyCasts/tailwind-bundle/zipball/f313019da18d6e938f7557319ee4fcadc26f0baa",
-                "reference": "f313019da18d6e938f7557319ee4fcadc26f0baa",
+                "url": "https://api.github.com/repos/SymfonyCasts/tailwind-bundle/zipball/e13e544c9d0f293c3155d34c6121dcf15a827867",
+                "reference": "e13e544c9d0f293c3155d34c6121dcf15a827867",
                 "shasum": ""
             },
             "require": {
@@ -7032,9 +7002,9 @@
             ],
             "support": {
                 "issues": "https://github.com/SymfonyCasts/tailwind-bundle/issues",
-                "source": "https://github.com/SymfonyCasts/tailwind-bundle/tree/v0.5.0"
+                "source": "https://github.com/SymfonyCasts/tailwind-bundle/tree/v0.5.1"
             },
-            "time": "2023-12-18T16:55:43+00:00"
+            "time": "2024-02-20T11:53:29+00:00"
         },
         {
             "name": "symfonycasts/verify-email-bundle",
@@ -8885,71 +8855,6 @@
             "time": "2023-09-18T18:17:31+00:00"
         },
         {
-<<<<<<< HEAD
-=======
-
-            "name": "symfony/process",
-            "version": "v6.3.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/process.git",
-                "reference": "0b5c29118f2e980d455d2e34a5659f4579847c54"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/0b5c29118f2e980d455d2e34a5659f4579847c54",
-                "reference": "0b5c29118f2e980d455d2e34a5659f4579847c54",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Process\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Executes commands in sub-processes",
-            "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/process/tree/v6.3.4"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2023-08-07T10:39:22+00:00"
-        },
-        {
->>>>>>> main
             "name": "theseer/tokenizer",
             "version": "1.2.1",
             "source": {
