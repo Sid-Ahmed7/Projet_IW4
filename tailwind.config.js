@@ -17,6 +17,10 @@ module.exports = {
         darkGreen: "#005DCD",
         pink: "#FF2896",
         orange: "#FF9B65",
+        fullPink : "#F2EDED",
+        purpleM : "#9D18A9",
+        red :"#B50505",
+        green :"#05B541",
         "text-color": "var(--text-color)"
       },
       borderRadius: {

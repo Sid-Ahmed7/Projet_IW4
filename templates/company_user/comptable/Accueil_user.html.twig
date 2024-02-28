@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+
+
+	<div class="bg-gray-100  p-4 w-64 h-full fixed top-0 left-0 z-10">
+
+
+		<div class="mb-2 flex items-center justify-center">
+			<img src="{{ asset('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4">
+
+		</div>
+
+		<div class="flex flex-col h-full items-center">
+			<div class="flex-1 overflow-y-auto absolute top-50 left-50 transform translate-x(-50%) translate-y(-50%)">
+				<ul class="p-4">
+
+					<li class="mb-2 p-4 flex items-center justify-center">
+						<a href="{{ url('Monprofil') }}" class="text-purpleM hover:text-purpleM-300">Mon profil</a>
+					</li>
+					<li class="mb-2 p-4 flex items-center justify-center">
+						<a href=" {{ url('Lesfactures') }}" class="text-purpleM hover:text-purpleM-300">Voir les factures</a>
+					</li>
+					<li class="mb-2 p-4 flex items-center justify-center">
+						<a href="{{ url('Lesdevis') }}" class="text-purpleM hover:text-purpleM-300">Voir les devis</a>
+					</li>
+					<li class="mb-2 p-4 flex items-center justify-center">
+						<a href="{{ url('Lespaiements') }}" class="text-purpleM hover:text-purpleM-300">Voir les paiements</a>
+					</li>
+
+
+				</ul>
+			</div>
+
+		</div>
+	</div>
+	<div class=" bg-fullPink mx-auto flex flex-col items-center justify-center h-screen w-full">
+		<div class="flex items-center">
+			<h1 class="text-2xl font-bold">Tableau de bord</h1>
+		</div>
+		<header>
+			<div class="flex items-center justify-between py-4"></div>
+		</header>
+		<main class="py-8">
+			<section class="mb-8">
+				<h2 class="text-xl font-bold mb-4">Mes factures</h2>
+				<table class="table-auto w-full bg-white shadow-md">
+					<thead>
+						<tr>
+							<th class="px-4 py-2 text-left  font-bold">Nom</th>
+							<th class="px-4 py-2 text-left  font-bold">Prénom</th>
+							<th class="px-4 py-2 text-left   font-bold">Numéro de facture</th>
+							<th class="px-4 py-2 text-left   font-bold">Date de fabrication</th>
+							<th class="px-4 py-2 text-left   font-bold"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="px-4 py-2 border-b border-gray-300">Sid ahmedi</td>
+							<td class="px-4 py-2 border-b border-gray-300">Younes</td>
+							<td class="px-4 py-2 border-b border-gray-300">12323AZRE</td>
+							<td class="px-4 py-2 border-b border-gray-300">17-06-2016</td>
+							<td class="px-4 py-2 border-b border-gray-300">
+								<a class="text-green" href="#">Voir</a>
+							</td>
+
+						</tr>
+
+					</tbody>
+				</table>
+			</section>
+			<section>
+				<h2 class="text-xl font-bold mb-4">Mes devis</h2>
+				<table class="table-auto w-full bg-white shadow-md">
+					<thead>
+						<tr>
+							<th class="px-4 py-2 text-left  font-bold">Nom</th>
+							<th class="px-4 py-2 text-left  font-bold">Prénom</th>
+							<th class="px-4 py-2 text-left   font-bold">Numéro de devis</th>
+							<th class="px-4 py-2 text-left   font-bold">Date de fabrication</th>
+							<th class="px-4 py-2 text-left   font-bold"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="px-4 py-2 border-b border-gray-300">Sid ahmedi</td>
+							<td class="px-4 py-2 border-b border-gray-300">Younes</td>
+							<td class="px-4 py-2 border-b border-gray-300">12323AZRE</td>
+							<td class="px-4 py-2 border-b border-gray-300">17-06-2016</td>
+							<td class="px-4 py-2 border-b border-gray-300">
+								<a class="text-green" href="#">Voir</a>
+							</td>
+						</tr>
+
+					</tbody>
+				</table>
+			</section>
+		</main>
+	</div>
+{% endblock %}
