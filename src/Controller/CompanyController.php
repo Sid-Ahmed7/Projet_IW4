@@ -29,14 +29,19 @@ class CompanyController extends AbstractController
    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $company = new Company();
+        $user = $this->getUser();
+
         $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
             $now = new \DateTimeImmutable();
             $company->setCreatedAt($now);
             $company->setState('Online');
             $company->setVerified(false);
+            $company->setCreatedBy($user->getId());
+            // dd($user);
+            
 
             // Gestion du logo
             $logoFile = $form->get('logo')->getData();

@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DevisAsset{% endblock %}
+
+{% block body %}
+    <h1>DevisAsset</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ devis_asset.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ devis_asset.name }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ devis_asset.price }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ devis_asset.createdAt ? devis_asset.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>UpdatedAt</th>
+                <td>{{ devis_asset.updatedAt ? devis_asset.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>State</th>
+                <td>{{ devis_asset.state }}</td>
+            </tr>
+            <tr>
+                <th>Size</th>
+                <td>{{ devis_asset.size }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ devis_asset.description }}</td>
+            </tr>
+            <tr>
+                <th>Picture1</th>
+                <td>{{ devis_asset.picture1 }}</td>
+            </tr>
+            <tr>
+                <th>Picture2</th>
+                <td>{{ devis_asset.picture2 }}</td>
+            </tr>
+            <tr>
+                <th>Picture3</th>
+                <td>{{ devis_asset.picture3 }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_devis_asset_index') }}">back to list</a>
+
+    <a href="{{ path('app_devis_asset_edit', {'id': devis_asset.id}) }}">edit</a>
+
+    {{ include('devis_asset/_delete_form.html.twig') }}
+{% endblock %}

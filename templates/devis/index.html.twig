@@ -50,6 +50,8 @@
         {% endfor %}
         </tbody>
     </table>
+    
+    <a href="{{ path('app_devis_new', {'userID': app.user.id}) }}">Create new</a>
 
-    <a href="{{ path('app_devis_new') }}">Create new</a>
+    {# <a href="{{ path('app_devis_new'), {'id': reque.id} }}">Create new</a> #}
 {% endblock %}

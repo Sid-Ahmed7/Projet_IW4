@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reque{% endblock %}
+
+{% block body %}
+    <h1>Reque</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ reque.id }}</td>
+            </tr>
+            <tr>
+                <th>Eventdate</th>
+                <td>{{ reque.eventdate ? reque.eventdate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ reque.createdAt ? reque.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>OperatorID</th>
+                <td>{{ reque.operatorID }}</td>
+            </tr>
+            <tr>
+                <th>EventLocation</th>
+                <td>{{ reque.eventLocation }}</td>
+            </tr>
+            <tr>
+                <th>EventCountry</th>
+                <td>{{ reque.eventCountry }}</td>
+            </tr>
+            <tr>
+                <th>EventCity</th>
+                <td>{{ reque.eventCity }}</td>
+            </tr>
+            <tr>
+                <th>EventCode</th>
+                <td>{{ reque.eventCode }}</td>
+            </tr>
+            <tr>
+                <th>Lastame</th>
+                <td>{{ reque.lastame }}</td>
+            </tr>
+            <tr>
+                <th>Firstname</th>
+                <td>{{ reque.firstname }}</td>
+            </tr>
+            <tr>
+                <th>PhoneNumber</th>
+                <td>{{ reque.phoneNumber }}</td>
+            </tr>
+            <tr>
+                <th>MaxBudget</th>
+                <td>{{ reque.maxBudget }}</td>
+            </tr>
+            <tr>
+                <th>State</th>
+                <td>{{ reque.state }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_reque_index') }}">back to list</a>
+    <a href="{{ path('app_reque_edit', {'id': reque.id}) }}">edit</a>
+    <a href="{{ path('app_devis_new', {'userID': reque.usr.id}) }}">Initier le Devis </a>
+
+
+    {{ include('reque/_delete_form.html.twig') }}
+{% endblock %}
