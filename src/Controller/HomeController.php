@@ -45,19 +45,19 @@ class HomeController extends AbstractController
     {
         return $this->render('company_user/VoirMonProfil.html.twig');
     }
-    #[Route('/VoirLespaiements', name: 'VoirLespaiements', methods: ['GET'])]
+    #[Route('/VoirMespaiements', name: 'VoirMespaiements', methods: ['GET'])]
     public function index7(UserRepository $userRepository): Response
     {
         return $this->render('company_user/VoirLespaiements.html.twig');
     }
 
-    #[Route('/VoirMesdevis', name: 'VoirMesdevis', methods: ['GET'])]
+    #[Route('/VoirMesdevis_company', name: 'VoirMesdevis', methods: ['GET'])]
     public function index8(UserRepository $userRepository): Response
     {
         return $this->render('company_user/VoirMesdevis.html.twig');
     }
 
-    #[Route('/GererMesClients', name: 'GererMesClients', methods: ['GET'])]
+    #[Route('/GererMesClients_company', name: 'GererMesClients', methods: ['GET'])]
     public function index9(UserRepository $userRepository): Response
     {
         return $this->render('company_user/GererMesClients.html.twig');
@@ -67,6 +67,55 @@ class HomeController extends AbstractController
     public function index10(UserRepository $userRepository): Response
     {
         return $this->render('company_user/Notifications.html.twig');
-        
+    }
+
+    // ************
+    // espace user 
+
+    // ************
+   
+    #[Route('/Mesfactures_user', name: 'Mesfactures_user', methods: ['GET'])]
+    public function index12(UserRepository $userRepository): Response
+    {
+        return $this->render('company_user/user/Mesfactures_user.html.twig');
+    }
+
+    #[Route('/Mesdevis_user', name: 'Mesdevis_user', methods: ['GET'])]
+    public function adminDevis(UserRepository $userRepository): Response
+    {
+        return $this->render('company_user/admin/Mesdevis_user.html.twig');
+    }
+
+    #[Route('/MonProfil_user', name: 'MonProfil_user', methods: ['GET'])]
+    public function index13(UserRepository $userRepository): Response
+    {
+        return $this->render('company_user/user/MonProfil_user.html.twig');
+    }
+
+    // ************
+    // espace admin
+
+    // ************
+    #[Route('/Mesfactures_admin', name: 'Mesfactures_admin', methods: ['GET'])]
+    public function admoin_factures(UserRepository $userRepository): Response
+    {
+        return $this->render('company_user/admin/VoirLesfactures_admin.html.twig');
+    }
+
+    #[Route('/Mesdevis_admin', name: 'Mesdevis_admin', methods: ['GET'])]
+    public function admin_devis(UserRepository $userRepository): Response
+    {
+        return $this->render('company_user/admin/VoirLesdevis_admin.html.twig');
+    }
+
+    #[Route('/MonProfil_admin', name: 'MonProfil_admin', methods: ['GET'])]
+    public function admin_profil(UserRepository $userRepository): Response
+    {
+        return $this->render('company_user/admin/Monprofil_admin.html.twig');
+    }
+    #[Route('/GererUtilisateurs_admin', name: 'GererUtilisateurs_admin', methods: ['GET'])]
+    public function admin_Gersion_utilisateur(UserRepository $userRepository): Response
+    {
+        return $this->render('company_user/admin/GererLesutilisateurs_admin.html.twig');
     }
 }

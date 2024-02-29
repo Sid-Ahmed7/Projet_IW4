@@ -17,26 +17,18 @@
 				<div class="flex-1 overflow-y-auto absolute top-50 left-50 transform translate-x(-50%) translate-y(-50%)">
 					<ul class="p-4">
 						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ url('Accueil_company') }}" class="text-purpleM hover:text-purple-300">Accueil</a>
+							<a href="{{ path('MonProfil_admin') }}" class="text-purpleM hover:text-purpleM-300">Mon Profil</a>
 						</li>
 						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ url('MonProfil_company') }}" class="text-purpleM hover:text-purple-300">Mon profil</a>
+							<a href="{{ path('Mesfactures_admin') }}" class="text-purpleM hover:text-purpleM-300">Voir les factures</a>
 						</li>
 						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('Mesfactures_company') }}" class="text-purpleM hover:text-purpleM-300">Voir les factures</a>
+							<a href="{{ path('Mesdevis_admin') }}" class="text-purpleM hover:text-purpleM-300">Voir les devis</a>
 						</li>
 						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('VoirMesdevis') }}" class="text-purpleM hover:text-purpleM-300">Voir les devis</a>
+							<a href="{{ path('GererUtilisateurs_admin') }}" class="text-purpleM hover:text-purpleM-300">Gérer les utilisateurs</a>
 						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('VoirMespaiements') }}" class="text-purpleM hover:text-purpleM-300">Suivi d'un paiement</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('GererMesClients') }}" class="text-purpleM hover:text-purpleM-300">Gérer les clients</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('Notifications') }}" class="text-purpleM hover:text-purpleM-300">Notifications</a>
-						</li>
+
 
 					</ul>
 				</div>
@@ -45,18 +37,20 @@
 
 
 		<div class=" bg-fullPink mx-auto flex flex-col items-center justify-center h-screen w-full">
-			<header>
-				<h2 class="text-xl font-bold mb-4">Voir Les paiements</h2>
-			</header>
 
-			<div class="flex flex-col   px-4 p-4 items-center justify-between py-2 w-1/2  ">
-				<table class="table-auto m-15 text-xs w-full bg-white shadow-md rounded-lg">
+			<header>
+				<h2 class="text-xl font-bold mb-4">Voir les paiements</h2>
+			</header>
+			<main class="py-8">
+
+
+				<table class="table-auto  text-xs  w-full bg-white shadow-md rounded-lg">
 					<thead>
 						<tr>
 							<th class="px-4 py-2 text-left  font-bold">Nom</th>
 							<th class="px-4 py-2 text-left  font-bold">Prénom</th>
-							<th class="px-4 py-2 text-left   font-bold">Numéro de devis</th>
-							<th class="px-4 py-2 text-left   font-bold">Date de fabrication</th>
+							<th class="px-4 py-2 text-left   font-bold">Email</th>
+							<th class="px-4 py-2 text-left   font-bold">Date de Naissance</th>
 							<th class="px-4 py-2 text-left   font-bold">Evenements</th>
 							<th class="px-4 py-2 text-left   font-bold"></th>
 						</tr>
@@ -68,9 +62,7 @@
 							<td class="px-4 py-2 border-b border-gray-300">12323AZRE</td>
 							<td class="px-4 py-2 border-b border-gray-300">17-06-2016</td>
 							<td class="px-4 py-2 border-b border-gray-300">Marriage</td>
-							<td class="px-4 py-2 border-b border-gray-300">
-								<a class="px-2 text-xs w-300 rounded-full text-white bg-purpleM" href="#">Voir La facture</a>
-							</td>
+
 						</tr>
 
 						<tr>
@@ -78,29 +70,25 @@
 							<td class="px-4 py-2 border-b border-gray-300">Hicham</td>
 							<td class="px-4 py-2 border-b border-gray-300">12323AZRE</td>
 							<td class="px-4 py-2 border-b border-gray-300">17-06-2016</td>
-							<td class="px-4 py-2 border-b border-gray-300">Anniversaire</td>
-							<td class="px-4 py-2 border-b border-gray-300">
-								<a class="px-2 text-xs rounded-full text-white bg-purpleM" href="#">Voir La factures</a>
-							</td>
+							<td class="px-4 py-2 border-b border-gray-300">Marriage</td>
+
 						</tr>
 						<tr>
-							<td class="px-4 py-2 border-b border-gray-300">Yassine</td>
-							<td class="px-4 py-2 border-b border-gray-300">Abs</td>
+							<td class="px-4 py-2 border-b border-gray-300">Léonce</td>
+							<td class="px-4 py-2 border-b border-gray-300">zang</td>
 							<td class="px-4 py-2 border-b border-gray-300">12323AZRE</td>
 							<td class="px-4 py-2 border-b border-gray-300">17-06-2016</td>
 							<td class="px-4 py-2 border-b border-gray-300">Spectacle</td>
 
-							<td class="px-4 py-2 border-b border-gray-300">
-								<a class="px-2 text-xs rounded-full text-white bg-purpleM" href="#">Voir La factures</a>
-							</td>
 						</tr>
+
 
 					</tbody>
 				</table>
 
 			</div>
+
+
 		</div>
-
-
 	</div>
-</div>{% endblock %}
+{% endblock %}
