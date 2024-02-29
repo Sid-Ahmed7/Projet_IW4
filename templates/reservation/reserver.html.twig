@@ -2,16 +2,18 @@
 
 {% block body %}
 
-	<header class="flex justify-between items-center bg-gray-100 px-4 py-3">
-		<h1 class="flex items-center">
-			<img class="rounded-full w-16 mr-2" src="{{ asset('/images/logo2.png') }}">
+		<header class="flex justify-between items-center bg-gray-200 py-4 px-6">
+			<img src="{{ asset ('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4">
 
-		</h1>
-		<div class="flex items-center gap-2">
-			<button class="bg-white border border-gray-300 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md">Connexion</button>
-			<button class="bg-purple-600 text-white hover:bg-purple-700 px-4 py-2 rounded-md">Inscription</button>
-		</div>
-	</header>
+			<div class="flex space-x-4">
+				<button class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+					<a href="{{ url('app_login') }}">Connexion</a>
+				</button>
+				<button class="inline-flex items-center px-4 py-2 bg-purple-500 border border-transparent rounded-md text-white font-medium hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+					<a href= "{{ url('app_register') }}">Inscription</a>
+				</button>
+			</div>
+		</header>
 
 	{# <main class="container mx-auto pt-12">
 								<h2 class="text-center text-2xl font-bold mb-8">Choisissez votre catégorie</h2>

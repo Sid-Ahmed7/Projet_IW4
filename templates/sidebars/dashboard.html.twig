@@ -1,0 +1,117 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DashBoard{% endblock %}
+
+{% block body %}
+	{% if app.session.get('statutUser') is defined and app.session.get('statutUser') == 'Admin' %}
+
+		<div class="bg-gray-100 text-xs    p-4 w-64 h-full fixed top-0 left-0 z-10">
+
+
+			<div class="mb-2 flex items-center justify-center">
+				<img src="{{ asset('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4">
+
+			</div>
+
+			<div class="flex flex-col h-full items-center">
+				<div class="flex-1 overflow-y-auto absolute top-50 left-50 transform translate-x(-50%) translate-y(-50%)">
+					<ul class="p-4">
+
+						<li class="mb-2 p-4 flex items-center justify-center">
+							<a href="#" class="text-black hover:text-purple-300">Mon profil</a>
+						</li>
+						<li class="mb-2 p-4 flex items-center justify-center">
+							<a href="#" class="text-purple hover:text-gray-300">Voir les factures</a>
+						</li>
+						<li class="mb-2 p-4 flex items-center justify-center">
+							<a href="#" class="text-purple hover:text-gray-300">Voir les devis</a>
+						</li>
+						<li class="mb-2 p-4 flex items-center justify-center">
+							<a href="#" class="text-purple hover:text-gray-300">Suivi d' un paiement</a>
+						</li>
+						<li class="mb-2 p-4 flex items-center justify-center">
+							<a href="#" class="text-purple hover:text-gray-300">Gérer les clients</a>
+						</li>
+						<li class="mb-2 p-4 flex items-center justify-center">
+							<a href="#" class="text-purple hover:text-gray-300">Gérer les produits</a>
+						</li>
+
+						<li class="mb-2 p-4 flex items-center justify-center">
+							<a href="#" class="text-purple hover:text-gray-300">Notifications</a>
+						</li>
+
+					</ul>
+				</div>
+			</div>
+		</div>
+
+	{% elseif app.session.get('statutUser') is defined and app.session.get('statutUser') == 'Compatble' %}
+
+
+		<div class="bg-gray-100 text-xs    p-4 w-64 h-full fixed top-0 left-0 z-10">
+
+
+			<div class="mb-2 flex items-center justify-center">
+				<img src="{{ asset('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4">
+
+			</div>
+
+			<div class="flex flex-col h-full items-center">
+				<div class="flex-1 overflow-y-auto absolute top-50 left-50 transform translate-x(-50%) translate-y(-50%)">
+					<ul class="p-4">
+
+						<li class="mb-2 p-4 flex items-center justify-center">
+							<a href="#" class="text-black hover:text-purple-300">Mon profil</a>
+						</li>
+						<li class="mb-2 p-4 flex items-center justify-center">
+							<a href="#" class="text-purple hover:text-gray-300">Voir les factures</a>
+						</li>
+						<li class="mb-2 p-4 flex items-center justify-center">
+							<a href="#" class="text-purple hover:text-gray-300">Voir les devis</a>
+						</li>
+						<li class="mb-2 p-4 flex items-center justify-center">
+							<a href="#" class="text-purple hover:text-gray-300">Voir les payement</a>
+						</li>
+
+					</li>
+
+				</ul>
+			</div>
+		</div>
+	</div>
+
+{% elseif app.session.get('statutUser') is defined and app.session.get('statutUser') == 'user' %}
+
+	<div class="bg-gray-100 text-xs    p-4 w-64 h-full fixed top-0 left-0 z-10">
+
+
+		<div class="mb-2 flex items-center justify-center">
+			<img src="{{ asset('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4">
+
+		</div>
+
+		<div class="flex flex-col h-full items-center">
+			<div class="flex-1 overflow-y-auto absolute top-50 left-50 transform translate-x(-50%) translate-y(-50%)">
+				<ul class="p-4">
+
+					<li class="mb-2 p-4 flex items-center justify-center">
+						<a href="#" class="text-black hover:text-purple-300">Mon profil</a>
+					</li>
+					<li class="mb-2 p-4 flex items-center justify-center">
+						<a href="#" class="text-purple hover:text-gray-300">Voir les factures</a>
+					</li>
+					<li class="mb-2 p-4 flex items-center justify-center">
+						<a href="#" class="text-purple hover:text-gray-300">Voir les devis</a>
+					</li>
+					<li class="mb-2 p-4 flex items-center justify-center">
+						<a href="#" class="text-purple hover:text-gray-300">Voir Mes payement</a>
+					</li>
+					<li class="mb-2 p-4 flex items-center justify-center">
+						<a href="#" class="text-purple hover:text-gray-300">Voir Mes réservation</a>
+					</li>
+				</li>
+
+			</ul>
+		</div>
+	</div>
+{% endif %}{% endblock %}
