@@ -1,5 +1,3 @@
-
-
 {% extends 'base.html.twig' %}
 
 {% block title %}{% endblock %}
@@ -19,26 +17,18 @@
 				<div class="flex-1 overflow-y-auto absolute top-50 left-50 transform translate-x(-50%) translate-y(-50%)">
 					<ul class="p-4">
 						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ url('Accueil_company') }}" class="text-purpleM hover:text-purple-300">Accueil</a>
+							<a href="{{ path('MonProfil_admin') }}" class="text-purpleM hover:text-purpleM-300">Mon Profil</a>
 						</li>
 						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ url('MonProfil_company') }}" class="text-purpleM hover:text-purple-300">Mon profil</a>
+							<a href="{{ path('Mesfactures_admin') }}" class="text-purpleM hover:text-purpleM-300">Voir les factures</a>
 						</li>
 						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('Mesfactures_company') }}" class="text-purpleM hover:text-purpleM-300">Voir les factures</a>
+							<a href="{{ path('Mesdevis_admin') }}" class="text-purpleM hover:text-purpleM-300">Voir les devis</a>
 						</li>
 						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('VoirMesdevis') }}" class="text-purpleM hover:text-purpleM-300">Voir les devis</a>
+							<a href="{{ path('GererUtilisateurs_admin') }}" class="text-purpleM hover:text-purpleM-300">Gérer les utilisateurs</a>
 						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('VoirLespaiements') }}" class="text-purpleM hover:text-purpleM-300">Suivi d'un paiement</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('GererMesClients') }}" class="text-purpleM hover:text-purpleM-300">Gérer les clients</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('Notifications') }}" class="text-purpleM hover:text-purpleM-300">Notifications</a>
-						</li>
+
 
 					</ul>
 				</div>
@@ -75,7 +65,7 @@
 
 						</tr>
 
-                        	<tr>
+						<tr>
 							<td class="px-4 py-2 border-b border-gray-300">Sagouti</td>
 							<td class="px-4 py-2 border-b border-gray-300">Hicham</td>
 							<td class="px-4 py-2 border-b border-gray-300">12323AZRE</td>
@@ -83,7 +73,7 @@
 							<td class="px-4 py-2 border-b border-gray-300">Marriage</td>
 
 						</tr>
-                        	<tr>
+						<tr>
 							<td class="px-4 py-2 border-b border-gray-300">Léonce</td>
 							<td class="px-4 py-2 border-b border-gray-300">zang</td>
 							<td class="px-4 py-2 border-b border-gray-300">12323AZRE</td>
@@ -101,7 +91,4 @@
 
 		</div>
 	</div>
-
-
 {% endblock %}
-

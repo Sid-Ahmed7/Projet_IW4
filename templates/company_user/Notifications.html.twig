@@ -3,7 +3,7 @@
 {% block title %}{% endblock %}
 
 {% block body %}
-	<div class="flex">
+	<div class="  flex">
 
 		<div class="bg-gray-100 text-xs   p-4 w-64 h-full fixed top-0 left-0 z-10">
 
@@ -43,66 +43,78 @@
 			</div>
 		</div>
 
+
 		<div class=" bg-fullPink mx-auto flex flex-col items-center justify-center h-screen w-full">
-			<div class="flex items-center">
-				<h1 class="text-2xl font-bold">Tableau de bord</h1>
-			</div>
+
 			<header>
-				<div class="flex items-center justify-between py-4"></div>
+				<h2 class="text-xl font-bold mb-4">Les notifications</h2>
 			</header>
-			<main class="py-8">
-				<section class="mb-8">
-					<h2 class="text-xl font-bold mb-4">Mes factures</h2>
-					<table class="table-auto w-full bg-white shadow-md">
-						<thead>
-							<tr>
-								<th class="px-4 py-2 text-left  font-bold">Nom Client</th>
-								<th class="px-4 py-2 text-left  font-bold">Motif</th>
-								<th class="px-4 py-2 text-left  font-bold">Numéro de devis</th>
-								<th class="px-4 py-2 text-left  font-bold">Mail du client</th>
-								<th class="px-4 py-2 text-left  font-bold">Date d'envoi</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td class="px-4 py-2 border-b border-gray-300">Sid ahmedi</td>
-								<td class="px-4 py-2 border-b border-gray-300">Demande de négociation</td>
-								<td class="px-4 py-2 border-b border-gray-300">12323AZRE</td>
-								<td class="px-4 py-2 border-b border-gray-300">17-06-2016</td>
-								<td class="px-4 py-2 border-b border-gray-300">hicham.sagouti@outlook.fr</td>
-								<td class="px-4 py-2 border-b border-gray-300"></td>
-							</tr>
-							<a class="text-green  text-center " href="#">Voir</a>
-						</tbody>
-						<a class="text-green " href="#">Voir</a>
-					</table>
-					<table class="table-auto w-full bg-white shadow-md">
-						<thead>
-							<tr>
-								<th class="px-4 py-2 text-left  font-bold">Nom Client</th>
-								<th class="px-4 py-2 text-left  font-bold">Motif</th>
-								<th class="px-4 py-2 text-left  font-bold">Numéro de devis</th>
-								<th class="px-4 py-2 text-left  font-bold">Mail du client</th>
-								<th class="px-4 py-2 text-left  font-bold">Date d'envoi</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td class="px-4 py-2 border-b border-gray-300">Sid ahmedi</td>
-								<td class="px-4 py-2 border-b border-gray-300">Demande de négociation</td>
-								<td class="px-4 py-2 border-b border-gray-300">12323AZRE</td>
-								<td class="px-4 py-2 border-b border-gray-300">17-06-2016</td>
-								<td class="px-4 py-2 border-b border-gray-300">hicham.sagouti@outlook.fr</td>
-								<td class="px-4 py-2 border-b border-gray-300"></td>
-							</tr>
-							<a class="text-green  text-center " href="#">Voir</a>
 
-						</tbody>
+			<div class="flex flex-col overflow-y-scroll  px-4 p-4 items-center justify-between py-2 w-1/2 ">
 
-					</table>
-				</section>
-			</main>
+				<table class="table-auto  m-15 text-xs w-full bg-white shadow-md rounded-lg">
+					<thead>
+						<tr>
+							<th class="px-4 py-2 text-left  font-bold">Nom Client</th>
+							<th class="px-4 py-2 text-left  font-bold">Motif</th>
+							<th class="px-4 py-2 text-left  font-bold">Numéro de devis</th>
+							<th class="px-4 py-2 text-left  font-bold">Mail du client</th>
+							<th class="px-4 py-2 text-left  font-bold">Date d'envoi</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="px-4 py-2 border-b border-gray-300">Sid ahmedi</td>
+							<td class="px-4 py-2 border-b border-gray-300">Demande de négociation</td>
+							<td class="px-4 py-2 border-b border-gray-300">12323AZRE</td>
+							<td class="px-4 py-2 border-b border-gray-300">17-06-2016</td>
+							<td class="px-4 py-2 border-b border-gray-300">hicham.sagouti@outlook.fr</td>
+							<td class="px-4 py-2 border-b border-gray-300">
+								<a class="px-2 text-xxs rounded-full text-white bg-purpleM " href="#">Voir</a>
+
+							</td>
+
+						</tr>
+
+					</tbody>
+					
+				</table>
+				<table class="table-auto m-15 text-xs w-full bg-white shadow-md rounded-lg">
+					<thead>
+						<tr>
+							<th class="px-4 py-2 text-left  font-bold">Nom Client</th>
+							<th class="px-4 py-2 text-left  font-bold">Motif</th>
+							<th class="px-4 py-2 text-left  font-bold">Numéro de devis</th>
+							<th class="px-4 py-2 text-left  font-bold">Mail du client</th>
+							<th class="px-4 py-2 text-left  font-bold">Date d'envoi</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="px-4 py-2 border-b border-gray-300">Sid ahmedi</td>
+							<td class="px-4 py-2 border-b border-gray-300">Demande de négociation</td>
+							<td class="px-4 py-2 border-b border-gray-300">12323AZRE</td>
+							<td class="px-4 py-2 border-b border-gray-300">17-06-2016</td>
+							<td class="px-4 py-2 border-b border-gray-300">hicham.sagouti@outlook.fr</td>
+							<td class="px-4 py-2 border-b border-gray-300">
+								<a class="px-2 text-xxs rounded-full text-white bg-purpleM " href="#">Voir</a>
+							</td>
+						</tr>
+
+
+					</tbody>
+
+				</table>
+
+
+			</div>
+
+
 		</div>
+	</div>
 
 
-	{% endblock %}
+{% endblock %}
+
+
+{#  #}
