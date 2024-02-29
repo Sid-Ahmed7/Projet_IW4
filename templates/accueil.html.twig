@@ -8,17 +8,17 @@
 
 			<div class="flex space-x-4">
 				<button class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-					Connexion
+					<a href="{{ url('app_login') }}">Connexion</a>
 				</button>
 				<button class="inline-flex items-center px-4 py-2 bg-purple-500 border border-transparent rounded-md text-white font-medium hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-					Inscription
+					<a href= "{{ url('app_register') }}">Inscription</a>
 				</button>
 			</div>
 		</header>
 
 		<div class="hero flex flex-col items-center justify-center h-screen bg-cover bg-no-repeat" style="background-image: url('{{ asset('images/pagedaccueil.png') }}')">
 			<span class="text-3xl text-white font-bold mb-8">Transformez vos rêves en réalité - laissez-nous donner vie à vos événements spéciaux.</span>
-			<button class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"><a href="{{ url('app_test_index2') }}">Réserver</a></button>
+			{# <button class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"><a href="{{ url('app_test_index2') }}">Réserver</a></button> #}
 		</div>
 
 		<div class="services container mx-auto py-12">
