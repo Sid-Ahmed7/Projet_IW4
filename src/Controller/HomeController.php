@@ -45,19 +45,19 @@ class HomeController extends AbstractController
     {
         return $this->render('company_user/VoirMonProfil.html.twig');
     }
-    #[Route('/VoirLespaiements', name: 'VoirLespaiements', methods: ['GET'])]
+    #[Route('/VoirMespaiements', name: 'VoirMespaiements', methods: ['GET'])]
     public function index7(UserRepository $userRepository): Response
     {
         return $this->render('company_user/VoirLespaiements.html.twig');
     }
 
-    #[Route('/VoirMesdevis', name: 'VoirMesdevis', methods: ['GET'])]
+    #[Route('/VoirMesdevis_company', name: 'VoirMesdevis', methods: ['GET'])]
     public function index8(UserRepository $userRepository): Response
     {
         return $this->render('company_user/VoirMesdevis.html.twig');
     }
 
-    #[Route('/GererMesClients', name: 'GererMesClients', methods: ['GET'])]
+    #[Route('/GererMesClients_company', name: 'GererMesClients', methods: ['GET'])]
     public function index9(UserRepository $userRepository): Response
     {
         return $this->render('company_user/GererMesClients.html.twig');
@@ -69,4 +69,31 @@ class HomeController extends AbstractController
         return $this->render('company_user/Notifications.html.twig');
         
     }
+
+    // espace user 
+
+    // #[Route('/Accueil_company', name: 'Accueil_user', methods: ['GET'])]
+    // public function index11(UserRepository $userRepository): Response
+    // {
+    //     return $this->render('company_user/Accueil_company.html.twig');
+    // }
+    #[Route('/Mesfactures_user', name: 'Mesfactures_user', methods: ['GET'])]
+    public function index12(UserRepository $userRepository): Response
+    {
+        return $this->render('company_user/user/Mesfactures_user.html.twig');
+    }
+
+    #[Route('/Mesdevis_user', name: 'Mesdevis_user', methods: ['GET'])]
+    public function index14(UserRepository $userRepository): Response
+    {
+        return $this->render('company_user/user/Mesdevis_user.html.twig');
+    }
+
+    #[Route('/MonProfil_user', name: 'MonProfil_user', methods: ['GET'])]
+    public function index13(UserRepository $userRepository): Response
+    {
+        return $this->render('company_user/user/MonProfil_user.html.twig');
+    }
+
+
 }

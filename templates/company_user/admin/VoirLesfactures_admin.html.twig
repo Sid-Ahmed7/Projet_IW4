@@ -1,0 +1,245 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+	<div class="  flex">
+
+		<div class="bg-gray-100  text-xs  p-4 w-64 h-full fixed top-0 left-0 z-10">
+
+
+			<div class="mb-2 flex items-center justify-center">
+				<img src="{{ asset('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4">
+
+			</div>
+
+			<div class="flex flex-col h-full items-center">
+				<div class="flex-1 overflow-y-auto absolute top-50 left-50 transform translate-x(-50%) translate-y(-50%)">
+					<ul
+						class="p-4">
+
+						{# <li class="mb-2 p-4 flex items-center justify-center">
+																																																																			<a href="{{ url('Accueil_company') }}" class="text-purpleM hover:text-purple-300">Accueil</a>
+																																																																		</li> #}
+						<li class="mb-2 p-4 flex items-center justify-center">
+							<a href="{{ url('MonProfil_user') }}" class="text-purpleM hover:text-purple-300">Mon profil</a>
+						</li>
+						<li class="mb-2 p-4 flex items-center justify-center">
+							<a href="{{ path('Mesfactures_user') }}" class="text-purpleM hover:text-purpleM-300">Voir les factures</a>
+						</li>
+						<li class="mb-2 p-4 flex items-center justify-center">
+							<a href="{{ path('Mesdevis_user') }}" class="text-purpleM hover:text-purpleM-300">Voir les devis</a>
+						</li>
+
+						{# <li class="mb-2 p-4 flex items-center justify-center">
+																																																																		<a href="{{ path('Notifications') }}" class="text-purpleM hover:text-purpleM-300">Notifications</a>
+																																																																	</li> #}
+
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class=" bg-fullPink mx-auto flex flex-col items-center justify-center h-screen w-full">
+
+			<header>
+				<h2 class="text-xl font-bold mb-4">Les factures</h2>
+			</header>
+			<main class="py-8">
+				<section class="mb-8">
+
+					<div class="flex items-center  text-xs justify-between  rounded-md px-4 py-2">
+						<label for="date" class="text-gray-500 mr-2">Date de fabrication</label>
+						<input type="date" id="date" class="border border-gray-300 rounded-md px-3 py-2 mr-2 focus:ring-blue-500 focus:ring-opacity-50" placeholder="Date de fabrication">
+						<label for="montant" class="text-gray-500 mr-2">Montant</label>
+						<input type="text" id="montant" class="border border-gray-300 rounded-md px-3 py-2 flex-grow focus:ring-blue-500 focus:ring-opacity-50" placeholder="Montant">
+					</div>
+
+
+				</section>
+			</main>
+
+
+			<div class="overflow-y-scroll w-1/2 ">
+				<div class="flex m-15 bg-white text-xs shadow-md px-4 p-4 items-center justify-between py-2 w-2/2 rounded-lg ">
+
+					<div class=" flex flex-col ">
+
+						<span>
+							Nom prenom</span>
+						<span>
+							Adresse
+						</span>
+						<span>
+							Numero de facture
+						</span>
+						<br>
+						<br>
+						<span class="flex justify-bettween">
+							<a class="px-4 rounded-full text-white bg-purpleM" href="">Voir</a>
+							<a class="text-red px-4" href="">Modifier</a>
+							<a class="text-green px-4" href="">Supprimer</a>
+						</span>
+
+
+					</div>
+					<div class=" rounded-md px-4 py-2">
+						<span>Montant / €</span>
+					</div>
+
+
+				</div>
+
+
+				<div class="flex  m-15 bg-white text-xs shadow-md px-4 p-4 items-center justify-between py-2 w-2/2 rounded-lg ">
+
+					<div class=" flex flex-col ">
+
+						<span>
+							Nom prenom</span>
+						<span>
+							Adresse
+						</span>
+						<span>
+							Numero de facture
+						</span>
+						<br>
+						<br>
+						<span class="flex justify-bettween">
+							<a class="px-4 rounded-full text-white bg-purpleM" href="">Voir</a>
+							<a class="text-red px-4" href="">Modifier</a>
+							<a class="text-green px-4" href="">Supprimer</a>
+						</span>
+
+
+					</div>
+					<div class=" rounded-md px-4 py-2">
+						<span>Montant / €</span>
+					</div>
+
+
+				</div>
+
+				<div class="flex bg-white m-15 text-xs shadow-md px-4 p-4 items-center justify-between py-2 w-2/2 rounded-lg ">
+
+					<div class=" flex flex-col ">
+
+						<span>
+							Nom prenom</span>
+						<span>
+							Adresse
+						</span>
+						<span>
+							Numero de facture
+						</span>
+						<br>
+						<br>
+						<span class="flex justify-bettween">
+							<a class="px-4 rounded-full text-white bg-purpleM" href="">Voir</a>
+							<a class="text-red px-4" href="">Modifier</a>
+							<a class="text-green px-4" href="">Supprimer</a>
+						</span>
+
+
+					</div>
+					<div class=" rounded-md px-4 py-2">
+						<span>Montant / €</span>
+					</div>
+
+
+				</div>
+
+
+				<div class="flex bg-white m-15 text-xs shadow-md px-4 p-4 items-center justify-between py-2 w-2/2 rounded-lg ">
+
+					<div class=" flex flex-col ">
+
+						<span>
+							Nom prenom</span>
+						<span>
+							Adresse
+						</span>
+						<span>
+							Numero de facture
+						</span>
+						<br>
+						<br>
+						<span class="flex justify-bettween">
+							<a class="px-4 rounded-full text-white bg-purpleM" href="">Voir</a>
+							<a class="text-red px-4" href="">Modifier</a>
+							<a class="text-green px-4" href="">Supprimer</a>
+						</span>
+
+
+					</div>
+					<div class=" rounded-md px-4 py-2">
+						<span>Montant / €</span>
+					</div>
+
+
+				</div>
+
+				<div class="flex bg-white m-15 text-xs shadow-md px-4 p-4 items-center justify-between py-2 w-2/2 rounded-lg ">
+
+					<div class=" flex flex-col ">
+
+						<span>
+							Nom prenom</span>
+						<span>
+							Adresse
+						</span>
+						<span>
+							Numero de facture
+						</span>
+						<br>
+						<br>
+						<span class="flex justify-bettween">
+							<a class="px-4 rounded-full text-white bg-purpleM" href="">Voir</a>
+							<a class="text-red px-4" href="">Modifier</a>
+							<a class="text-green px-4" href="">Supprimer</a>
+						</span>
+
+
+					</div>
+					<div class=" rounded-md px-4 py-2">
+						<span>Montant / €</span>
+					</div>
+
+
+				</div>
+				<div class="flex bg-white m-15 text-xs shadow-md px-4 p-4 items-center justify-between py-2 w-2/2 rounded-lg ">
+
+					<div class=" flex flex-col ">
+
+						<span>
+							Nom prenom</span>
+						<span>
+							Adresse
+						</span>
+						<span>
+							Numero de facture
+						</span>
+						<br>
+						<br>
+						<span class="flex justify-bettween">
+							<a class="px-4 rounded-full text-white bg-purpleM" href="">Voir</a>
+							<a class="text-red px-4" href="">Modifier</a>
+							<a class="text-green px-4" href="">Supprimer</a>
+						</span>
+
+
+					</div>
+					<div class=" rounded-md px-4 py-2">
+						<span>Montant / €</span>
+					</div>
+
+
+				</div>
+
+
+			</div>
+		</div>
+
+
+	</div>
+</div>{% endblock %}

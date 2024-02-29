@@ -3,9 +3,9 @@
 {% block title %}{% endblock %}
 
 {% block body %}
-	
 
-	<div class="bg-gray-100  p-4 w-64 h-full fixed top-0 left-0 z-10">
+
+	<div class="bg-gray-100 text-xs   p-4 w-64 h-full fixed top-0 left-0 z-10">
 
 
 		<div class="mb-2 flex items-center justify-center">
@@ -18,26 +18,26 @@
 				<ul class="p-4">
 
 					<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ url('Accueil_company') }}" class="text-purpleM hover:text-purple-300">Accueil</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ url('MonProfil_company') }}" class="text-purpleM hover:text-purple-300">Mon profil</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('Mesfactures_company') }}" class="text-purpleM hover:text-purpleM-300">Voir les factures</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('VoirMesdevis') }}" class="text-purpleM hover:text-purpleM-300">Voir les devis</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('VoirLespaiements') }}" class="text-purpleM hover:text-purpleM-300">Suivi d'un paiement</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('GererMesClients') }}" class="text-purpleM hover:text-purpleM-300">Gérer les clients</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('Notifications') }}" class="text-purpleM hover:text-purpleM-300">Notifications</a>
-						</li>
+						<a href="{{ url('Accueil_company') }}" class="text-purpleM hover:text-purple-300">Accueil</a>
+					</li>
+					<li class="mb-2 p-4 flex items-center justify-center">
+						<a href="{{ url('MonProfil_company') }}" class="text-purpleM hover:text-purple-300">Mon profil</a>
+					</li>
+					<li class="mb-2 p-4 flex items-center justify-center">
+						<a href="{{ path('Mesfactures_company') }}" class="text-purpleM hover:text-purpleM-300">Voir les factures</a>
+					</li>
+					<li class="mb-2 p-4 flex items-center justify-center">
+						<a href="{{ path('VoirMesdevis') }}" class="text-purpleM hover:text-purpleM-300">Voir les devis</a>
+					</li>
+					<li class="mb-2 p-4 flex items-center justify-center">
+						<a href="{{ path('VoirMespaiements') }}" class="text-purpleM hover:text-purpleM-300">Suivi d'un paiement</a>
+					</li>
+					<li class="mb-2 p-4 flex items-center justify-center">
+						<a href="{{ path('GererMesClients') }}" class="text-purpleM hover:text-purpleM-300">Gérer les clients</a>
+					</li>
+					<li class="mb-2 p-4 flex items-center justify-center">
+						<a href="{{ path('Notifications') }}" class="text-purpleM hover:text-purpleM-300">Notifications</a>
+					</li>
 
 				</ul>
 			</div>
@@ -54,42 +54,38 @@
 		</header>
 		<main class="py-8">
 			<section class="mb-8">
-				<h2 class="text-xl font-bold mb-4">Mes factures</h2>
-				<table class="table-auto w-full bg-white shadow-md">
-					<thead>
-						<tr>
-							<th class="px-4 py-2 text-left  font-bold">Nom</th>
-							<th class="px-4 py-2 text-left  font-bold">Prénom</th>
-							<th class="px-4 py-2 text-left   font-bold">Numéro de facture</th>
-							<th class="px-4 py-2 text-left   font-bold">Date de fabrication</th>
-							<th class="px-4 py-2 text-left   font-bold"></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td class="px-4 py-2 border-b border-gray-300">Sid ahmedi</td>
-							<td class="px-4 py-2 border-b border-gray-300">Younes</td>
-							<td class="px-4 py-2 border-b border-gray-300">12323AZRE</td>
-							<td class="px-4 py-2 border-b border-gray-300">17-06-2016</td>
-							<td class="px-4 py-2 border-b border-gray-300">
-								<a  class="text-green" href="#">Voir</a>
-							</td>
+				<h2 class="text-xl  mb-4">Mes factures</h2>
+				<div class="flex m-15 bg-white text-xs shadow-md px-4 p-4 items-center justify-between py-2 w-2/2 rounded-lg  ">
 
-						</tr>
+					<div class=" flex flex-col ">
 
-					</tbody>
-				</table>
+						<span>
+							Nom prenom</span>
+						<span>
+							Adresse
+						</span>
+						<span>
+							Numero de facture
+						</span>
+						<br>
+					</div>
+					<div class=" rounded-md px-4 py-2">
+						<span>Montant / €</span>
+					</div>
+
+					<a class="px-2 py-2  text-xs rounded-full text-white bg-purpleM" href="#">Voir Les autres factures</a>
+				</div>
 			</section>
 			<section>
-				<h2 class="text-xl font-bold mb-4">Mes devis</h2>
-				<table class="table-auto w-full bg-white shadow-md">
+				<h2 class="text-xl mb-4">Mes devis</h2>
+				<table class="table-auto h-86 m-15 text-xs w-full bg-white shadow-md rounded-lg">
 					<thead>
 						<tr>
 							<th class="px-4 py-2 text-left  font-bold">Nom</th>
 							<th class="px-4 py-2 text-left  font-bold">Prénom</th>
 							<th class="px-4 py-2 text-left   font-bold">Numéro de devis</th>
 							<th class="px-4 py-2 text-left   font-bold">Date de fabrication</th>
-							<th class="px-4 py-2 text-left   font-bold"></th>
+
 						</tr>
 					</thead>
 					<tbody>
@@ -98,12 +94,15 @@
 							<td class="px-4 py-2 border-b border-gray-300">Younes</td>
 							<td class="px-4 py-2 border-b border-gray-300">12323AZRE</td>
 							<td class="px-4 py-2 border-b border-gray-300">17-06-2016</td>
-							<td class="px-4 py-2 border-b border-gray-300">
-								<a  class="text-green" href="#">Voir</a>
+							<td>
+								<a class="px-2 py-1  text-xs rounded-full text-white bg-purpleM" href="#">Voir Les autres devis</a>
 							</td>
+
 						</tr>
 
 					</tbody>
+
+
 				</table>
 			</section>
 		</main>

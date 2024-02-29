@@ -3,9 +3,9 @@
 {% block title %}{% endblock %}
 
 {% block body %}
-	<div class="  flex">
+	<div class="flex">
 
-		<div class="bg-gray-100  p-4 w-64 h-full fixed top-0 left-0 z-10">
+		<div class="bg-gray-100 text-xs   p-4 w-64 h-full fixed top-0 left-0 z-10">
 
 
 			<div class="mb-2 flex items-center justify-center">
@@ -20,18 +20,18 @@
 
 					<ul class="p-4">
 
-					<li class="mb-2 p-4 flex items-center justify-center">
-						<a href="{{ url('Monprofil') }}" class="text-purpleM hover:text-purpleM-300">Mon profil</a>
-					</li>
-					<li class="mb-2 p-4 flex items-center justify-center">
-						<a href=" {{ url('Lesfactures') }}" class="text-purpleM hover:text-purpleM-300">Voir les factures</a>
-					</li>
-					<li class="mb-2 p-4 flex items-center justify-center">
-						<a href="{{ url('Lesdevis') }}" class="text-purpleM hover:text-purpleM-300">Voir les devis</a>
-					</li>
-					<li class="mb-2 p-4 flex items-center justify-center">
-						<a href="{{ url('Lespaiements') }}" class="text-purpleM hover:text-purpleM-300">Voir les paiements</a>
-					</li>
+						<li class="mb-2 p-4 flex items-center justify-center">
+							<a href="{{ url('Monprofil') }}" class="text-purpleM hover:text-purpleM-300">Mon profil</a>
+						</li>
+						<li class="mb-2 p-4 flex items-center justify-center">
+							<a href=" {{ url('Lesfactures') }}" class="text-purpleM hover:text-purpleM-300">Voir les factures</a>
+						</li>
+						<li class="mb-2 p-4 flex items-center justify-center">
+							<a href="{{ url('Lesdevis') }}" class="text-purpleM hover:text-purpleM-300">Voir les devis</a>
+						</li>
+						<li class="mb-2 p-4 flex items-center justify-center">
+							<a href="{{ url('Lespaiements') }}" class="text-purpleM hover:text-purpleM-300">Voir les paiements</a>
+						</li>
 
 					</ul>
 				</div>
@@ -48,7 +48,7 @@
 				<section class="mb-8">
 
 
-					<div class="flex items-center justify-between  rounded-md px-4 py-2">
+					<div class="flex text-xs items-center justify-between  rounded-md px-4 py-2">
 						<label for="date" class="text-gray-500 mr-2">Date de fabrication</label>
 						<input type="date" id="date" class="border border-gray-300 rounded-md px-3 py-2 mr-2 focus:ring-blue-500 focus:ring-opacity-50" placeholder="Date de fabrication">
 						<label for="montant" class="text-gray-500 mr-2">Montant</label>
@@ -60,9 +60,9 @@
 			</main>
 
 
-			<div class="flex bg-white shadow-md px-4 p-4 items-center justify-between py-2 w-1/2 rounded-lg ">
+			<div class="flex flex-col overflow-y-scroll px-4 p-4 items-center justify-between py-2 w-1/2  ">
 
-				<table class="table-auto w-full bg-white shadow-md">
+				<table class="table-auto m-15   text-xs w-full bg-white shadow-md">
 					<thead>
 						<tr>
 							<th class="px-4 py-2 text-left  font-bold">Nom</th>
@@ -80,14 +80,14 @@
 							<td class="px-4 py-2 border-b border-gray-300">17-06-2016</td>
 							<td class="px-4 py-2 border-b border-gray-300">En attente</td>
 							<td class="px-4 py-2 border-b border-gray-300">
-								<a class="text-green" href="#">Voir</a>
+								<a class="px-2 text-xxs rounded-full text-white bg-purpleM" href="#">Voir</a>
 							</td>
 						</tr>
 
 					</tbody>
 				</table>
 
-				<table class="table-auto w-full bg-white shadow-md">
+				<table class="table-auto m-15   text-xs w-full bg-white shadow-md">
 					<thead>
 						<tr>
 							<th class="px-4 py-2 text-left  font-bold">Nom</th>
@@ -105,7 +105,7 @@
 							<td class="px-4 py-2 border-b border-gray-300">17-06-2016</td>
 							<td class="px-4 py-2 border-b border-gray-300 text-green">Payer</td>
 							<td class="px-4 py-2 border-b border-gray-300">
-								<a class="text-green" href="#">Voir</a>
+								<a class="px-2 text-xxs rounded-full text-white bg-purpleM" href="#">Voir</a>
 							</td>
 						</tr>
 
