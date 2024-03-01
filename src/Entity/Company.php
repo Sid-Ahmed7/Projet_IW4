@@ -80,7 +80,7 @@ class Company
     #[ORM\OneToMany(mappedBy: 'Company', targetEntity: Negotiation::class)]
     private Collection $negotiations;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(type: 'bigint',nullable: true)]
     private ?int $createdBy = null;
 
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: Reque::class)]
