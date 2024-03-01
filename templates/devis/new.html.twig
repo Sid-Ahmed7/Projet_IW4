@@ -3,9 +3,18 @@
 {% block title %}New Devis{% endblock %}
 
 {% block body %}
-    <h1>Create new Devis</h1>
+    <div class="flex flex-col bg-fullPink items-center justify-center min-h-screen py-12">
+        <div class="bg-white text-xs shadow-md rounded-lg p-8 max-w-md">
+            <header class="flex justify-center items-center mb-4">
+                <img src="{{ asset('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4" width="93">
+                <h1 class="text-xl font-medium">Create New Devis</h1>
+            </header>
 
-    {{ include('devis/_form.html.twig') }}
+            {{ include('devis/_form.html.twig') }}
 
-    <a href="{{ path('app_devis_index') }}">back to list</a>
+            <div class="mt-4">
+                <a href="{{ path('app_devis_index') }}" class="text-blue-600">Back to list</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}
