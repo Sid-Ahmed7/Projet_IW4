@@ -65,16 +65,18 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td class="px-4 py-2 border-b border-gray-300">Hicham</td>
-							<td class="px-4 py-2 border-b border-gray-300">Sagouti</td>
-							<td class="px-4 py-2 border-b border-gray-300">12323AZRE</td>
-							<td class="px-4 py-2 border-b border-gray-300">17-06-2016</td>
-							<td class="px-4 py-2 border-b border-gray-300 text-green">Payer</td>
-							<td class="px-4 py-2 border-b border-gray-300">
-								<a class="px-2 text-xxs rounded-full text-white bg-purpleM" href="#">Voir</a>
-							</td>
-						</tr>
+						{% for devi in devis %}
+							<tr>
+								<td class="px-4 py-2 border-b border-gray-300">{{ devi.firstName }}</td>
+								<td class="px-4 py-2 border-b border-gray-300">{{ devi.lastName }}</td>
+								<td class="px-4 py-2 border-b border-gray-300">{{ devi.id }}</td>
+								<td class="px-4 py-2 border-b border-gray-300">{{ devi.date|date('d-m-Y') }}</td>
+								<td class="px-4 py-2 border-b border-gray-300 text-green">{{ devi.status }}</td>
+								<td class="px-4 py-2 border-b border-gray-300">
+									<a class="px-2 text-xxs rounded-full text-white bg-purpleM" href="{{ path('devis_show', {'id': devi.id}) }}">Voir</a>
+								</td>
+							</tr>
+						{% endfor %}
 					</tbody>
 				</table>
 			</div>

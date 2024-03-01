@@ -3,89 +3,52 @@
 {% block title %}Devis index{% endblock %}
 
 {% block body %}
-	<div class="  flex">
-		<div class="bg-gray-100  p-4 w-64 h-full fixed top-0 left-0 z-10">
-			<div class="mb-2 flex items-center justify-center">
-				<img src="{{ asset('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4">
-			</div>
-			<div class="flex flex-col h-full items-center">
-				<div class="flex-1 overflow-y-auto absolute top-50 left-50 transform translate-x(-50%) translate-y(-50%)">
-					<ul class="p-4">
+    <h1>Devis index</h1>
 
-					<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ url('Accueil_company') }}" class="text-purpleM hover:text-purple-300">Accueil</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ url('MonProfil_company') }}" class="text-purpleM hover:text-purple-300">Mon profil</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('Mesfactures_company') }}" class="text-purpleM hover:text-purpleM-300">Voir les factures</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('VoirMesdevis') }}" class="text-purpleM hover:text-purpleM-300">Voir les devis</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ url('VoirLespaiements') }}" class="text-purpleM hover:text-purpleM-300">Suivi d'un paiement</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('GererMesClients') }}" class="text-purpleM hover:text-purpleM-300">Gérer les clients</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('Notifications') }}" class="text-purpleM hover:text-purpleM-300">Notifications</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<div class=" bg-fullPink mx-auto flex flex-col items-center justify-center h-screen w-full">
-			<header>
-				<h2 class="text-xl font-bold mb-4">Mes Devis</h2>
-			</header>
-			<div class="flex bg-white shadow-md px-4 p-4 items-center justify-between py-2 w-1/2 rounded-lg ">
-				<table class="table-auto w-full bg-white shadow-md">
-					<thead>
-						<tr>
-                    <th class="px-4 py-2 text-left font-bold">Id</th>
-                    <th class="px-4 py-2 text-left font-bold">Content</th>
-                    <th class="px-4 py-2 text-left font-bold">State</th>
-                    <th class="px-4 py-2 text-left font-bold">IsNegotiable</th>
-                    <th class="px-4 py-2 text-left font-bold">CreatedAt</th>
-                    <th class="px-4 py-2 text-left font-bold">DeletedAt</th>
-                    <th class="px-4 py-2 text-left font-bold">UpdatedAt</th>
-                    <th class="px-4 py-2 text-left font-bold">Slug</th>
-                    <th class="px-4 py-2 text-left font-bold">Prix</th>
-                    <th class="px-4 py-2 text-left font-bold">Title</th>
-                    <th class="px-4 py-2 text-left font-bold">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="text-gray-700">
-            {% for devi in devis %}
-                <tr>
-                    <td class="px-4 py-2 border-b border-gray-300">{{ devi.id }}</td>
-                    <td class="px-4 py-2 border-b border-gray-300">{{ devi.content }}</td>
-                    <td class="px-4 py-2 border-b border-gray-300">{{ devi.state }}</td>
-                    <td class="px-4 py-2 border-b border-gray-300">{{ devi.isNegotiable ? 'Yes' : 'No' }}</td>
-                    <td class="px-4 py-2 border-b border-gray-300">{{ devi.createdAt ? devi.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                    <td class="px-4 py-2 border-b border-gray-300">{{ devi.deletedAt ? devi.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
-                    <td class="px-4 py-2 border-b border-gray-300">{{ devi.updatedAt ? devi.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                    <td class="px-4 py-2 border-b border-gray-300">{{ devi.slug }}</td>
-                    <td class="px-4 py-2 border-b border-gray-300">{{ devi.price }}</td>
-                    <td class="px-4 py-2 border-b border-gray-300">{{ devi.title }}</td>
-                    <td class="px-4 py-2 border-b border-gray-300">
-                        <a href="{{ path('app_devis_show', {'id': devi.id}) }}" class="text-blue-500 hover:text-blue-600">show</a>
-                        <a href="{{ path('app_devis_edit', {'id': devi.id}) }}" class="text-blue-500 hover:text-blue-600 ml-4">edit</a>
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="11" class="text-center py-4">No records found</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        </div>
-        <div class="mt-4">
-            <a href="{{ path('app_devis_new', {'userID': app.user.id}) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Create new</a>
-        </div>
-</div>
-{% endblock %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Content</th>
+                <th>State</th>
+                <th>IsNegotiable</th>
+                <th>CreatedAt</th>
+                <th>DeletedAt</th>
+                <th>UpdatedAt</th>
+                <th>Slug</th>
+                <th>Prix</th>
+                <th>Title</th>
+                <th>actions</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+        {% for devi in devis %}
+            <tr>
+                <td>{{ devi.id }}</td>
+                <td>{{ devi.content }}</td>
+                <td>{{ devi.state }}</td>
+                <td>{{ devi.isNegotiable ? 'Yes' : 'No' }}</td>
+                <td>{{ devi.createdAt ? devi.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ devi.deletedAt ? devi.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ devi.updatedAt ? devi.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ devi.slug }}</td>
+                <td>{{ devi.price}}</td>
+                <td>{{ devi.title}}</td>
+
+
+               
+                <td>
+                    <a href="{{ path('app_devis_show', {'id': devi.id}) }}">show</a>
+                    <a href="{{ path('app_devis_edit', {'id': devi.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+<a href="{{ path('app_devis_new', {'userID': app.user.id}) }}">Create new</a>{% endblock %}
