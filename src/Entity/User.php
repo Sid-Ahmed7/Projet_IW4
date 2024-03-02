@@ -151,7 +151,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'usr', targetEntity: Reque::class)]
     private Collection $reques;
 
-   
+
 
     public function __construct()
     {
@@ -162,10 +162,60 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->conversationUsers = new ArrayCollection();
         $this->userRoles = new ArrayCollection();
         $this->userRoleUpdateBy = new ArrayCollection();
+        $this->uuid = Uuid::v4();
         $this->emailVerificationToken = null;
-
-
+        $this->requests = new ArrayCollection();
+        $this->reques = new ArrayCollection();
+        $this->uuid = Uuid::v4()->toString();
     }
+    #[ORM\Column(type: 'uuid', unique: true, nullable: true)]
+    public function getUuid(): ?string
+    {
+        return $this->uuid;
+    }
+    
+    public function setUuid(string $uuid): self
+    {
+        $this->uuid = $uuid;
+        return $this;
+    }
+    #[ORM\Column(type: 'uuid', unique: true, nullable: true)]
+private ?string $uuid = null;
+    
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: 'App\Entity\User')]
+    private Collection $requests;
+    public function getRequests(): Collection
+    {
+        return $this->requests;
+    }
+    public function __toString(): string
+    {
+        return $this->username; // ou return $this->email;
+    }
+
+
+    public function addRequest(Request $request): self
+    {
+    if (!$this->requests->contains($request)) {
+        $this->requests[] = $request;
+        $request->setUser($this);
+    }
+
+    return $this;
+}
+
+public function removeRequest(Request $request): self
+{
+    if ($this->requests->removeElement($request)) {
+        // set the owning side to null (unless already changed)
+        if ($request->getUser() === $this) {
+            $request->setUser(null);
+        }
+    }
+
+    return $this;
+}
 
     public function getId(): ?int
     {

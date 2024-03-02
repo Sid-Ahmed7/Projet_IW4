@@ -100,7 +100,11 @@ class Company
         $this->usr = new ArrayCollection();
         $this->reques = new ArrayCollection();
     }
-
+    public function __toString(): string
+    {
+        return $this->name;
+    }
+    
     public function getId(): ?int
     {
         return $this->id;
