@@ -166,7 +166,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->emailVerificationToken = null;
         $this->requests = new ArrayCollection();
         $this->reques = new ArrayCollection();
-        $this->uuid = Uuid::v4()->toString();
+        // $this->uuid = Uuid::v4()->toString();
     }
     #[ORM\Column(type: 'uuid', unique: true, nullable: true)]
     public function getUuid(): ?string
