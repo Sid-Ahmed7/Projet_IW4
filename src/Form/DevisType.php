@@ -19,6 +19,8 @@ class DevisType extends AbstractType
         $builder
             ->add('content', TextareaType::class, [
                 'label' => 'Content',
+                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
+
                 // Vous pouvez ajouter d'autres options de validation ici
             ])
             ->add('state', ChoiceType::class, [
@@ -27,17 +29,23 @@ class DevisType extends AbstractType
                     'Pending' => 'pending',
                     'Accepted' => 'accepted',
                     'Rejected' => 'rejected',
+                    'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
+
                 ],
                 'expanded' => true, // Afficher sous forme de boutons radio
             ])
             ->add('isNegotiable', CheckboxType::class, [
                 'label' => 'Is Negotiable',
                 'required' => false, // Le champ n'est pas requis
+                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
+
             ])
             
         
             ->add('title', TextType::class, [
                 'label' => 'title',
+                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
+
             ]);
     }
 
