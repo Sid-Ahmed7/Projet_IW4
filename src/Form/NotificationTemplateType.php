@@ -12,10 +12,19 @@ class NotificationTemplateType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title')
-            ->add('description')
-            ->add('read')
-            ->add('createdAt')
+            ->add('title',null,
+            [  'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],]
+            )
+            ->add('description',null,
+            [  'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],]
+            )
+            ->add('read',null,
+            [  'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],]
+            )
+            ->add('createdAt',null,
+            [  'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],]
+            
+            )
         ;
     }
 
