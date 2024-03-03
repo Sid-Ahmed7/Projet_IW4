@@ -22,6 +22,13 @@ class UserPlan
     #[ORM\ManyToOne(inversedBy: 'userPlans')]
     private ?Plan $plan = null;
 
+    #[ORM\ManyToOne(inversedBy: 'userPlans')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $usr = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $slug = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -42,5 +49,29 @@ class UserPlan
     public function getUuid(): ?string
     {
         return $this->uuid->toString();
+    }
+
+    public function getUsr(): ?User
+    {
+        return $this->usr;
+    }
+
+    public function setUsr(?User $usr): static
+    {
+        $this->usr = $usr;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): static
+    {
+        $this->slug = $slug;
+
+        return $this;
     }
 }

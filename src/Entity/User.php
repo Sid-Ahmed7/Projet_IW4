@@ -143,6 +143,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'usr', targetEntity: Reque::class)]
     private Collection $reques;
 
+    #[ORM\OneToMany(mappedBy: 'usr', targetEntity: UserPlan::class)]
+    private Collection $userPlans;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $stripeCustomerID = null;
+
    
 
     public function __construct()
@@ -155,6 +161,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->userRoles = new ArrayCollection();
         // $this->userRoleUpdateBy = new ArrayCollection();
         $this->emailVerificationToken = null;
+        $this->userPlans = new ArrayCollection();
 
 
     }
@@ -541,6 +548,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getReques(): Collection
     {
         return $this->reques;
+    }
+
+    /**
+     * @return Collection<int, UserPlan>
+     */
+    public function getUserPlans(): Collection
+    {
+        return $this->userPlans;
+    }
+
+    public function addUserPlan(UserPlan $userPlan): static
+    {
+        if (!$this->userPlans->contains($userPlan)) {
+            $this->userPlans->add($userPlan);
+            $userPlan->setUsr($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserPlan(UserPlan $userPlan): static
+    {
+        if ($this->userPlans->removeElement($userPlan)) {
+            // set the owning side to null (unless already changed)
+            if ($userPlan->getUsr() === $this) {
+                $userPlan->setUsr(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getStripeCustomerID(): ?string
+    {
+        return $this->stripeCustomerID;
+    }
+
+    public function setStripeCustomerID(?string $stripeCustomerID): static
+    {
+        $this->stripeCustomerID = $stripeCustomerID;
+
+        return $this;
     }
 
    

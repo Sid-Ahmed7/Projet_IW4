@@ -18,6 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 use App\Repository\UserRepository;
+use Stripe\Customer;
+use Stripe\Stripe;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -82,6 +84,19 @@ class RegistrationController extends AbstractController
                     ])
             );
 
+            // Création de l'identifiant client dans Stripe
+            Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
+            $stripeCustomer = Customer::create([
+                'email' => $user->getEmail(), 
+                'name' => $user->getFirstName() . ' ' . $user->getLastName(), 
+                // Autres informations sur le client...
+            ]);
+
+            // Associez l'identifiant client à l'utilisateur dans votre application
+            $user->setStripeCustomerId($stripeCustomer->id);
+            $entityManager->flush();
+
+            // Envoi de l'email de confirmation et autres actions..
             // do anything else you need here, like send an email
             $this->addFlash('success', 'Your account has been created. Please check your email to verify your account before logging in.');
 

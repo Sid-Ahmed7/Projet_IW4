@@ -52,6 +52,9 @@ class Plan
     #[ORM\OneToMany(mappedBy: 'plan', targetEntity: UserPlan::class)]
     private Collection $userPlans;
 
+    #[ORM\Column(length: 255)]
+    private ?string $subscriptionID = null;
+
     public function __construct()
     {
         $this->userPlans = new ArrayCollection();
@@ -198,6 +201,18 @@ class Plan
                 $userPlan->setPlan(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSubscriptionID(): ?string
+    {
+        return $this->subscriptionID;
+    }
+
+    public function setSubscriptionID(string $subscriptionID): static
+    {
+        $this->subscriptionID = $subscriptionID;
 
         return $this;
     }
