@@ -49,6 +49,8 @@ class RegistrationController extends AbstractController
             );
 
             $user->setSignupDate(new \DateTime());
+            $user->setRoles(['ROLE_USER']);
+
 
             // Gestion du picture
             $pictureFile = $form->get('picture')->getData();
@@ -58,15 +60,27 @@ class RegistrationController extends AbstractController
                 $pictureFile->move($this->getParameter('profilePicture_directory'), $pictureFileName);
                 $user->setPicture($pictureFileName);
             } else {
-                // si l'utilisateur ne souhaite pas mettre de pp cel rest à voir !!
+                // si l'utilisateur ne souhaite pas mettre de pp cela rest à voir !!
                 $defaultPictureFileName = $this->getParameter('profilePicture_directory') . '/no-user.jpg';
                 $user->setPicture($defaultPictureFileName);
             }
 
             $entityManager->persist($user);
-            $entityManager->flush();
 
-            // Dans votre méthode register du RegistrationController
+             // Création de l'identifiant client dans Stripe
+        Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
+        $stripeCustomer = Customer::create([
+            'email' => $user->getEmail(), 
+            'name' => $user->getFirstName() . ' ' . $user->getLastName(),
+
+        ]);
+
+        // Associez l'identifiant client à l'utilisateur dans votre application
+        $user->setStripeCustomerId($stripeCustomer->id);
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+            // Dans votre méthode register du RegistrationController EMAIL
             $this->emailVerifier->sendEmailConfirmation(
                 'app_verify_email',
                 $user,
@@ -84,19 +98,6 @@ class RegistrationController extends AbstractController
                     ])
             );
 
-            // Création de l'identifiant client dans Stripe
-            Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
-            $stripeCustomer = Customer::create([
-                'email' => $user->getEmail(), 
-                'name' => $user->getFirstName() . ' ' . $user->getLastName(), 
-                // Autres informations sur le client...
-            ]);
-
-            // Associez l'identifiant client à l'utilisateur dans votre application
-            $user->setStripeCustomerId($stripeCustomer->id);
-            $entityManager->flush();
-
-            // Envoi de l'email de confirmation et autres actions..
             // do anything else you need here, like send an email
             $this->addFlash('success', 'Your account has been created. Please check your email to verify your account before logging in.');
 

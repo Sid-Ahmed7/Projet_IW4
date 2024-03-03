@@ -29,6 +29,9 @@ class UserPlan
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $subscriptionID = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -71,6 +74,18 @@ class UserPlan
     public function setSlug(?string $slug): static
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getSubscriptionID(): ?string
+    {
+        return $this->subscriptionID;
+    }
+
+    public function setSubscriptionID(string $subscriptionID): static
+    {
+        $this->subscriptionID = $subscriptionID;
 
         return $this;
     }

@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Plan;
+use App\Entity\User;
 use App\Form\PlanType;
 use App\Repository\PlanRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Stripe\Stripe;
+use Stripe\Subscription;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +26,7 @@ class PlanController extends AbstractController
     }
 
     #[Route('/new', name: 'app_plan_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, User $user): Response
     {
         $plan = new Plan();
         $form = $this->createForm(PlanType::class, $plan);
@@ -35,7 +38,7 @@ class PlanController extends AbstractController
             $entityManager->persist($plan);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_plan_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('create_subscription_plan', ['wplanID' => $plan->getId()]);
         }
 
         return $this->render('plan/new.html.twig', [

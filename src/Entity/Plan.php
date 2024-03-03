@@ -41,8 +41,11 @@ class Plan
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $deletedAt = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50,)]
     private ?string $state = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $stripePlanID = null;
 
     
     
@@ -51,9 +54,6 @@ class Plan
 
     #[ORM\OneToMany(mappedBy: 'plan', targetEntity: UserPlan::class)]
     private Collection $userPlans;
-
-    #[ORM\Column(length: 255)]
-    private ?string $subscriptionID = null;
 
     public function __construct()
     {
@@ -205,14 +205,14 @@ class Plan
         return $this;
     }
 
-    public function getSubscriptionID(): ?string
+    public function getStripePlanID(): ?string
     {
-        return $this->subscriptionID;
+        return $this->stripePlanID;
     }
 
-    public function setSubscriptionID(string $subscriptionID): static
+    public function setStripePlanID(string $stripePlanID): static
     {
-        $this->subscriptionID = $subscriptionID;
+        $this->stripePlanID = $stripePlanID;
 
         return $this;
     }
