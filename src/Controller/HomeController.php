@@ -69,4 +69,10 @@ class HomeController extends AbstractController
         return $this->render('company_user/Notifications.html.twig');
         
     }
+
+    #[Route('/newsubscribe', name: 'newsubscribe', methods: ['GET'])]
+    public function sub(UserRepository $userRepository): Response
+    {
+        return $this->render('wizzard/newsubscriber.html.twig');
+    }
 }

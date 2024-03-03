@@ -55,6 +55,9 @@ class Plan
     #[ORM\OneToMany(mappedBy: 'plan', targetEntity: UserPlan::class)]
     private Collection $userPlans;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $stripePaymentID = null;
+
     public function __construct()
     {
         $this->userPlans = new ArrayCollection();
@@ -213,6 +216,18 @@ class Plan
     public function setStripePlanID(string $stripePlanID): static
     {
         $this->stripePlanID = $stripePlanID;
+
+        return $this;
+    }
+
+    public function getStripePaymentID(): ?string
+    {
+        return $this->stripePaymentID;
+    }
+
+    public function setStripePaymentID(?string $stripePaymentID): static
+    {
+        $this->stripePaymentID = $stripePaymentID;
 
         return $this;
     }

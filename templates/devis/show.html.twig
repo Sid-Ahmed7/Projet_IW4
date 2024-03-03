@@ -5,7 +5,7 @@
 
 {% block body %}
 	<h1>Devis</h1>
-	{# 
+	
 	    <table class="table">
 	        <tbody>
 	            <tr>
@@ -61,10 +61,8 @@
 	    <a href="{{ path('app_devis_pdf', {'id': devi.id}) }}"> Telecharger le PDF</a>
 	
 	
-	
-	    {{ include('devis/_delete_form.html.twig') }} #}
 
-	<div class="flex items-center justify-center min-h-screen bg-gray-100">
+	{# <div class="flex items-center justify-center min-h-screen bg-gray-100">
 		<div class="w-3/5 bg-white shadow-lg">
 			<div class="flex justify-between p-4">
 				<div>
@@ -284,9 +282,8 @@
 					<button class="px-2 py-1 bg-gray-200 hover:bg-gray-400">Print</button>
 				</div>
 			</div>
-			<div class="w-full h-0.5 bg-gray-800"></div>
+			<div class="w-full h-0.5 bg-gray-800"></div> #}
 
-    <a href="{{ path('app_devis_pdf', {'slug': devi.slug}) }}"> Telecharger le PDF</a>
 
     
     <h2>Devis Assets</h2>
@@ -312,10 +309,6 @@
             {% endfor %}
         </tbody>
     </table>
-
-
-    {{ include('devis/_delete_form.html.twig') }}
-   {# <a href="{{ path('app_devis_send_pdf', {'id': devi.id}) }}"> Envoyer le PDF par mail</a> #}
 
 		</div>
 	</div>

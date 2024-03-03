@@ -92,6 +92,9 @@ class Company
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: Reque::class)]
     private Collection $reques;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $stripeCustomerID = null;
+
    
 
 
@@ -415,6 +418,18 @@ class Company
 //         ->getQuery()
 //         ->getOneOrNullResult();
 // }
+
+public function getStripeCustomerID(): ?string
+{
+    return $this->stripeCustomerID;
+}
+
+public function setStripeCustomerID(?string $stripeCustomerID): static
+{
+    $this->stripeCustomerID = $stripeCustomerID;
+
+    return $this;
+}
    
    
 }

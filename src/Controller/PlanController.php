@@ -4,8 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Plan;
 use App\Entity\User;
+use App\Entity\UserPlan;
 use App\Form\PlanType;
 use App\Repository\PlanRepository;
+use App\Repository\UserPlanRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Stripe;
 use Stripe\Subscription;
@@ -83,4 +86,7 @@ class PlanController extends AbstractController
 
         return $this->redirectToRoute('app_plan_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    
+
 }

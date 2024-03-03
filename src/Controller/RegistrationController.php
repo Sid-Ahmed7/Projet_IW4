@@ -67,18 +67,18 @@ class RegistrationController extends AbstractController
 
             $entityManager->persist($user);
 
-             // Création de l'identifiant client dans Stripe
-        Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
-        $stripeCustomer = Customer::create([
-            'email' => $user->getEmail(), 
-            'name' => $user->getFirstName() . ' ' . $user->getLastName(),
+            // Création de l'identifiant client dans Stripe
+            Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
+            $stripeCustomer = Customer::create([
+                'email' => $user->getEmail(),
+                'name' => $user->getFirstName() . ' ' . $user->getLastName(),
 
-        ]);
+            ]);
 
-        // Associez l'identifiant client à l'utilisateur dans votre application
-        $user->setStripeCustomerId($stripeCustomer->id);
-        $entityManager->persist($user);
-        $entityManager->flush();
+            // Associez l'identifiant client à l'utilisateur dans votre application
+            $user->setStripeCustomerId($stripeCustomer->id);
+            $entityManager->persist($user);
+            $entityManager->flush();
 
             // Dans votre méthode register du RegistrationController EMAIL
             $this->emailVerifier->sendEmailConfirmation(
