@@ -29,15 +29,15 @@ class CompanyController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_company_new', methods: ['GET', 'POST'])]
+    #[Route('{id}/new', name: 'app_company_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, Security $security): Response
     {
         $company = new Company();
         $user = $security->getUser();
 
-        // if (!$security->isGranted('ROLE_USER')) {
-        //     throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à cette fonctionnalité.');
-        // }
+        if (!$security->isGranted('ROLE_USER')) {
+            throw $this->createAccessDeniedException('Vous devez vous connecter pour crer une organization petit malin...');
+        }
         $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
 
@@ -46,7 +46,7 @@ class CompanyController extends AbstractController
             $company->setCreatedAt($now);
             $company->setState('Online');
             $company->setVerified(false);
-            $company->setCreatedBy($user);
+            $company->setCreatedBy();
 
             $entityManager->persist($company);
 
