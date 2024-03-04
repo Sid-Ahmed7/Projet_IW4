@@ -77,11 +77,11 @@ class UserController extends AbstractController
         return $this->redirectToRoute('app_user_index');
     }
     if ($user->getPicture()) {
-        $filePath = $this->getParameter('pictures_directory') . '/' . $user->getPicture();
+        $filePath = $this->getParameter('profilePicture_directory') . '/' . $user->getPicture();
         if (file_exists($filePath)) {
             $user->setPicture(new File($filePath));
         } else {
-            $user->setPicture(new File($this->getParameter('pictures_directory') . '/no-user.jpg'));
+            $user->setPicture(new File($this->getParameter('profilePicture_directory') . '/no-user.jpg'));
         }
     }
 
