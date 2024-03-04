@@ -13,25 +13,37 @@ class CompanyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
-            ->add('address')
-
+            ->add('name', null, [
+                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
+            ])
+            ->add('address', null, [
+                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
+            ])
             ->add('logo', FileType::class, [
                 'label' => 'Logo (image)',
-                'required' => false, // Le logo n'est pas obligatoire lors de la creation
+                'required' => false,
+                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
             ])
             ->add('banner', FileType::class, [
                 'label' => 'Banner (image)',
-                'required' => false, // Le logo n'est pas obligatoire lors de la creation
+                'required' => false,
+                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
             ])
-        
-            ->add('email')
-            ->add('phoneNumber')
-            ->add('taxNumber')
-            ->add('siretNumber');
-            
-        
-           // Il faudrait voire comment faire le 
+            ->add('email', null, [
+                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
+            ])
+            ->add('phoneNumber', null, [
+                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
+            ])
+            ->add('taxNumber', null, [
+                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
+            ])
+            ->add('siretNumber', null, [
+                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
+            ]);
+
+
+            // Il faudrait voire comment faire le 
         ;
     }
 
