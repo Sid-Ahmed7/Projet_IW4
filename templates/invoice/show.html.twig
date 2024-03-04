@@ -4,7 +4,7 @@
 
 {% block body %}
 <div class="flex items-center justify-center min-h-screen bg-gray-100">
-    <div class="w-1/9 bg-white shadow-lg">
+    <div class="w-1/9 bg-white shadow-lg" id ="imprimer">
         <div class="flex justify-between p-4">
             <div>
                 <img src="{{ asset('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4" width="93">
@@ -72,10 +72,25 @@
                 Thank you very much for doing business with us.
             </div>
             <div class="flex items-end justify-end space-x-3">
-                <button class="px-4 py-2 text-sm text-blue-600 bg-blue-100">Print</button>
+                <button class="px-4 py-2 text-sm text-blue-600 bg-blue-100" onclick="imprimerPage()">Print</button>
                 <button class="px-4 py-2 text-sm text-red-600 bg-red-100">Retour</button>
             </div>
         </div>
     </div>
 </div>
+<script>
+    function imprimerPage() {
+        var contenuDivImprimer = document.getElementById('imprimer').innerHTML;
+        var fenetreImprimer = window.open('', '');
+
+        fenetreImprimer.document.write('<html><head><title>Impression</title></head><body>' + contenuDivImprimer + '</body></html>');
+        fenetreImprimer.document.close();
+
+        fenetreImprimer.print();
+
+        fenetreImprimer.onafterprint = function() {
+            fenetreImprimer.close();
+        };
+    }
+</script>
 {% endblock %}
