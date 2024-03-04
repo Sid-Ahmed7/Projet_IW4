@@ -56,7 +56,8 @@ class UserController extends AbstractController
     {
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
-
+        $now = new \DateTimeImmutable();
+        $user->setUpdateAt($now);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
