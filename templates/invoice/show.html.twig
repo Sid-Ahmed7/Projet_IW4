@@ -3,59 +3,79 @@
 {% block title %}Invoice{% endblock %}
 
 {% block body %}
-    <h1>Invoice</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ invoice.id }}</td>
-            </tr>
-            <tr>
-                <th>StripePaymentID</th>
-                <td>{{ invoice.stripePaymentID }}</td>
-            </tr>
-            <tr>
-                <th>PaymentType</th>
-                <td>{{ invoice.paymentType }}</td>
-            </tr>
-            <tr>
-                <th>Vat</th>
-                <td>{{ invoice.Vat }}</td>
-            </tr>
-            <tr>
-                <th>PaymentDetails</th>
-                <td>{{ invoice.paymentDetails }}</td>
-            </tr>
-            <tr>
-                <th>State</th>
-                <td>{{ invoice.state }}</td>
-            </tr>
-            <tr>
-                <th>UpdatedAt</th>
-                <td>{{ invoice.updatedAt ? invoice.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ invoice.createdAt ? invoice.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>DeletedAt</th>
-                <td>{{ invoice.deletedAt ? invoice.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Slug</th>
-                <td>{{ invoice.slug }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_invoice_index') }}">back to list</a>
-
-    <a href="{{ path('app_invoice_edit', {'id': invoice.id}) }}">edit</a>
-
-    <a href="{{ path('app_invoice_pdf', {'id': invoice.id}) }}"> Telecharger le PDF</a>
-
-
-    {{ include('invoice/_delete_form.html.twig') }}
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="w-1/9 bg-white shadow-lg">
+        <div class="flex justify-between p-4">
+            <div>
+                <img src="{{ asset('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4" width="93">
+            </div>
+        </div>
+        <div class="w-full h-0.5 bg-indigo-500"></div>
+        <div class="flex justify-between p-4">
+            <div>
+                <h6 class="font-bold">Date: <span class="text-sm font-medium">{{ invoice.createdAt ? invoice.createdAt|date('Y-m-d H:i:s') : '' }}</span></h6>
+                <h6 class="font-bold">ID Invoice: <span class="text-sm font-medium">{{ invoice.id }}</span></h6>
+            </div>
+            <!-- Add other invoice details here -->
+        </div>
+        <div class="flex justify-center p-4">
+            <div class="border-b border-gray-200 shadow">
+                <table class="w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-2">Id</th>
+                            <th class="px-4 py-2">StripePaymentID</th>
+                            <th class="px-4 py-2">PaymentType</th>
+                            <th class="px-4 py-2">Vat</th>
+                            <th class="px-4 py-2">PaymentDetails</th>
+                            <th class="px-4 py-2">State</th>
+                            <th class="px-4 py-2">UpdatedAt</th>
+                            <th class="px-4 py-2">CreatedAt</th>
+                            <th class="px-4 py-2">DeletedAt</th>
+                            <th class="px-4 py-2">Slug</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-white border-b">
+                            <td class="px-4 py-2">{{ invoice.id }}</td>
+                            <td class="px-4 py-2">{{ invoice.stripePaymentID }}</td>
+                            <td class="px-4 py-2">{{ invoice.paymentType }}</td>
+                            <td class="px-4 py-2">{{ invoice.Vat }}</td>
+                            <td class="px-4 py-2">{{ invoice.paymentDetails }}</td>
+                            <td class="px-4 py-2">{{ invoice.state }}</td>
+                            <td class="px-4 py-2">{{ invoice.updatedAt ? invoice.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                            <td class="px-4 py-2">{{ invoice.createdAt ? invoice.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                            <td class="px-4 py-2">{{ invoice.deletedAt ? invoice.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
+                            <td class="px-4 py-2">{{ invoice.slug }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="flex justify-between p-4">
+            <div>
+                <h3 class="text-xl">Terms And Condition:</h3>
+                <ul class="text-xs list-disc list-inside">
+                    <li>All accounts are to be paid within 7 days from receipt of invoice.</li>
+                    <li>To be paid by cheque or credit card or direct payment online.</li>
+                    <li>If account is not paid within 7 days the credits details supplied.</li>
+                </ul>
+            </div>
+            <div class="p-4">
+                <h3>Signature</h3>
+                <div class="text-4xl italic text-indigo-500">WizzardEvent</div>
+            </div>
+        </div>
+        <div class="w-full h-0.5 bg-indigo-500"></div>
+        <div class="p-4">
+            <div class="flex items-center justify-center">
+                Thank you very much for doing business with us.
+            </div>
+            <div class="flex items-end justify-end space-x-3">
+                <button class="px-4 py-2 text-sm text-blue-600 bg-blue-100">Print</button>
+                <button class="px-4 py-2 text-sm text-red-600 bg-red-100">Retour</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
