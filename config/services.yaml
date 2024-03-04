@@ -6,10 +6,10 @@
 parameters:
     logos_directory: '%kernel.project_dir%/public/uploads/logos'
     banners_directory: '%kernel.project_dir%/public/uploads/banners'
-    profilePicture_directory: '%kernel.project_dir%/public/uploads/profilePicture'
+    profilePicture_directory: '%kernel.project_dir%/public/Uploads/profilePicture'
     invoice_directory: '%kernel.project_dir%/public/uploads/invoices'
     devis_directory: '%kernel.project_dir%/public/uploads/devis'
-    pictures_directory: '%kernel.project_dir%/public/uploads/profilePicture'
+    pictures_directory: '%kernel.project_dir%/public/Uploads/profilePicture'
 
 
 
