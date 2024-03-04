@@ -173,7 +173,7 @@ class StripeController extends AbstractController
 
 
 
-    #[Route('/stripe/{planId}/{userId}', name: 'stripe')]
+    #[Route('/stripe/{planId}/{userId}', name: 'stripe2')]
     public function stripePayment(Plan $plan, EntityManagerInterface $entityManager, UserRepository $userRepository, $userId, $planId, PlanRepository $planRepository): Response
     {
         $YOUR_DOMAIN = 'http://127.0.0.1:8000';
@@ -209,7 +209,7 @@ class StripeController extends AbstractController
             ]],
             'mode' => 'subscription',
             // 'customer' => $stripeCustomerId, // Ajouter le customer id dans la session de paiement
-            'success_url' => $YOUR_DOMAIN . '/stripe/success/'.$planId,
+            'success_url' => $YOUR_DOMAIN . '/stripe/valide/'.$planId,
             'cancel_url' => $YOUR_DOMAIN . '/stripe/cancel',
             'metadata' => [
                 'plan_id' => $planStripe->getStripePlanID(),
@@ -220,7 +220,7 @@ class StripeController extends AbstractController
         return $this->redirect($checkout_session->url);
     }
 
-    #[Route('/stripe/success/{planId}', name: 'stripe_success')]
+    #[Route('/stripe/valide/{planId}', name: 'stripe_success')]
     public function stripeSuccess(Request $request, UserRepository $userRepository, PlanRepository $planRepository, EntityManagerInterface $entityManager,$planId): Response
     {
         dd($planId);
