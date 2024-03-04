@@ -18,17 +18,10 @@ class UserType extends AbstractType
             ->add('lastname')
             ->add('firstname')
             ->add('username')
-            ->add('picture', FileType::class, [
-                'label' => 'Banner (image)',
-                'required' => false, // Le logo n'est pas obligatoire lors de la creation
-            ])
-            ->add('signupDate')
             ->add('updateAt')
             ->add('deletedAt')
             ->add('slug')
-            ->add('company')
-            ->add('userPlan')
-            ->add('requests')
+          
         ;
     }
 

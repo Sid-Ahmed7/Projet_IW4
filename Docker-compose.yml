@@ -2,17 +2,17 @@ version: '3.8'
 
 services:
   web:
-    build: .
-    volumes:
-      - .:/var/www/symfony
-    working_dir: /var/www/symfony
-    command: php -S 0.0.0.0:8000 -t public
-    depends_on:
-      - database
-    environment:
-      DATABASE_URL: "pgsql://root:root@database:5432/stackT1" 
-    ports:
-      - "8000:8000"
+   image: gcr.io/wizzard-416121/wizzard:v1
+   volumes:
+     - .:/var/www/symfony
+   working_dir: /var/www/symfony
+   command: php -S 0.0.0.0:8000 -t public
+   depends_on:
+    - database
+   environment:
+    DATABASE_URL: "pgsql://root:root@database:5432/stackT1"
+   ports:
+    - "8000:8000"
 
   database:
     image: postgres:16-alpine
