@@ -1,3 +1,4 @@
+{# templates/partials/_sidebar.html.twig #}
 <div id="TelephoneFormat" class="text-xs p-4 w-64 h-full fixed top-0 left-0 z-10 block md:hidden">
 	<button id="bouton" aria-label="Toggle Menu">
 		<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke="currentColor" class="h-6 w-6">
@@ -51,3 +52,12 @@
 	</div>
 </div>
 <script>
+const menuButton = document.getElementById('bouton');
+const sidebar = document.getElementById('sidebar');
+const content = document.getElementById('content');
+
+menuButton.addEventListener('click', () => {
+sidebar.classList.toggle('hidden');
+content.classList.toggle('ml-64'); // Adjust the margin-left value based on your design
+});
+</script>
