@@ -5,38 +5,7 @@
 			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
 		</svg>
 	</button>
-				<ul class="p-4">
-				<li class="mb-2 p-4 flex items-center justify-center">
-					<a href="{{ url('Accueil_company') }}" class="text-purpleM hover:text-purple-300">Accueil</a>
-				</li>
-				<li class="mb-2 p-4 flex items-center justify-center">
-					<a href="{{ url('MonProfil_company') }}" class="text-purpleM hover:text-purple-300">Mon profil</a>
-				</li>
-				<li class="mb-2 p-4 flex items-center justify-center">
-					<a href="{{ path('Mesfactures_company') }}" class="text-purpleM hover:text-purpleM-300">Voir les factures</a>
-				</li>
-				<li class="mb-2 p-4 flex items-center justify-center">
-					<a href="{{ path('app_devis_index') }}" class="text-purpleM hover:text-purpleM-300">Voir les devis</a>
-				</li>
-				<li class="mb-2 p-4 flex items-center justify-center">
-					<a href="{{ url('VoirMespaiements') }}" class="text-purpleM hover:text-purpleM-300">Suivi d'un paiement</a>
-				</li>
-				<li class="mb-2 p-4 flex items-center justify-center">
-					<a href="{{ path('GererMesClients') }}" class="text-purpleM hover:text-purpleM-300">Gérer les clients</a>
-				</li>
-				<li class="mb-2 p-4 flex items-center justify-center">
-					<a href="{{ path('Notifications') }}" class="text-purpleM hover:text-purpleM-300">Notifications</a>
-				</li>
-				<li class="mb-2 p-4 flex items-center justify-center">
-					<a href="{{ path('app_company_index') }}" class="text-purpleM hover:text-purpleM-300">Company</a>
-				</li>
-				<li class="mb-2 p-4 flex items-center justify-center">
-					<a href="{{ path('app_user_index') }}" class="text-purpleM hover:text-purpleM-300">User</a>
-				</li>
-				<li class="mb-2 p-4 flex items-center justify-center">
-					<a href="{{ path('app_logout') }}" class="text-redM hover:text-redM-300">Déconnexion</a>
-				</li>
-			</ul>
+	
 </div>
 
 <div id="sidebar" class="bg-gray-100 text-xs p-4 w-64 h-full fixed top-0 left-0 z-9 hidden md:block">
@@ -46,7 +15,7 @@
 		<img src="{{ asset('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4">
 	</div>
 
-	<div class="flex flex-col h-full items-center">
+	<div class="flex flex-col h-full z-10 items-center">
 		<div class="flex-1 overflow-y-auto absolute top-50 left-50 transform translate-x(-50%) translate-y(-50%)">
 			<ul class="p-4">
 				<li class="mb-2 p-4 flex items-center justify-center">
