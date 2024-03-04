@@ -36,7 +36,7 @@ class StripeController extends AbstractController
         $YOUR_DOMAIN = 'http://127.0.0.1:8000';
 
         // Créer la session de paiement Stripe
-        Stripe::setApiKey('sk_test_51MzKwrI4CWQS7W9jqgneaMlVfXnj4r76Xc3c3TRBVsbgXE0sqP0sBpGYM3O1IJtRzvPRxiiOJUXNIF6rTCzmF4rB00Lm235aBu'); // Remplacer par votre clé privée Stripe
+        Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']); // Remplacer par votre clé privée Stripe
         $checkout_session = Session::create([
             'payment_method_types' => ['card'],
             'line_items' => [[
@@ -79,7 +79,7 @@ class StripeController extends AbstractController
     public function createSubscriptionPlan(Plan $plan, $wplanID, PlanRepository $planRepository, EntityManagerInterface $entityManager): Response
     {
         // Configurez votre clé d'API Stripe
-        Stripe::setApiKey('sk_test_51MzKwrI4CWQS7W9jqgneaMlVfXnj4r76Xc3c3TRBVsbgXE0sqP0sBpGYM3O1IJtRzvPRxiiOJUXNIF6rTCzmF4rB00Lm235aBu');
+        Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
         $wplanID = (int) $wplanID;
         $planW =  $planRepository->findOneBy(['id' => $wplanID]);
 
@@ -121,7 +121,7 @@ class StripeController extends AbstractController
     #[Route('/subscribe/{userPlanId}', name: 'subscribe')]
     public function subscribe(int $userPlanId, UserPlanRepository $userPlanRepository, EntityManagerInterface $entityManager): Response
     {
-        Stripe::setApiKey('sk_test_51MzKwrI4CWQS7W9jqgneaMlVfXnj4r76Xc3c3TRBVsbgXE0sqP0sBpGYM3O1IJtRzvPRxiiOJUXNIF6rTCzmF4rB00Lm235aBu');
+        Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
         $userPlan = $userPlanRepository->find($userPlanId);
 
         // Vérifier si le UserPlan existe
@@ -158,7 +158,7 @@ class StripeController extends AbstractController
         }
 
         // Annuler l'abonnement sur Stripe
-        Stripe::setApiKey('sk_test_51MzKwrI4CWQS7W9jqgneaMlVfXnj4r76Xc3c3TRBVsbgXE0sqP0sBpGYM3O1IJtRzvPRxiiOJUXNIF6rTCzmF4rB00Lm235aBu');
+        Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
         $subscriptionId = $userPlan->getSubscriptionId();
         $subscription = Subscription::retrieve($subscriptionId);
         $subscription->cancel();
@@ -179,12 +179,12 @@ class StripeController extends AbstractController
         $YOUR_DOMAIN = 'http://127.0.0.1:8000';
 
         // Configurez votre clé d'API Stripe
-        Stripe::setApiKey('sk_test_51MzKwrI4CWQS7W9jqgneaMlVfXnj4r76Xc3c3TRBVsbgXE0sqP0sBpGYM3O1IJtRzvPRxiiOJUXNIF6rTCzmF4rB00Lm235aBu');
+        Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
 
         $user = $this->getUser();
         $planStripe =  $planRepository->findOneBy(['id' => $planId]);
         // Initialisez et configurez Stripe ici...
-        Stripe::setApiKey('sk_test_51MzKwrI4CWQS7W9jqgneaMlVfXnj4r76Xc3c3TRBVsbgXE0sqP0sBpGYM3O1IJtRzvPRxiiOJUXNIF6rTCzmF4rB00Lm235aBu');
+        Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
         $price = Price::create([
             'unit_amount' => $planStripe->getPrice() * 100, // Le prix en centimes *100
             'currency' => 'eur', // La devise (ici l'euro)
@@ -209,7 +209,7 @@ class StripeController extends AbstractController
             ]],
             'mode' => 'subscription',
             // 'customer' => $stripeCustomerId, // Ajouter le customer id dans la session de paiement
-            'success_url' => $YOUR_DOMAIN . '/stripe/success',
+            'success_url' => $YOUR_DOMAIN . '/stripe/success/'.$planId,
             'cancel_url' => $YOUR_DOMAIN . '/stripe/cancel',
             'metadata' => [
                 'plan_id' => $planStripe->getStripePlanID(),

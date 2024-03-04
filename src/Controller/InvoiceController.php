@@ -52,7 +52,7 @@ class InvoiceController extends AbstractController
         $invoice->setCreatedAt(new \DateTimeImmutable());
 
         // Initialisez et configurez Stripe ici...
-        Stripe::setApiKey('sk_test_51MzKwrI4CWQS7W9jqgneaMlVfXnj4r76Xc3c3TRBVsbgXE0sqP0sBpGYM3O1IJtRzvPRxiiOJUXNIF6rTCzmF4rB00Lm235aBu');
+        Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
         $price = Price::create([
             'unit_amount' => $devis->getPrice() * 100, // Le prix en centimes *100
             'currency' => 'eur', // La devise (ici l'euro)
