@@ -3,48 +3,29 @@
 {% block title %}Invoice index{% endblock %}
 
 {% block body %}
-    <h1>Invoice index</h1>
+{% include 'partials/_sidebar.html.twig' %}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>StripePaymentID</th>
-                <th>PaymentType</th>
-                <th>Vat</th>
-                <th>PaymentDetails</th>
-                <th>State</th>
-                <th>UpdatedAt</th>
-                <th>CreatedAt</th>
-                <th>DeletedAt</th>
-                <th>Slug</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
+<div class="bg-fullPink mx-auto flex flex-col items-center justify-center h-screen w-full">
+    <div class="overflow-y-scroll w-1/2">
         {% for invoice in invoices %}
-            <tr>
-                <td>{{ invoice.id }}</td>
-                <td>{{ invoice.stripePaymentID }}</td>
-                <td>{{ invoice.paymentType }}</td>
-                <td>{{ invoice.Vat }}</td>
-                <td>{{ invoice.paymentDetails }}</td>
-                <td>{{ invoice.state }}</td>
-                <td>{{ invoice.updatedAt ? invoice.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ invoice.createdAt ? invoice.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ invoice.deletedAt ? invoice.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ invoice.slug }}</td>
-                <td>
-                    <a href="{{ path('app_invoice_show', {'id': invoice.id}) }}">show</a>
-                    <a href="{{ path('app_invoice_edit', {'id': invoice.id}) }}">edit</a>
-                </td>
-            </tr>
+        <div class="flex m-15 bg-white text-xs shadow-md px-4 p-4 items-center justify-between py-2 w-full rounded-lg">
+            <div class="flex flex-col">
+                <span>{{ invoice.stripePaymentID }}</span>
+                <span>{{ invoice.Vat }}</span>
+                <span>{{ invoice.paymentDetails }}</span>
+                <span class="flex justify-between mt-2">
+                    <a class="px-4 rounded-full text-white bg-purpleM" href="{{ path('app_invoice_show', {'id': invoice.id}) }}">Voir</a>
+                    <a class="text-red px-4" href="{{ path('app_invoice_edit', {'id': invoice.id}) }}">Modifier</a>
+                    <a class="text-green px-4" href="{{ path('app_invoice_delete', {'id' : invoice.id }) }}">Supprimer</a>
+                </span>
+            </div>
+            <div class="rounded-md px-4 py-2">
+                <span>{{ invoice.paymentType }} / €</span>
+            </div>
+        </div>
         {% else %}
-            <tr>
-                <td colspan="11">no records found</td>
-            </tr>
+        <div class="text-center">No records found</div>
         {% endfor %}
-        </tbody>
-    </table>
-
+    </div>
+</div>
 {% endblock %}

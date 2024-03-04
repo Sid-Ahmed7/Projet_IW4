@@ -12,17 +12,53 @@ class InvoiceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('stripePaymentID')
-            ->add('paymentType')
-            ->add('Vat')
-            ->add('paymentDetails')
-            ->add('state')
-            ->add('updatedAt')
-            ->add('createdAt')
-            ->add('deletedAt')
-            ->add('slug')
-            
-        ;
+            ->add(
+                'stripePaymentID',
+                null,
+                ['attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],]
+            )
+            ->add(
+                'paymentType',
+                null,
+                ['attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],]
+            )
+            ->add(
+                'Vat',
+                null,
+
+                ['attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],]
+
+            )
+            ->add(
+                'paymentDetails',
+                null,
+                ['attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],]
+            )
+            ->add(
+                'state',
+                null,
+                ['attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],]
+            )
+            ->add(
+                'updatedAt',
+                null,
+                ['attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],]
+            )
+            ->add(
+                'createdAt',
+                null,
+                ['attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],]
+            )
+            ->add(
+                'deletedAt',
+                null,
+                ['attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],]
+            )
+            ->add(
+                'slug',
+                null,
+                ['attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],]
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -32,4 +68,3 @@ class InvoiceType extends AbstractType
         ]);
     }
 }
- 
