@@ -72,7 +72,7 @@ class DevisController extends AbstractController
         ]);
     }
 
-    #[Route('/show', name: 'app_devis_show', methods: ['GET'])]
+    #[Route('/show/{id}', name: 'app_devis_show', methods: ['GET'])]
     public function show(Devis $devi): Response
     {
         return $this->render('devis/show.html.twig', [
