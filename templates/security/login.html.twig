@@ -63,6 +63,7 @@
 					<label for="password" class="block mb-2 text-sm font-medium">Mot de passe</label>
 					<input type="password" name="password" id="password" class="border border-gray-300 rounded-md p-2 w-full" placeholder="Entrez votre mot de passe"/>
 				</div>
+				<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
 				<div class="flex items-center justify-between">
 					<button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-md">Se connecter</button>

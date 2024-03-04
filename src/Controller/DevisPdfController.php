@@ -41,7 +41,7 @@ class DevisPdfController extends AbstractController
 
         // Envoyer le PDF au navigateur
         $dompdf->stream("devis_" . $devis->getId() . ".pdf", [
-            "Attachment" => false 
+            "Attachment" => false
         ]);
 
         return new Response('', 200, [
@@ -57,20 +57,20 @@ class DevisPdfController extends AbstractController
         if (!$devis) {
             throw $this->createNotFoundException('Le devis demandé n\'existe pas.');
         }
-        
-            // Obtenir l'utilisateur connecté
-    $user = $security->getUser();
-    // ou $user = $this->getUser();
 
-    if (!$user) {
-        throw $this->createNotFoundException('Utilisateur non trouvé.');
-    }
+        // Obtenir l'utilisateur connecté
+        $user = $security->getUser();
+        // ou $user = $this->getUser();
 
-    // Assurez-vous que l'utilisateur a une adresse e-mail valide
-    $userEmail = $user->getEmail();
-    if (!$userEmail) {
-        throw new \Exception('L\'utilisateur n\'a pas d\'adresse e-mail valide.');
-    }
+        if (!$user) {
+            throw $this->createNotFoundException('Utilisateur non trouvé.');
+        }
+
+        // Assurez-vous que l'utilisateur a une adresse e-mail valide
+        $userEmail = $user->getEmail();
+        if (!$userEmail) {
+            throw new \Exception('L\'utilisateur n\'a pas d\'adresse e-mail valide.');
+        }
 
 
         // Générer le PDF

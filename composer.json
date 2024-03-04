@@ -11,6 +11,8 @@
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.18",
         "dompdf/dompdf": "^2.0",
+        "gedmo/doctrine-extensions": "^3.14",
+        "stof/doctrine-extensions-bundle": "^1.10",
         "stripe/stripe-php": "^13.9",
         "symfony/console": "6.3.*",
         "symfony/dotenv": "6.3.*",
@@ -28,7 +30,7 @@
         "symfony/validator": "6.3.*",
         "symfony/webpack-encore-bundle": "^2.1",
         "symfony/yaml": "6.3.*",
-        "symfonycasts/tailwind-bundle": "^0.5.0",
+        "symfonycasts/tailwind-bundle": "^0.5.1",
         "symfonycasts/verify-email-bundle": "^1.14"
     },
     "config": {

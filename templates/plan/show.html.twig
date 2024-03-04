@@ -40,10 +40,6 @@
                 <td>{{ plan.state }}</td>
             </tr>
             <tr>
-                <th>Uuid</th>
-                <td>{{ plan.uuid }}</td>
-            </tr>
-            <tr>
                 <th>Slug</th>
                 <td>{{ plan.slug }}</td>
             </tr>
@@ -53,6 +49,7 @@
     <a href="{{ path('app_plan_index') }}">back to list</a>
 
     <a href="{{ path('app_plan_edit', {'id': plan.id}) }}">edit</a>
+<a href="{{ path('stripe', {'userId': app.user.id, 'planId': plan.id}) }}">Souscrire à ce plan</a>
 
     {{ include('plan/_delete_form.html.twig') }}
 {% endblock %}

@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\InvoiceRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 
 #[ORM\Entity(repositoryClass: InvoiceRepository::class)]
 class Invoice
@@ -42,7 +44,13 @@ class Invoice
     private ?\DateTimeImmutable $deletedAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    // #[Gedmo\Slug(fields: ['name',"id"])]
+
+
     private ?string $slug = null;
+
+    #[ORM\Column]
+    private ?int $HTPrice = null;
 
     public function getId(): ?int
     {
@@ -165,6 +173,18 @@ class Invoice
     public function setSlug(?string $slug): static
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getHTPrice(): ?int
+    {
+        return $this->HTPrice;
+    }
+
+    public function setHTPrice(int $HTPrice): static
+    {
+        $this->HTPrice = $HTPrice;
 
         return $this;
     }
