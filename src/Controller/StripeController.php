@@ -174,7 +174,7 @@ class StripeController extends AbstractController
 
 
     #[Route('/stripe/{planId}/{userId}', name: 'stripe')]
-    public function stripePayment(Plan $plan, EntityManagerInterface $entityManager, UserRepository $userRepository, $userId, $planId): Response
+    public function stripePayment(Plan $plan, EntityManagerInterface $entityManager, UserRepository $userRepository, $userId, $planId, PlanRepository $planRepository): Response
     {
         $YOUR_DOMAIN = 'http://127.0.0.1:8000';
 
@@ -182,8 +182,7 @@ class StripeController extends AbstractController
         Stripe::setApiKey('sk_test_51MzKwrI4CWQS7W9jqgneaMlVfXnj4r76Xc3c3TRBVsbgXE0sqP0sBpGYM3O1IJtRzvPRxiiOJUXNIF6rTCzmF4rB00Lm235aBu');
 
         $user = $this->getUser();
-        $planStripe = $planRepository->find($planId);
-        dd($planStripe);
+        $planStripe =  $planRepository->findOneBy(['id' => $planId]);
         // Initialisez et configurez Stripe ici...
         Stripe::setApiKey('sk_test_51MzKwrI4CWQS7W9jqgneaMlVfXnj4r76Xc3c3TRBVsbgXE0sqP0sBpGYM3O1IJtRzvPRxiiOJUXNIF6rTCzmF4rB00Lm235aBu');
         $price = Price::create([
@@ -210,7 +209,7 @@ class StripeController extends AbstractController
             ]],
             'mode' => 'subscription',
             // 'customer' => $stripeCustomerId, // Ajouter le customer id dans la session de paiement
-            'success_url' => $YOUR_DOMAIN . '/stripe/success/' . $planId,
+            'success_url' => $YOUR_DOMAIN . '/stripe/success',
             'cancel_url' => $YOUR_DOMAIN . '/stripe/cancel',
             'metadata' => [
                 'plan_id' => $planStripe->getStripePlanID(),
