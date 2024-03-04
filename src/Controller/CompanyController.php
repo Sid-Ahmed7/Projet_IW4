@@ -30,7 +30,7 @@ class CompanyController extends AbstractController
     }
 
     #[Route('{id}/new', name: 'app_company_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, Security $security): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, Security $security, $id): Response
     {
         $company = new Company();
         $user = $security->getUser();
@@ -46,7 +46,7 @@ class CompanyController extends AbstractController
             $company->setCreatedAt($now);
             $company->setState('Online');
             $company->setVerified(false);
-            $company->setCreatedBy();
+            $company->setCreatedBy($id);
 
             $entityManager->persist($company);
 
