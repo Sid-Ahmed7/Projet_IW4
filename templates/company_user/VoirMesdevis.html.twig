@@ -4,46 +4,7 @@
 
 {% block body %}
 	<div class="  flex">
-
-		<div class="bg-gray-100 text-xs   p-4 w-64 h-full fixed top-0 left-0 z-10">
-
-
-			<div class="mb-2 flex items-center justify-center">
-				<img src="{{ asset('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4">
-
-			</div>
-
-			<div class="flex flex-col h-full items-center">
-				<div class="flex-1 overflow-y-auto absolute top-50 left-50 transform translate-x(-50%) translate-y(-50%)">
-					<ul class="p-4">
-
-						<li class="mb-2 p-4  flex items-center justify-center">
-							<a href="{{ url('Accueil_company') }}" class="text-purpleM hover:text-purple-300">Accueil</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ url('MonProfil_company') }}" class="text-purpleM hover:text-purple-300">Mon profil</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('Mesfactures_company') }}" class="text-purpleM hover:text-purpleM-300">Voir les factures</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('VoirMesdevis') }}" class="text-purpleM hover:text-purpleM-300">Voir les devis</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('VoirMespaiements') }}" class="text-purpleM hover:text-purpleM-300">Suivi d'un paiement</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('GererMesClients') }}" class="text-purpleM hover:text-purpleM-300">Gérer les clients</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('Notifications') }}" class="text-purpleM hover:text-purpleM-300">Notifications</a>
-						</li>
-
-					</ul>
-				</div>
-			</div>
-		</div>
-
+	{% include 'partials/_sidebar.html.twig' %}
 
 		<div class=" bg-fullPink mx-auto flex flex-col items-center justify-center h-screen w-full">
 
@@ -104,24 +65,21 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td class="px-4 py-2 border-b border-gray-300">Hicham</td>
-							<td class="px-4 py-2 border-b border-gray-300">Sagouti</td>
-							<td class="px-4 py-2 border-b border-gray-300">12323AZRE</td>
-							<td class="px-4 py-2 border-b border-gray-300">17-06-2016</td>
-							<td class="px-4 py-2 border-b border-gray-300 text-green">Payer</td>
-							<td class="px-4 py-2 border-b border-gray-300">
-								<a class="px-2 text-xxs rounded-full text-white bg-purpleM" href="#">Voir</a>
-							</td>
-						</tr>
-
+						{% for devi in devis %}
+							<tr>
+								<td class="px-4 py-2 border-b border-gray-300">{{ devi.firstName }}</td>
+								<td class="px-4 py-2 border-b border-gray-300">{{ devi.lastName }}</td>
+								<td class="px-4 py-2 border-b border-gray-300">{{ devi.id }}</td>
+								<td class="px-4 py-2 border-b border-gray-300">{{ devi.date|date('d-m-Y') }}</td>
+								<td class="px-4 py-2 border-b border-gray-300 text-green">{{ devi.status }}</td>
+								<td class="px-4 py-2 border-b border-gray-300">
+									<a class="px-2 text-xxs rounded-full text-white bg-purpleM" href="{{ path('devis_show', {'id': devi.id}) }}">Voir</a>
+								</td>
+							</tr>
+						{% endfor %}
 					</tbody>
 				</table>
-
-
 			</div>
-
-
 		</div>
 	</div>
 

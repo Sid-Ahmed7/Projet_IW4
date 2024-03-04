@@ -1,9 +1,6 @@
-{{ form_start(form) }}
-{{ form_widget(form) }}
-
-
-<div class="flex items-center justify-between">
-	<button class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-md mx-auto">{{ button_label|default('Save') }}</button>
-
-</div>
+{{ form_start(form, {'attr': {'class': 'flex flex-col space-y-4'}}) }}
+    {{ form_widget(form, {'attr': {'class': 'w-full max-w-xs'}}) }}
+    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        {{ button_label|default('Save') }}
+    </button>
 {{ form_end(form) }}

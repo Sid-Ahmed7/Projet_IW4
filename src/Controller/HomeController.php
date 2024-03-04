@@ -25,7 +25,7 @@ class HomeController extends AbstractController
     {
         return $this->render('reservation/reserver.html.twig');
     }
-    #[Route('/dashboard', name: 'dashboard', methods: ['GET'])]
+    #[Route('/dashboard', name: 'app_dashboard', methods: ['GET'])]
     public function index3(UserRepository $userRepository): Response
     {
         return $this->render('sidebars/dashboard.html.twig');

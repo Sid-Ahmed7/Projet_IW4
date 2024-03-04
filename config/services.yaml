@@ -9,6 +9,8 @@ parameters:
     profilePicture_directory: '%kernel.project_dir%/public/uploads/profilePicture'
     invoice_directory: '%kernel.project_dir%/public/uploads/invoices'
     devis_directory: '%kernel.project_dir%/public/uploads/devis'
+    pictures_directory: '%kernel.project_dir%/public/uploads/profilePicture'
+
 
 
 

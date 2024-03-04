@@ -80,7 +80,7 @@ class Company
     #[ORM\OneToMany(mappedBy: 'Company', targetEntity: Negotiation::class)]
     private Collection $negotiations;
 
-    #[ORM\Column]
+    #[ORM\Column(type: 'bigint',nullable: true)]
     private ?int $createdBy = null;
 
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: Reque::class)]
@@ -100,7 +100,11 @@ class Company
         $this->usr = new ArrayCollection();
         $this->reques = new ArrayCollection();
     }
-
+    public function __toString(): string
+    {
+        return $this->name;
+    }
+    
     public function getId(): ?int
     {
         return $this->id;
