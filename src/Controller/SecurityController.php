@@ -74,7 +74,7 @@ public function reset(Request $request, MailerInterface $mailer, UserRepository 
                 ->from('ibrahim60200@gmail.com')
                 ->to($user->getEmail())
                 ->subject('Your password reset request')
-                ->html('<p>To reset your password, please click the link below</p><a href="http://http://162.19.78.55:8000/reset-password?token=' . $resetToken . '">Reset Password</a>');
+                ->html('<p>To reset your password, please click the link below</p><a href="http://162.19.78.55:8000/reset-password?token=' . $resetToken . '">Reset Password</a>');
 
             // Envoyer l'email
             $mailer->send($email);
