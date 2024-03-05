@@ -75,7 +75,7 @@ class HomeController extends AbstractController
     {
         return $this->render('wizzard/newsubscriber.html.twig');
     }
-    #[Route('/MonProfile', name: 'newsubscribe', methods: ['GET'])]
+    #[Route('/MonProfile', name: 'voirMonProfile_app', methods: ['GET'])]
     public function index11(): Response
     {
         return $this->render('company_user/VoirMonProfil.html.twig');

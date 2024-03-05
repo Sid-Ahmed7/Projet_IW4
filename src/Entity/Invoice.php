@@ -52,6 +52,9 @@ class Invoice
     #[ORM\Column(nullable: true)]
     private ?int $HTPrice = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $ttcprice = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -185,6 +188,18 @@ class Invoice
     public function setHTPrice(int $HTPrice): static
     {
         $this->HTPrice = $HTPrice;
+
+        return $this;
+    }
+
+    public function getTtcprice(): ?int
+    {
+        return $this->ttcprice;
+    }
+
+    public function setTtcprice(?int $ttcprice): static
+    {
+        $this->ttcprice = $ttcprice;
 
         return $this;
     }
