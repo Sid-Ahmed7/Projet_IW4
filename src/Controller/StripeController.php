@@ -44,7 +44,7 @@ class StripeController extends AbstractController
                 'quantity' => 1,
             ]],
             'mode' => 'payment',
-            'success_url' => $YOUR_DOMAIN . '/success.html',
+            'success_url' => $YOUR_DOMAIN . '/newsubsciber.html',
             'cancel_url' => $YOUR_DOMAIN . '/cancel.html',
             'metadata' => [
                 'invoice_id' => $invoice->getId(),
@@ -223,8 +223,6 @@ class StripeController extends AbstractController
     #[Route('/stripe/valide/{planId}', name: 'stripe_success')]
     public function stripeSuccess(Request $request, UserRepository $userRepository, PlanRepository $planRepository, EntityManagerInterface $entityManager,$planId): Response
     {
-        dd($planId);
-
         // Récupérer le plan et l'utilisateur à partir des métadonnées de la session de paiement
         $planId = $request->query->get('plan_id');
         $userId = $this->getUser();

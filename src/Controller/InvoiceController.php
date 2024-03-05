@@ -50,6 +50,8 @@ class InvoiceController extends AbstractController
         $invoice->setDevis($devis); // lier la facture au devis 
         $invoice->setState('pending');
         $invoice->setCreatedAt(new \DateTimeImmutable());
+        $invoice->setHTPrice();
+
 
         // Initialisez et configurez Stripe ici...
         Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);

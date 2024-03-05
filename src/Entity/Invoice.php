@@ -49,7 +49,7 @@ class Invoice
 
     private ?string $slug = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $HTPrice = null;
 
     public function getId(): ?int
