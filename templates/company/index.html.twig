@@ -1,61 +1,71 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}company index{% endblock %}
+{% block title %}Company Index{% endblock %}
 
 {% block body %}
-    <h1>company index</h1>
+    {% include 'partials/_sidebar.html.twig' %}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Address</th>
-                <th>Logo</th>
-                <th>Banner</th>
-                <th>Email</th>
-                <th>PhoneNumber</th>
-                <th>TaxNumber</th>
-                <th>SiretNumber</th>
-                <th>Likes</th>
-                <th>UpdatedAt</th>
-                <th>CreatedAt</th>
-                <th>State</th>
-                <th>Slug</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for company in companys %}
-            <tr>
-                <td>{{ company.id }}</td>
-                <td>{{ company.name }}</td>
-                <td>{{ company.address }}</td>
-                <td>{{ company.logo }}</td>
-                <td>{{ company.banner }}</td>
-                <td>{{ company.email }}</td>
-                <td>{{ company.phoneNumber }}</td>
-                <td>{{ company.taxNumber }}</td>
-                <td>{{ company.siretNumber }}</td>
-                <td>{{ company.likes }}</td>
-                <td>{{ company.updatedAt ? company.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ company.createdAt ? company.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ company.state }}</td>
-                <td>{{ company.slug }}</td>
-                <td>
-                    <a href="{{ path('app_company_show', {'slug': company.slug}) }}">show</a>
-                    <a href="{{ path('app_company_edit', {'slug': company.slug}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="16">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="flex flex-col bg-fullPink items-center justify-center min-h-screen py-12">
+        <div class="bg-white text-xs shadow-md rounded-lg p-8 max-w-full">
+            <header class="flex justify-center items-center mb-4">
+                <img src="{{ asset ('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4" width="93">
+                <h1 class="text-xl font-medium">Company Index</h1>
+            </header>
 
-    <a href="{{ path('app_company_new', {'id': app.user.id}) }}">nouvelle company</a>
+            <div class="overflow-x-auto">
+                <table class="table-auto w-full">
+                    <thead>
+                        <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                            <th>Id</th>
+                            <th>Name</th>
+                            <th>Address</th>
+                            <th>Logo</th>
+                            <th>Banner</th>
+                            <th>Email</th>
+                            <th>PhoneNumber</th>
+                            <th>TaxNumber</th>
+                            <th>SiretNumber</th>
+                            <th>Likes</th>
+                            <th>UpdatedAt</th>
+                            <th>CreatedAt</th>
+                            <th>State</th>
+                            <th>Slug</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-600 text-sm font-light">
+                    {% for company in companys %}
+                        <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <td>{{ company.id }}</td>
+                        <td>{{ company.name }}</td>
+                        <td>{{ company.address }}</td>
+                        <td>{{ company.logo }}</td>
+                        <td>{{ company.banner }}</td>
+                        <td>{{ company.email }}</td>
+                        <td>{{ company.phoneNumber }}</td>
+                        <td>{{ company.taxNumber }}</td>
+                        <td>{{ company.siretNumber }}</td>
+                        <td>{{ company.likes }}</td>
+                        <td>{{ company.updatedAt ? company.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                        <td>{{ company.createdAt ? company.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                        <td>{{ company.state }}</td>
+                        <td>{{ company.slug }}</td>
+                        <td>
+                            <a href="{{ path('app_company_show', {'id': company.id}) }}">show</a>
+                            <a href="{{ path('app_company_edit', {'id': company.id}) }}">edit</a>
+                        </td>                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="15" class="text-center">No records found</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-
+            <div class="mt-4">
+<a href="{{ path('app_company_new', {'id': app.user.id}) }}" class="text-blue-600">Create new</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Company;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -24,14 +25,23 @@ class CompanyType extends AbstractType
                 'label' => 'Banner (image)',
                 'required' => false, // Le logo n'est pas obligatoire lors de la creation
             ])
-        
+
             ->add('email')
+            ->add('categorie', ChoiceType::class, [
+                'choices' => [
+                    'Événement' => 'EVENEMENT',
+                    'Anniversaire' => 'ANNIVERSAIRE',
+                    'Mariage' => 'MARIAGE', 
+                    'Concert' => 'CONCERT', 
+                ]
+            ])
             ->add('phoneNumber')
             ->add('taxNumber')
             ->add('siretNumber');
-            
-        
-           // Il faudrait voire comment faire le 
+
+
+
+            // Il faudrait voire comment faire le 
         ;
     }
 

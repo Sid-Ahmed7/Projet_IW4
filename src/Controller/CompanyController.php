@@ -16,12 +16,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 
 
 #[Route('/company')]
 class CompanyController extends AbstractController
 {
     #[Route('/', name: 'app_company_index', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
+
     public function index(CompanyRepository $companyRepository, User $user): Response
     {
         return $this->render('company/index.html.twig', [
@@ -91,7 +95,7 @@ class CompanyController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}', name: 'app_company_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_company_show', methods: ['GET'])]
     public function show(Company $company, $slug): Response
     {
         $slug;
@@ -101,7 +105,7 @@ class CompanyController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}/edit', name: 'app_company_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_company_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
 

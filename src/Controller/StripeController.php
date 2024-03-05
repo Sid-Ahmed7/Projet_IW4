@@ -192,7 +192,7 @@ class StripeController extends AbstractController
                 'name' => $planStripe->getName(), // Le titre de l'annonce comme nom du produit
             ],
             'recurring' => [
-                'interval' => 'month', // Intervalle de facturation (par exemple, chaque mois)
+                'interval' => 'month', //  chaque mois ducoup 
             ],
         ]);
         $planStripe->setStripePaymentID($price->id);
@@ -230,7 +230,6 @@ class StripeController extends AbstractController
         $user = $userRepository->find($userId);
 
         dd($planId);
-        // Vérifier si le plan et l'utilisateur existent
         if (!$plan || !$user) {
             throw $this->createNotFoundException('L\'utilisateur ou le plan n\'a pas été trouvé.');
         }
@@ -250,10 +249,10 @@ class StripeController extends AbstractController
         ]);
     }
 
-    #[Route('/stripe/cancel', name: 'stripe_cancel')]
-    public function stripeCancel(): Response
-    {
-        // Rediriger l'utilisateur vers une page d'annulation ou une autre page de votre choix
-        return $this->redirectToRoute('homepage');
-    }
+    // #[Route('/stripe/cancel', name: 'stripe_cancel')]
+    // public function stripeCancel(): Response
+    // {
+    //     // Rediriger l'utilisateur vers une page d'annulation ou une autre page de votre choix
+    //     return $this->redirectToRoute('homepage');
+    // }
 }

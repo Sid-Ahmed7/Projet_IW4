@@ -65,6 +65,9 @@ class Reque
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    #[ORM\Column]
+    private ?int $companie = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -270,6 +273,18 @@ class Reque
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getCompanie(): ?int
+    {
+        return $this->companie;
+    }
+
+    public function setCompanie(int $companie): static
+    {
+        $this->companie = $companie;
 
         return $this;
     }

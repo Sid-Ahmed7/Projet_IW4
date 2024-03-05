@@ -95,6 +95,9 @@ class Company
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $stripeCustomerID = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $categorie = null;
+
    
 
 
@@ -427,6 +430,18 @@ public function getStripeCustomerID(): ?string
 public function setStripeCustomerID(?string $stripeCustomerID): static
 {
     $this->stripeCustomerID = $stripeCustomerID;
+
+    return $this;
+}
+
+public function getCategorie(): ?string
+{
+    return $this->categorie;
+}
+
+public function setCategorie(?string $categorie): static
+{
+    $this->categorie = $categorie;
 
     return $this;
 }
