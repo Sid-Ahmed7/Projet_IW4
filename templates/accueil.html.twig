@@ -2,86 +2,28 @@
 
 {% block body %}
 
+
 		<header class="flex justify-between items-center bg-gray-200 py-4 px-6">
 			<img src="{{ asset ('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4">
 
-		</h1>
-		<div class="flex items-center gap-2">
-			<button class="bg-white text-xs border border-gray-300 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md"><a href= "{{ url('app_login') }}">Connexion</a></button>
-			<button class="bg-purple-600 text-xs text-white hover:bg-purple-700 px-4 py-2 rounded-md"><a href= "{{ url('app_register') }}">Inscription</a></button>
-		</div>
-	</header>
-	<main class="container mx-auto pt-12">
-		<div class="mb-4">
-			<label class="block text-gray-700 text-sm font-bold mb-2 text-center">
-				Saisissez votre demande
-			</label>
-		</div>
-
-		<div class="mb-6">
-			<label class="block text-gray-700 text-sm font-bold mb-2 text-center">
-				Choisissez la catégorie
-			</label>
-			<form method="post" class="flex flex-wrap justify-center">
-				<div class="grid grid-cols-3 gap-4">
-					<div class="text-center">
-						<img src="{{ asset('/images/marriage.jpg') }}" class="rounded-full mx-auto object-contain w-343 h-278" alt="Mariage"  >
-						<input type="checkbox" name="" class="mt-2">
-						<span class="text-gray-700">Mariage</span>
-					</div>
-					<div class="text-center">
-						<img src="{{ asset('/images/soiree.jpg') }}" class="rounded-full mx-auto object-contain w-343 h-278" alt="Soirée"  style="
-													
-														">
-						<input type="checkbox" name="" class="mt-2">
-						<span class="text-gray-700">Soirée</span>
-					</div>
-					<div class="text-center">
-						<img src="{{ asset('/images/Séminaire.jpg') }}" class="rounded-full  mx-auto object-contain w-343 h-278" alt="Séminaire">
-						<input type="checkbox" name="" class="mt-2">
-						<span class="text-gray-700">Séminaire</span>
-					</div>
-					<div class="text-center">
-						<img src="{{ asset('/images/spectacle.jpg') }}" class="rounded-full mx-auto w-343 h-278" alt="Spectacle" >
-						<input type="checkbox" name="" class="mt-2">
-						<span class="text-gray-700">Spectacle</span>
-					</div>
-					<div class="text-center">
-						<img src="{{ asset('/images/anniversaire.jpg') }}" alt="Anniversaire" class="rounded-full mx-auto w-343 h-278">
-						<input type="checkbox" name="" class="mt-2">
-						<span class="text-gray-700">Anniversaire</span>
-					</div>
-				</div>
-			</div>
-
-			<div class="flex text-xs w-1/2 mx-auto mb-4">
-				<div class="w-1/2 mr-2">
-					<label class="block text-gray-700 text-sm font-bold mb-2">
-						Date de l'événement
-					</label>
-					<input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="date">
-				</div>
-				<div class="w-1/2 ml-2">
-					<label class="block text-gray-700 text-sm font-bold mb-2">
-						Heure de l'événement
-					</label>
-					<input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="time">
-				</div>
-			</div>
-
-			<div class="mb-6 text-xs w-1/2 mx-auto">
-				<label class="block text-gray-700 text-sm font-bold mb-2">
-					Description
-				</label>
-				<textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="4" placeholder="Détails supplémentaires ici"></textarea>
-			</div>
-
-			<div class="flex items-center justify-center">
-				<button class=" text-xs bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
-					envoyer
+			<div class="flex space-x-4">
+				<button class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+					<a href="{{ url('app_login') }}">Connexion</a>
+				</button>
+				<button class="inline-flex items-center px-4 py-2 bg-purple-500 border border-transparent rounded-md text-white font-medium hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+					<a href= "{{ url('app_register') }}">Inscription</a>
 				</button>
 			</div>
-			<br>
-		</form>
-	</main>
-{% endblock %}
+		</header>
+
+		<div class="hero flex flex-col items-center justify-center h-screen bg-cover bg-no-repeat" style="background-image: url('{{ asset('images/pagedaccueil.png') }}')">
+			<span class="text-3xl text-white font-bold mb-8">Transformez vos rêves en réalité - laissez-nous donner vie à vos événements spéciaux.</span>
+			<button class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"><a href="{{ url('reserver') }}">Réservé</a></button>
+		</div>
+
+		<div class="services container mx-auto py-12">
+			<h2 class="text-3xl font-bold text-center mb-8">NOS SERVICES</h2>
+			<img src="{{ asset ('/images/dacc.png') }}" alt="Services Image" class="mx-auto">
+		</div>
+
+	{% endblock %}
