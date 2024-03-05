@@ -1,77 +1,41 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!
-{% endblock %}
+{% block title %}Log in!{% endblock %}
 
 {% block body %}
-	{# <form method="post"> #}
-	{# {% if error %}
-						<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-					{% endif %}
-			
-					{% if app.user %}
-						<div class="mb-3">
-							You are logged in as
-							{{ app.user.userIdentifier }},
-							<a href="{{ path('app_logout') }}">Logout</a>
-						</div>
-					{% endif %}
-			
-					<h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-					<label for="inputEmail">Email</label>
-					<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-					<label for="inputPassword">Password</label>
-					<input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-			
-					<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-			
-					<button class="btn btn-lg btn-primary" type="submit">
-						Sign in
-					</button>
-			
-					<a href="{{ path('app_reset') }}">
-						Forgot password</a>
-			
-			
-				</form> #}
-
-		<div class="flex flex-col items-center justify-center min-h-screen py-12"> <div class="bg-white shadow-md rounded-lg p-8 w-full max-w-md">
-			<header class="flex justify-center items-center">
-				<img src="{{ asset ('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4" width="93">
-			</header>
-			<br>
-			<br>
-
-			<form action="#" method='post'>
-				{% if error %}
-					<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-				{% endif %}
-
-				{% if app.user %}
-					<div class="mb-3">
-						You are logged in as
-						{{ app.user.userIdentifier }},
-						<a href="{{ path('app_logout') }}">Logout</a>
-					</div>
-				{% endif %}
-				<div class="mb-4">
-					<label for="email" class="block mb-2 text-sm font-medium">Email</label>
-					<input type="email" name="email" id="email" value="{{ last_username }}" class="border border-gray-300 rounded-md p-2 w-full" placeholder="Entrez votre email"/>
-				</div>
-
-				<div class="mb-6">
-					<label for="password" class="block mb-2 text-sm font-medium">Mot de passe</label>
-					<input type="password" name="password" id="password" class="border border-gray-300 rounded-md p-2 w-full" placeholder="Entrez votre mot de passe"/>
-				</div>
-				<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-				<div class="flex items-center justify-between">
-					<button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-md">Se connecter</button>
-
-					<a href="{{ path('app_reset') }}" class="text-sm text-gray-500 hover:underline">Mot de passe oublié ?</a>
-				</div>
-			</form>
+<div class="flex flex-col bg-fullPink items-center justify-center min-h-screen py-12">
+	<div class="bg-white text-xs shadow-md rounded-lg p-8 w-full max-w-md">
+		<header class="flex justify-center items-center">
+			<img src="{{ asset('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4" width="93">
+		</header>
+		<div class="flex justify-center items-center m-4">
+			<h2 class="block mb-2 text-xl font-medium">Connexion</h2>
 		</div>
+		<br>
+		<br>
+		<form action="#" method='post'>
+			{% if error %}
+				<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+			{% endif %}
+			{% if app.user %}
+				<div class="mb-3">
+					You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+				</div>
+			{% endif %}
+			<div class="mb-4">
+				<label for="email" class="block mb-2 text-sm font-medium">Email</label>
+				<input type="email" name="email" id="email" value="{{ last_username }}" class="border border-gray-300 rounded-md p-2 w-full" placeholder="Entrez votre email"/>
+			</div>
+			<div class="mb-6">
+				<label for="password" class="block mb-2 text-sm font-medium">Mot de passe</label>
+				<input type="password" name="password" id="password" class="border border-gray-300 rounded-md p-2 w-full" placeholder="Entrez votre mot de passe"/>
+			</div>
+			<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+			<div class="flex items-center justify-between">
+				<button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-md">Se connecter</button>
+				<a href="{{ path('app_reset') }}" class="text-sm text-gray-500 hover:underline">Mot de passe oublié ?</a>
+			</div>
+		</form>
 	</div>
-
+</div>
 {% endblock %}
