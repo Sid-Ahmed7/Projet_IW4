@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\DevisAssetRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 
 #[ORM\Entity(repositoryClass: DevisAssetRepository::class)]
 class DevisAsset
@@ -49,6 +51,9 @@ class DevisAsset
 
     #[ORM\Column]
     private ?int $unitPrice = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Gedmo\Slug(fields: ['name',"id"])]
 
     public function getId(): ?int
     {

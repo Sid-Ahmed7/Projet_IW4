@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 
 
@@ -50,7 +52,8 @@ class Devis
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true, unique: true)]
+    #[Gedmo\Slug(fields: ['title',"id"])]
     private ?string $slug = null;
 
     #[ORM\OneToMany(mappedBy: 'devis', targetEntity: Invoice::class)]

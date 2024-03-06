@@ -18,6 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 use App\Repository\UserRepository;
+use Stripe\Customer;
+use Stripe\Stripe;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -47,24 +49,40 @@ class RegistrationController extends AbstractController
             );
 
             $user->setSignupDate(new \DateTime());
-
-            // Gestion du picture
-            $pictureFile = $form->get('picture')->getData();
-            if ($pictureFile instanceof UploadedFile) {
-                $filesystem = new Filesystem();
-                $pictureFileName = md5(uniqid()) . '.' . $pictureFile->guessExtension();
-                $pictureFile->move($this->getParameter('profilePicture_directory'), $pictureFileName);
-                $user->setPicture($pictureFileName);
-            } else {
-                // si l'utilisateur ne souhaite pas mettre de pp cel rest à voir !!
+            $user->setRoles(['ROLE_USER']);
                 $defaultPictureFileName = $this->getParameter('profilePicture_directory') . '/no-user.jpg';
                 $user->setPicture($defaultPictureFileName);
-            }
 
+
+            // Gestion du picture
+            // $pictureFile = $form->get('picture')->getData();
+            // if ($pictureFile instanceof UploadedFile) {
+            //     $filesystem = new Filesystem();
+            //     $pictureFileName = md5(uniqid()) . '.' . $pictureFile->guessExtension();
+            //     $pictureFile->move($this->getParameter('profilePicture_directory'), $pictureFileName);
+            //     $user->setPicture($pictureFileName);
+            // } else {
+            //     // si l'utilisateur ne souhaite pas mettre de pp cela rest à voir !!
+            //     $defaultPictureFileName = $this->getParameter('profilePicture_directory') . '/no-user.jpg';
+            //     $user->setPicture($defaultPictureFileName);
+            // }
+
+            $entityManager->persist($user);
+
+            // Création de l'identifiant client dans Stripe
+            Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
+            $stripeCustomer = Customer::create([
+                'email' => $user->getEmail(),
+                'name' => $user->getFirstName() . ' ' . $user->getLastName(),
+
+            ]);
+
+            // Associez l'identifiant client à l'utilisateur dans votre application
+            $user->setStripeCustomerId($stripeCustomer->id);
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // Dans votre méthode register du RegistrationController
+            // Dans votre méthode register du RegistrationController EMAIL
             $this->emailVerifier->sendEmailConfirmation(
                 'app_verify_email',
                 $user,

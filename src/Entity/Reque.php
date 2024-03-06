@@ -56,6 +56,18 @@ class Reque
     #[ORM\Column(length: 20)]
     private ?string $state = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $mail = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $object = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column]
+    private ?int $companie = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -225,6 +237,54 @@ class Reque
     public function setState(string $state): static
     {
         $this->state = $state;
+
+        return $this;
+    }
+
+    public function getMail(): ?string
+    {
+        return $this->mail;
+    }
+
+    public function setMail(string $mail): static
+    {
+        $this->mail = $mail;
+
+        return $this;
+    }
+
+    public function getObject(): ?string
+    {
+        return $this->object;
+    }
+
+    public function setObject(string $object): static
+    {
+        $this->object = $object;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getCompanie(): ?int
+    {
+        return $this->companie;
+    }
+
+    public function setCompanie(int $companie): static
+    {
+        $this->companie = $companie;
 
         return $this;
     }

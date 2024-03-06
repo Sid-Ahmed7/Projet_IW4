@@ -44,7 +44,7 @@ class DevisAssetController extends AbstractController
             $entityManager->persist($devisAsset);
             $entityManager->flush();
     
-            return $this->redirectToRoute('app_devis_asset_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_devis_edit_price', ['id' => $devisId]);
         }
     
         return $this->render('devis_asset/new.html.twig', [
@@ -75,7 +75,7 @@ class DevisAssetController extends AbstractController
             $devisAsset->setUpdatedAt($now); 
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_devis_asset_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_devis_edit_price', ['id' => $devisAsset->getDevis()->getId()]);
         }
 
         return $this->render('devis_asset/edit.html.twig', [

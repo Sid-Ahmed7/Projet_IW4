@@ -50,9 +50,13 @@ class InvoiceController extends AbstractController
         $invoice->setDevis($devis); // lier la facture au devis 
         $invoice->setState('pending');
         $invoice->setCreatedAt(new \DateTimeImmutable());
+        $invoice->setHTPrice($devis->getPrice()*0,80);
+        $invoice->setTtcprice($devis->getPrice());
+
+
 
         // Initialisez et configurez Stripe ici...
-        Stripe::setApiKey('sk_test_51MzKwrI4CWQS7W9jqgneaMlVfXnj4r76Xc3c3TRBVsbgXE0sqP0sBpGYM3O1IJtRzvPRxiiOJUXNIF6rTCzmF4rB00Lm235aBu');
+        Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
         $price = Price::create([
             'unit_amount' => $devis->getPrice() * 100, // Le prix en centimes *100
             'currency' => 'eur', // La devise (ici l'euro)
@@ -60,7 +64,7 @@ class InvoiceController extends AbstractController
                 'name' => $devis->getTitle(), // Le titre de l'annonce comme nom du produit
             ],
         ]);
-        //ici on set toutes les données dont la facture à besoin dont l'ID de paiment construit en haut 
+        //ici on set toutes les données dont la facture à besoin dont l'ID de paiment construit en haut` 
         $invoice->setStripePaymentID($price->id);
         $invoice->setPaymentType('carte');
         $entityManager->persist($invoice);

@@ -1,58 +1,118 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing card</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="./dist/output.css"/>
+</head>
+<body class="h-screen">
+    <header>
+        <div class="container mx-auto">
+            <nav class="h-16">
+                <ul class="flex justify-center h-16 items-center gap-1">
+                    <li class="border border-green-100 text-green-500 hover:text-green-700 hover:bg-green-50 rounded"><a href="https://rabiulislam.dev" target="_blank" class="px-5 py-2 block">My Portfolio</a></li>
+                    <li class="border border-green-100 text-green-500 hover:text-green-700 hover:bg-green-50 rounded"><a href="mailto:rir.cse.71@gmail.com" class="px-5 py-2 block">Hire Me</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="container mx-auto">
+            <div class="p-5 text-center pb-10">
+                <h2 class="text-4xl font-bold">Nos Plans </h2>
+                <p class="text-gray-600">There are many variations of passages of Lorem Ipsum available but the majority have suffered alteration in some form.</p>
+            </div>
+            <div class="p-5 grid grid-cols-1 md:grid-cols-3 md:align-middle gap-5">
+<!-- starter -->
+                <div class="p-5 border shadow rounded  h-max hover:border-gray-200 hover:shadow-gray-400">
+                    <div class="text-center flex flex-col gap-2 py-5 text-gray-600">
+                        <h2 class="text-xl font-bold">Starter</h2>
+                        <p >Best suite for personal use for short project.</p>
+                        <p><span class="font-bold text-4xl">$20</span> <span>/ Year</span></p>
+                    </div>
+                    
+                    <ul class="px-2 py-5 flex flex-col gap-3">
+                        <li class="flex gap-2 items-center">
+                            <span class="fa fa-check-circle text-blue-500"></span>
+                            <span class="text-gray-500">1 user</span>
+                        </li>
+                        <li class="flex gap-2 items-center">
+                            <span class="fa fa-check-circle text-blue-500"></span>
+                            <span class="text-gray-500">1 project</span>
+                        </li>
+                        <li class="flex gap-2 items-center">
+                            <span class="fa fa-check-circle text-blue-500"></span>
+                            <span class="text-gray-500">Tracking and debugging</span>
+                        </li>
+                        <li class="flex gap-2 items-center">
+                            <span class="fa fa-check-circle text-blue-500"></span>
+                            <span class="text-gray-500">View report</span>
+                        </li>
+                        <li class="flex gap-2 items-center">
+                            <span class="fa fa-check-circle text-blue-500"></span>
+                            <span class="text-gray-500">Real time report</span>
+                        </li>
+                        <li class="flex gap-2 items-center">
+                            <span class="fa fa-check-circle text-blue-500"></span>
+                            <span class="text-gray-500">Support system</span>
+                        </li>
+                    </ul>
+                    <button class="px-5 py-2 border shadow w-full bg-gray-50 border-gray-200 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded">Buy Now</button>
+                </div>
 
-{% block title %}Plan{% endblock %}
+<!-- standard -->
+                <div class="p-5 shadow-md shadow-green-100 relative border border-green-100 hover:border-green-300 hover:shadow-green-300 rounded h-max">
+                    <span class="absolute top-0 px-10 py-2 bg-green-200 sm:-mt-5 rounded left-[calc(50%-65px)] shadow">Popular</span>
+                    <div class="text-center flex flex-col gap-2 py-5 text-gray-600">
+                        <h2 class="text-xl font-bold ">Standard</h2>
+                        <p>Best for multiple project handling</p>
+                        <p><span class="font-bold text-4xl">$50</span> <span>/ Year</span></p>
+                    </div>
+                    
+                    <ul class="px-2 py-5 flex flex-col gap-3">
+                        <li class="flex gap-2 items-center">
+                            <span class="fa fa-check-circle text-blue-500"></span>
+                            <span class="text-gray-500">3 users</span>
+                        </li>
+                        <li class="flex gap-2 items-center">
+                            <span class="fa fa-check-circle text-blue-500"></span>
+                            <span class="text-gray-500">10 projects</span>
+                        </li>
+                        <li class="flex gap-2 items-center">
+                            <span class="fa fa-check-circle text-blue-500"></span>
+                            <span class="text-gray-500">Tracking and debugging</span>
+                        </li>
+                        <li class="flex gap-2 items-center">
+                            <span class="fa fa-check-circle text-blue-500"></span>
+                            <span class="text-gray-500">View analytical report</span>
+                        </li>
+                        <li class="flex gap-2 items-center">
+                            <span class="fa fa-check-circle text-blue-500"></span>
+                            <span class="text-gray-500">Real time report</span>
+                        </li>
+                        <li class="flex gap-2 items-center">
+                            <span class="fa fa-check-circle text-blue-500"></span>
+                            <span class="text-gray-500">Active support system</span>
+                        </li>
+                        <li class="flex gap-2 items-center">
+                            <span class="fa fa-check-circle text-blue-500"></span>
+                            <span class="text-gray-500">Notification system</span>
+                        </li>
+                        <li class="flex gap-2 items-center">
+                            <span class="fa fa-check-circle text-blue-500"></span>
+                            <span class="text-gray-500">Invoicing system</span>
+                        </li>
+                        <li class="flex gap-2 items-center">
+                            <span class="fa fa-check-circle text-blue-500"></span>
+                            <span class="text-gray-500">Tax & billing system</span>
+                        </li>
+                    </ul>
 
-{% block body %}
-    <h1>Plan</h1>
+                    <button class="px-5 py-2 border shadow w-full bg-gray-50 border-gray-200 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded">Buy Now</button>
+                </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ plan.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ plan.name }}</td>
-            </tr>
-            <tr>
-                <th>Price</th>
-                <td>{{ plan.price }}</td>
-            </tr>
-            <tr>
-                <th>Features</th>
-                <td>{{ plan.features }}</td>
-            </tr>
-            <tr>
-                <th>UpdatedAt</th>
-                <td>{{ plan.updatedAt ? plan.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ plan.createdAt ? plan.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>DeletedAt</th>
-                <td>{{ plan.deletedAt ? plan.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>State</th>
-                <td>{{ plan.state }}</td>
-            </tr>
-            {# <tr>
-                <th>Uuid</th>
-                <td>{{ plan.uuid }}</td>
-            </tr> #}
-            <tr>
-                <th>Slug</th>
-                <td>{{ plan.slug }}</td>
-            </tr>
-        </tbody>
-    </table>
 
-    <a href="{{ path('app_plan_index') }}">back to list</a>
-
-    <a href="{{ path('app_plan_edit', {'id': plan.id}) }}">edit</a>
-
-    {{ include('plan/_delete_form.html.twig') }}
-{% endblock %}

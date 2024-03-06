@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Company;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -32,15 +33,21 @@ class CompanyType extends AbstractType
             ->add('email', null, [
                 'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
             ])
-            ->add('phoneNumber', null, [
-                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
+
+            ->add('email')
+            ->add('categorie', ChoiceType::class, [
+                'choices' => [
+                    'Événement' => 'EVENEMENT',
+                    'Anniversaire' => 'ANNIVERSAIRE',
+                    'Mariage' => 'MARIAGE', 
+                    'Concert' => 'CONCERT', 
+                ]
             ])
-            ->add('taxNumber', null, [
-                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
-            ])
-            ->add('siretNumber', null, [
-                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
-            ]);
+            ->add('phoneNumber')
+            ->add('taxNumber')
+            ->add('siretNumber');
+
+
 
 
             // Il faudrait voire comment faire le 

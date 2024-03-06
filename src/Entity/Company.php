@@ -9,6 +9,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 
 #[ORM\Entity(repositoryClass: CompanyRepository::class)]
 class Company
@@ -63,8 +65,9 @@ class Company
     private ?string $state = null;
 
     
-
     #[ORM\Column(length: 255, nullable: true)]
+    #[Gedmo\Slug(fields: ['name'])]
+
     private ?string $slug = null;
 
 
@@ -88,6 +91,12 @@ class Company
 
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: Reque::class)]
     private Collection $reques;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $stripeCustomerID = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $categorie = null;
 
    
 
@@ -402,9 +411,44 @@ class Company
         return $this->reques;
     }
 
+    // public function getUuid(): Uuid
+    // {
+    //     return $this->uuid;
+    // }
     
    
+//     public function findOneBySlug($slug): ?Company
+// {
+//     return $this->createQueryBuilder('c')
+//         ->andWhere('c.slug = :slug')
+//         ->setParameter('slug', $slug)
+//         ->getQuery()
+//         ->getOneOrNullResult();
+// }
 
+public function getStripeCustomerID(): ?string
+{
+    return $this->stripeCustomerID;
+}
+
+public function setStripeCustomerID(?string $stripeCustomerID): static
+{
+    $this->stripeCustomerID = $stripeCustomerID;
+
+    return $this;
+}
+
+public function getCategorie(): ?string
+{
+    return $this->categorie;
+}
+
+public function setCategorie(?string $categorie): static
+{
+    $this->categorie = $categorie;
+
+    return $this;
+}
    
    
 }

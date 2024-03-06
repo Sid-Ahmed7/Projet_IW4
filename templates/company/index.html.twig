@@ -64,8 +64,9 @@
             </div>
 
             <div class="mt-4">
-                <a href="{{ path('app_company_new') }}" class="text-blue-600">Create new</a>
+<a href="{{ path('app_company_new', {'id': app.user.id}) }}" class="text-blue-600">Create new</a>
             </div>
         </div>
     </div>
 {% endblock %}
+

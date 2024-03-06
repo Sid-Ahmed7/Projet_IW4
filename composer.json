@@ -11,6 +11,8 @@
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.18",
         "dompdf/dompdf": "^2.0",
+        "gedmo/doctrine-extensions": "^3.14",
+        "stof/doctrine-extensions-bundle": "^1.10",
         "stripe/stripe-php": "^13.9",
         "symfony/console": "6.3.*",
         "symfony/dotenv": "6.3.*",
