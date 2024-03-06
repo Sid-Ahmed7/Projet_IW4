@@ -13,8 +13,6 @@ class RequeType extends AbstractType
     {
         $builder
             ->add('eventdate')
-            ->add('createdAt')
-            ->add('operatorID')
             ->add('eventLocation')
             ->add('eventCountry')
             ->add('eventCity')
@@ -23,7 +21,10 @@ class RequeType extends AbstractType
             ->add('firstname')
             ->add('phoneNumber')
             ->add('maxBudget')
-            ->add('state')
+            ->add('mail')
+            ->add('object')
+            ->add('description')
+
         ;
     }
 

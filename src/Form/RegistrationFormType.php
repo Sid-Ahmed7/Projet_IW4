@@ -44,10 +44,10 @@ class RegistrationFormType extends AbstractType
             'required' => false,
             
         ])
-        ->add('picture', FileType::class, [
-            'label' => 'Photo de profil',
-            'required' => false, // Le logo n'est pas obligatoire lors de la création
-        ])
+        // ->add('picture', FileType::class, [
+        //     'label' => 'Photo de profil',
+        //     'required' => false, // Le logo n'est pas obligatoire lors de la création
+        // ])
         ->add('lastname', TextType::class, ['required' => false])
         ->add('firstname', TextType::class, ['required' => false]);       
             

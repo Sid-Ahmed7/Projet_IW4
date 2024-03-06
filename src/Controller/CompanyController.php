@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 
 
 #[Route('/company')]
@@ -36,7 +38,7 @@ class CompanyController extends AbstractController
         $user = $security->getUser();
 
         if (!$security->isGranted('ROLE_USER')) {
-            throw $this->createAccessDeniedException('Vous devez vous connecter pour crer une organization petit malin...');
+            throw $this->createAccessDeniedException('Vous devez vous connecter pour crer une company petit malin...');
         }
         $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
@@ -91,7 +93,7 @@ class CompanyController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}', name: 'app_company_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_company_show', methods: ['GET'])]
     public function show(Company $company, $slug): Response
     {
         $slug;
@@ -101,7 +103,7 @@ class CompanyController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}/edit', name: 'app_company_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_company_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
 

@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Company;
 use App\Entity\Reque;
 use App\Form\RequeType;
+use App\Repository\CompanyRepository;
 use App\Repository\RequeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,32 +16,48 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/reque')]
 class RequeController extends AbstractController
 {
-    #[Route('/', name: 'app_reque_index', methods: ['GET'])]
-    public function index(RequeRepository $requeRepository): Response
-    {
-        return $this->render('reque/index.html.twig', [
-            'reques' => $requeRepository->findAll(),
-        ]);
+    #[Route('/all/{companyId}', name: 'app_reque_index', methods: ['GET'])]
+public function index(RequeRepository $requeRepository, $companyId): Response
+{
+    if (!is_numeric($companyId)) {
+        throw $this->createNotFoundException('Company ID must be a number.');
     }
+    $reques = $requeRepository->findBy(['companie' => $companyId]);
 
-    #[Route('/new', name: 'app_reque_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    return $this->render('reque/index.html.twig', [
+        'reques' => $reques,
+    ]);
+}
+
+
+    #[Route('/new/{companyId}', name: 'app_reque_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager,$companyId): Response
     {
         $reque = new Reque();
         $form = $this->createForm(RequeType::class, $reque);
         $form->handleRequest($request);
+    
+        
+
 
         $user = $this->getUser();
 
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($user !== null) {
+
             $reque->setUsr($user);
-            }
+            $now = new \DateTimeImmutable();
+            $reque->setCreatedAt($now);
+            $reque->setState('pending');
+            $reque->setCompanie($companyId);
+
+            
+
+
             $entityManager->persist($reque);
             $entityManager->flush();
-// dd($user);
-            return $this->redirectToRoute('app_reque_index', [], Response::HTTP_SEE_OTHER);
+            // dd($user);
+            return $this->redirectToRoute('app_test_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('reque/new.html.twig', [
@@ -77,7 +95,7 @@ class RequeController extends AbstractController
     #[Route('/{id}', name: 'app_reque_delete', methods: ['POST'])]
     public function delete(Request $request, Reque $reque, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$reque->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $reque->getId(), $request->request->get('_token'))) {
             $entityManager->remove($reque);
             $entityManager->flush();
         }

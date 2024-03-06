@@ -50,20 +50,22 @@ class RegistrationController extends AbstractController
 
             $user->setSignupDate(new \DateTime());
             $user->setRoles(['ROLE_USER']);
+                $defaultPictureFileName = $this->getParameter('profilePicture_directory') . '/no-user.jpg';
+                $user->setPicture($defaultPictureFileName);
 
 
             // Gestion du picture
-            $pictureFile = $form->get('picture')->getData();
-            if ($pictureFile instanceof UploadedFile) {
-                $filesystem = new Filesystem();
-                $pictureFileName = md5(uniqid()) . '.' . $pictureFile->guessExtension();
-                $pictureFile->move($this->getParameter('profilePicture_directory'), $pictureFileName);
-                $user->setPicture($pictureFileName);
-            } else {
-                // si l'utilisateur ne souhaite pas mettre de pp cela rest à voir !!
-                $defaultPictureFileName = $this->getParameter('profilePicture_directory') . '/no-user.jpg';
-                $user->setPicture($defaultPictureFileName);
-            }
+            // $pictureFile = $form->get('picture')->getData();
+            // if ($pictureFile instanceof UploadedFile) {
+            //     $filesystem = new Filesystem();
+            //     $pictureFileName = md5(uniqid()) . '.' . $pictureFile->guessExtension();
+            //     $pictureFile->move($this->getParameter('profilePicture_directory'), $pictureFileName);
+            //     $user->setPicture($pictureFileName);
+            // } else {
+            //     // si l'utilisateur ne souhaite pas mettre de pp cela rest à voir !!
+            //     $defaultPictureFileName = $this->getParameter('profilePicture_directory') . '/no-user.jpg';
+            //     $user->setPicture($defaultPictureFileName);
+            // }
 
             $entityManager->persist($user);
 

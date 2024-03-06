@@ -1,0 +1,16 @@
+<div class="absolute hidden text-sm bg-white shadow-lg rounded-lg w-48 mt-2 right-0">
+    <a href="#" class="block px-4 py-2 hover:bg-gray-100">Mes devis</a>
+    <a href="#" class="block px-4 py-2 hover:bg-gray-100">Mes informations</a>
+    <a href="#" class="block px-4 py-2 hover:bg-gray-100">Mes factures</a>
+    <a href="#" class="block px-4 py-2 hover:bg-gray-100">Mon abonnement</a>
+</div>
+
+<script>
+    // Obtenir le bouton du profil
+    const profileButton = document.querySelector('.relative button');
+
+    profileButton.addEventListener('click', function() {
+        const dropdownMenu = this.nextElementSibling;
+        dropdownMenu.classList.toggle('hidden');
+    });
+</script>
