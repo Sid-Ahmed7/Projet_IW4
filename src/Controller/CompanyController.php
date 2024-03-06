@@ -24,8 +24,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class CompanyController extends AbstractController
 {
     #[Route('/', name: 'app_company_index', methods: ['GET'])]
-    #[IsGranted('ROLE_ADMIN')]
-
     public function index(CompanyRepository $companyRepository, User $user): Response
     {
         return $this->render('company/index.html.twig', [
@@ -40,7 +38,7 @@ class CompanyController extends AbstractController
         $user = $security->getUser();
 
         if (!$security->isGranted('ROLE_USER')) {
-            throw $this->createAccessDeniedException('Vous devez vous connecter pour crer une organization petit malin...');
+            throw $this->createAccessDeniedException('Vous devez vous connecter pour crer une company petit malin...');
         }
         $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
