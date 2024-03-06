@@ -26,4 +26,10 @@ class HomeController extends AbstractController
         return $this->render('/home/entreprise.html.twig');
     }
 
+    #[Route('/request', name: 'home_request_app', methods: ['GET'])]
+    public function index2(UserRepository $userRepository): Response
+    {
+        return $this->render('/home/request.html.twig');
+    }
+
 }
