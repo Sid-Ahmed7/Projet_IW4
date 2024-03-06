@@ -1,62 +1,131 @@
+
 {% extends 'base.html.twig' %}
 
-{% block title %}DevisAsset{% endblock %}
+{% block title %}{% endblock %}
 
 {% block body %}
-    <h1>DevisAsset</h1>
+	<div class="  flex">
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ devis_asset.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ devis_asset.name }}</td>
-            </tr>
-            <tr>
-                <th>Price</th>
-                <td>{{ devis_asset.price }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ devis_asset.createdAt ? devis_asset.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>UpdatedAt</th>
-                <td>{{ devis_asset.updatedAt ? devis_asset.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>State</th>
-                <td>{{ devis_asset.state }}</td>
-            </tr>
-            <tr>
-                <th>Size</th>
-                <td>{{ devis_asset.size }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ devis_asset.description }}</td>
-            </tr>
-            <tr>
-                <th>Picture1</th>
-                <td>{{ devis_asset.picture1 }}</td>
-            </tr>
-            <tr>
-                <th>Picture2</th>
-                <td>{{ devis_asset.picture2 }}</td>
-            </tr>
-            <tr>
-                <th>Picture3</th>
-                <td>{{ devis_asset.picture3 }}</td>
-            </tr>
-        </tbody>
-    </table>
 
-    <a href="{{ path('app_devis_asset_index') }}">back to list</a>
+		<div class=" bg-fullPink mx-auto flex flex-col items-center justify-center h-screen w-full">
 
-    <a href="{{ path('app_devis_asset_edit', {'id': devis_asset.id}) }}">edit</a>
+			<header>
+				<h2 class="text-xl font-bold mb-4">Mon devis</h2>
+			</header>
 
-    {{ include('devis_asset/_delete_form.html.twig') }}
+			<div class="flex flex-col overflow-y-scroll  px-4 p-4 items-center justify-between py-2 w-1/2  ">
+
+				<table class="table-auto m-15 text-xs w-full bg-white shadow-md rounded-lg">
+					<thead>
+						<tr>
+							<th class="px-4 py-2 text-left  font-bold">Nom</th>
+							<th class="px-4 py-2 text-left  font-bold">Price</th>
+							<th class="px-4 py-2 text-left  font-bold">Date de fabrication</th>
+							<th class="px-4 py-2 text-left  font-bold">Date de modification</th>
+							<th class="px-4 py-2 text-left  font-bold">Etat</th>
+							<th class="px-4 py-2 text-left  font-bold">taille</th>
+							<th class="px-4 py-2 text-left  font-bold">Description</th>
+							<th class="px-4 py-2 text-left  font-bold">image1</th>
+							<th class="px-4 py-2 text-left  font-bold">image2</th>
+							<th class="px-4 py-2 text-left  font-bold">image3</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="px-4 py-2 border-b border-gray-300">Sid ahmedi</td>
+							<td class="px-4 py-2 border-b border-gray-300">{{ devis_asset.name }}</td>
+							<td class="px-4 py-2 border-b border-gray-300">{{ devis_asset.price }}</td>
+							<td class="px-4 py-2 border-b border-gray-300">{{ devis_asset.createdAt ? devis_asset.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+							<td class="px-4 py-2 border-b border-gray-300">{{ devis_asset.updatedAt ? devis_asset.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+							<td class="px-4 py-2 border-b border-gray-300">{{ devis_asset.state }}</td>
+							<td class="px-4 py-2 border-b border-gray-300">{{ devis_asset.size }}</td>
+							<td class="px-4 py-2 border-b border-gray-300">{{ devis_asset.description }}</td>
+							<td class="px-4 py-2 border-b border-gray-300">{{ devis_asset.picture1 }}</td>
+							<td class="px-4 py-2 border-b border-gray-300">{{ devis_asset.picture2 }}</td>
+							<td class="px-4 py-2 border-b border-gray-300">{{ devis_asset.picture3 }}</td>
+							<td class="px-4 py-2 border-b border-gray-300">
+								<a class="px-2 text-xxs rounded-full text-white bg-purpleM" href="#">Voir</a>
+							</td>
+						</tr>
+						<td class="px-4 py-2 border-b border-gray-300">{{ devis_asset.price }}</td>
+
+					</tbody>
+				</table>
+				<a href="{{ path('app_devis_asset_index') }}">back to list</a>
+
+				<a href="{{ path('app_devis_asset_edit', {'id': devis_asset.id}) }}">edit</a>
+
+				{{ include('devis_asset/_delete_form.html.twig') }}
+
+			</div>
+
+
+		</div>
+	</div>
+
+
 {% endblock %}
+
+{# {% extends 'base.html.twig' %}
+
+{% block title %}DevisAsset
+{% endblock %}
+
+{% block body %}
+	<h1>DevisAsset</h1>
+
+	<table class="table">
+		<tbody>
+			<tr>
+				<th>Id</th>
+				<td>{{ devis_asset.id }}</td>
+			</tr>
+			<tr>
+				<th>Name</th>
+				<td>{{ devis_asset.name }}</td>
+			</tr>
+			<tr>
+				<th>Price</th>
+				<td>{{ devis_asset.price }}</td>
+			</tr>
+			<tr>
+				<th>CreatedAt</th>
+				<td>{{ devis_asset.createdAt ? devis_asset.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+			</tr>
+			<tr>
+				<th>UpdatedAt</th>
+				<td>{{ devis_asset.updatedAt ? devis_asset.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+			</tr>
+			<tr>
+				<th>State</th>
+				<td>{{ devis_asset.state }}</td>
+			</tr>
+			<tr>
+				<th>Size</th>
+				<td>{{ devis_asset.size }}</td>
+			</tr>
+			<tr>
+				<th>Description</th>
+				<td>{{ devis_asset.description }}</td>
+			</tr>
+			<tr>
+				<th>Picture1</th>
+				<td>{{ devis_asset.picture1 }}</td>
+			</tr>
+			<tr>
+				<th>Picture2</th>
+				<td>{{ devis_asset.picture2 }}</td>
+			</tr>
+			<tr>
+				<th>Picture3</th>
+				<td>{{ devis_asset.picture3 }}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<a href="{{ path('app_devis_asset_index') }}">back to list</a>
+
+	<a href="{{ path('app_devis_asset_edit', {'id': devis_asset.id}) }}">edit</a>
+
+	{{ include('devis_asset/_delete_form.html.twig') }}
+{% endblock %} #}

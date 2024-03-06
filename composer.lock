@@ -5,6 +5,7 @@
         "This file is @generated automatically"
     ],
     "content-hash": "f627dc55fc036fada7d2078447fec816",
+
     "packages": [
         {
             "name": "behat/transliterator",
@@ -8916,5 +8917,5 @@
         "ext-iconv": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }

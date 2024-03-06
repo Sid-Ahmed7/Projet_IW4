@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\HttpFoundation\File\File;
 
 
 
@@ -65,14 +66,50 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
-        }
+    //         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+    //     }
 
-        return $this->render('user/edit.html.twig', [
-            'user' => $user,
-            'form' => $form,
-        ]);
+    //     return $this->render('user/edit.html.twig', [
+    //         'user' => $user,
+    //         'form' => $form,
+    //     ]);
+    // }
+    #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
+{
+    if (!$user) {
+        return $this->redirectToRoute('app_user_index');
     }
+    if ($user->getPicture()) {
+        $filePath = $this->getParameter('pictures_directory') . '/' . $user->getPicture();
+        if (file_exists($filePath)) {
+            $user->setPicture(new File($filePath));
+        } else {
+            $user->setPicture(new File($this->getParameter('pictures_directory') . '/no-user.jpg'));
+        }
+    }
+
+    $form = $this->createForm(UserType::class, $user);
+    $form->handleRequest($request);
+    
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Si aucun nouveau fichier n'est téléchargé, conservez le nom du fichier existant
+        if (null === $form['picture']->getData()) {
+            $user->setPicture($user->getPicture() instanceof File ? $user->getPicture()->getFilename() : null);
+        }
+    
+        $entityManager->flush();
+        return $this->redirectToRoute('app_user_index');
+    }
+    
+    return $this->render('user/edit.html.twig', [
+        'user' => $user,
+        'form' => $form->createView(),
+    ]);
+    
+    
+}
+
 
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response

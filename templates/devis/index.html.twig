@@ -1,57 +1,64 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Devis index{% endblock %}
+{% block title %}Devis Index{% endblock %}
 
 {% block body %}
-    <h1>Devis index</h1>
+    {% include 'partials/_sidebar.html.twig' %}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Content</th>
-                <th>State</th>
-                <th>IsNegotiable</th>
-                <th>CreatedAt</th>
-                <th>DeletedAt</th>
-                <th>UpdatedAt</th>
-                <th>Slug</th>
-                <th>Prix</th>
-                <th>Title</th>
-                <th>actions</th>
-               
-            </tr>
-        </thead>
-        <tbody>
-        {% for devi in devis %}
-            <tr>
-                <td>{{ devi.id }}</td>
-                <td>{{ devi.content }}</td>
-                <td>{{ devi.state }}</td>
-                <td>{{ devi.isNegotiable ? 'Yes' : 'No' }}</td>
-                <td>{{ devi.createdAt ? devi.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ devi.deletedAt ? devi.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ devi.updatedAt ? devi.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ devi.slug }}</td>
-                <td>{{ devi.price}}</td>
-                <td>{{ devi.title}}</td>
+    <div class="flex flex-col bg-fullPink items-center justify-center min-h-screen py-12">
+        <div class="bg-white text-xs shadow-md rounded-lg p-8 max-w-full">
+            <header class="flex justify-center items-center mb-4">
+                <img src="{{ asset('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4" width="93">
+                <h1 class="text-xl font-medium">Devis Index</h1>
+            </header>
 
+            <div class="overflow-x-auto">
+                <table class="table-auto w-full">
+                    <thead>
+                        <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                            <th>Id</th>
+                            <th>Content</th>
+                            <th>State</th>
+                            <th>IsNegotiable</th>
+                            <th>CreatedAt</th>
+                            <th>DeletedAt</th>
+                            <th>UpdatedAt</th>
+                            <th>Slug</th>
+                            <th>Prix</th>
+                            <th>Title</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                    {% for devi in devis %}
+                        <tr class="whitespace-nowrap">
+                            <td>{{ devi.id }}</td>
+                            <td>{{ devi.content }}</td>
+                            <td>{{ devi.state }}</td>
+                            <td>{{ devi.isNegotiable ? 'Yes' : 'No' }}</td>
+                            <td>{{ devi.createdAt ? devi.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                            <td>{{ devi.deletedAt ? devi.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
+                            <td>{{ devi.updatedAt ? devi.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                            <td>{{ devi.slug }}</td>
+                            <td>{{ devi.price }}</td>
+                            <td>{{ devi.title }}</td>
+                            <td>
+                                <a href="{{ path('app_devis_show', {'id': devi.id}) }}">show</a>
+                                <a href="{{ path('app_devis_edit', {'id': devi.id}) }}">edit</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="11">No records found</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-               
-                <td>
-                    <a href="{{ path('app_devis_show', {'id': devi.id}) }}">show</a>
-                    <a href="{{ path('app_devis_edit', {'id': devi.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="10">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    
-    <a href="{{ path('app_devis_new', {'userID': app.user.id}) }}">Create new</a>
-
-    {# <a href="{{ path('app_devis_new'), {'id': reque.id} }}">Create new</a> #}
+            <div class="mt-4">
+                <a href="{{ path('app_devis_new', {'userID': app.user.id}) }}" class="text-blue-600">Create new</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

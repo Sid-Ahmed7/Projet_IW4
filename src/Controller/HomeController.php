@@ -26,4 +26,5 @@ class HomeController extends AbstractController
         return $this->render('/home/entreprise.html.twig');
     }
 
+
 }

@@ -1,11 +1,29 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New NotificationTemplate{% endblock %}
+{% block title %}New NotificationTemplate
+{% endblock %}
+
 
 {% block body %}
-    <h1>Create new NotificationTemplate</h1>
 
-    {{ include('notification_template/_form.html.twig') }}
 
-    <a href="{{ path('app_notification_template_index') }}">back to list</a>
+	<div class="flex flex-col bg-fullPink items-center justify-center min-h-screen py-12">
+		<div class="bg-white text-xs shadow-md rounded-lg p-8 w-full max-w-md">
+			<header class="flex justify-center items-center">
+				<img src="{{ asset ('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4" width="93">
+			</header>
+
+
+			<div class="flex justify-center items-center mt-4 ">
+				<h2 class=" block mb-2 text-xl font-medium ">Ajouter des notifications
+				</h2>
+			</div>
+			<br>
+
+			{{ include('notification_template/_form.html.twig') }}
+
+			<a href="{{ path('app_notification_template_index') }}">back to list</a>
+
+		</div>
+	</div>
 {% endblock %}

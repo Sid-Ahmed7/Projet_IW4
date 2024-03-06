@@ -137,6 +137,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
+        return $this;
+    }
+
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $birthdate = null;
 
@@ -149,7 +160,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $stripeCustomerID = null;
 
-   
+
 
     public function __construct()
     {
@@ -164,7 +175,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->userPlans = new ArrayCollection();
 
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: 'App\Entity\User')]
+    private Collection $requests;
+    public function getRequests(): Collection
+    {
+        return $this->requests;
     }
+    public function __toString(): string
+    {
+        return $this->username; // ou return $this->email;
+    }
+
+
+    public function addRequest(Request $request): self
+    {
+    if (!$this->requests->contains($request)) {
+        $this->requests[] = $request;
+        $request->setUser($this);
+    }
+
+    return $this;
+}
+
+public function removeRequest(Request $request): self
+{
+    if ($this->requests->removeElement($request)) {
+        // set the owning side to null (unless already changed)
+        if ($request->getUser() === $this) {
+            $request->setUser(null);
+        }
+    }
+
+    return $this;
+}
 
     public function getId(): ?int
     {
@@ -523,12 +566,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function setIsVerified(bool $isVerified): static
-    {
-        $this->isVerified = $isVerified;
 
-        return $this;
-    }
 
     public function getBirthdate(): ?\DateTimeInterface
     {
