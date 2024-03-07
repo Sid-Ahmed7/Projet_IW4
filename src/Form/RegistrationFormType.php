@@ -50,8 +50,33 @@ class RegistrationFormType extends AbstractType
         // ])
         ->add('lastname', TextType::class, ['required' => false])
         ->add('firstname', TextType::class, ['required' => false]);       
-            
 
+
+            ])
+            ->add('birthdate', DateType::class, [
+                'label' => 'Date de naissance',
+                'widget' => 'single_text',
+                'required' => false,
+                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
+
+
+            ])
+            ->add('picture', FileType::class, [
+                'label' => 'Photo de profil',
+                'required' => false, // Le logo n'est pas obligatoire lors de la création
+                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
+
+            ])
+            ->add('lastname', TextType::class, [
+                'required' => false,
+                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
+
+            ])
+            ->add('firstname', TextType::class, [
+                'required' => false,
+                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
+
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

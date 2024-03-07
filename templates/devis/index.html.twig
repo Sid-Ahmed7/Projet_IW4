@@ -41,6 +41,50 @@
                 <td>{{ devi.title}}</td>
 
 
+            <div class="overflow-x-auto">
+                <table class="table-auto w-full">
+                    <thead>
+                        <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                            <th>Id</th>
+                            <th>Content</th>
+                            <th>State</th>
+                            <th>IsNegotiable</th>
+                            <th>CreatedAt</th>
+                            <th>DeletedAt</th>
+                            <th>UpdatedAt</th>
+                            <th>Slug</th>
+                            <th>Prix</th>
+                            <th>Title</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                    {% for devi in devis %}
+                        <tr class="whitespace-nowrap">
+                            <td>{{ devi.id }}</td>
+                            <td>{{ devi.content }}</td>
+                            <td>{{ devi.state }}</td>
+                            <td>{{ devi.isNegotiable ? 'Yes' : 'No' }}</td>
+                            <td>{{ devi.createdAt ? devi.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                            <td>{{ devi.deletedAt ? devi.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
+                            <td>{{ devi.updatedAt ? devi.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                            <td>{{ devi.slug }}</td>
+                            <td>{{ devi.price }}</td>
+                            <td>{{ devi.title }}</td>
+                            <td>
+                                <a href="{{ path('app_devis_show', {'id': devi.id}) }}">show</a>
+                                <a href="{{ path('app_devis_edit', {'id': devi.id}) }}">edit</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="11">No records found</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
                
                 <td>
                     <a href="{{ path('app_devis_show', {'id': devi.id}) }}">show</a>

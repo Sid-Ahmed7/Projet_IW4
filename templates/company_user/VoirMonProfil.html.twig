@@ -1,48 +1,97 @@
-{% extends 'base.html.twig' %}
+{# {% extends 'base.html.twig' %}
 
 {% block title %}{% endblock %}
 
 {% block body %}
 	<div class="  flex">
+		<div class="bg-gray-100  text-xs  p-4 w-64 h-full fixed top-0 left-0 z-10" id="TelephoneFormat">
+			<button id="bouton">Menu</button>
 
-		<div class="bg-gray-100  p-4 w-64 h-full fixed top-0 left-0 z-10">
+	{% include 'partials/_sidebar.html.twig' %}
 
-
-			<div class="mb-2 flex items-center justify-center">
-				<img src="{{ asset('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4">
-
-			</div>
-
-			<div class="flex flex-col h-full items-center">
-				<div class="flex-1 overflow-y-auto absolute top-50 left-50 transform translate-x(-50%) translate-y(-50%)">
-					<ul class="p-4">
-
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ url('Accueil_company') }}" class="text-purpleM hover:text-purple-300">Accueil</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ url('MonProfil_company') }}" class="text-purpleM hover:text-purple-300">Mon profil</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('Mesfactures_company') }}" class="text-purpleM hover:text-purpleM-300">Voir les factures</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('VoirMesdevis') }}" class="text-purpleM hover:text-purpleM-300">Voir les devis</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('VoirLespaiements') }}" class="text-purpleM hover:text-purpleM-300">Suivi d'un paiement</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('GererMesClients') }}" class="text-purpleM hover:text-purpleM-300">Gérer les clients</a>
-						</li>
-						<li class="mb-2 p-4 flex items-center justify-center">
-							<a href="{{ path('Notifications') }}" class="text-purpleM hover:text-purpleM-300">Notifications</a>
-						</li>
-
-					</ul>
-				</div>
-			</div>
+		<div
+			id="sidebar" class="bg-gray-100  text-xs  p-4 w-64 h-full fixed top-0 left-0 z-10">
+							<div class="mb-2 flex items-center justify-center">
+								<img src="{{ asset('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4">
+				
+							</div>
+				
+				
+							<div class="flex flex-col h-full items-center">
+								<div class="flex-1 overflow-y-auto absolute top-50 left-50 transform translate-x(-50%) translate-y(-50%)">
+									<ul class="p-4">
+				
+										<li class="mb-2 p-4 flex items-center justify-center">
+											<a href="{{ url('Accueil_company') }}" class="text-purpleM hover:text-purple-300">Accueil</a>
+										</li>
+										<li class="mb-2 p-4 flex items-center justify-center">
+											<a href="{{ url('MonProfil_company') }}" class="text-purpleM hover:text-purple-300">Mon profil</a>
+										</li>
+										<li class="mb-2 p-4 flex items-center justify-center">
+											<a href="{{ path('Mesfactures_company') }}" class="text-purpleM hover:text-purpleM-300">Voir les factures</a>
+										</li>
+										<li class="mb-2 p-4 flex items-center justify-center">
+											<a href="{{ path('VoirMesdevis') }}" class="text-purpleM hover:text-purpleM-300">Voir les devis</a>
+										</li>
+										<li class="mb-2 p-4 flex items-center justify-center">
+											<a href="{{ path('VoirMespaiements') }}" class="text-purpleM hover:text-purpleM-300">Suivi d'un paiement</a>
+										</li>
+										<li class="mb-2 p-4 flex items-center justify-center">
+											<a href="{{ path('GererMesClients') }}" class="text-purpleM hover:text-purpleM-300">Gérer les clients</a>
+										</li>
+										<li class="mb-2 p-4 flex items-center justify-center">
+											<a href="{{ path('Notifications') }}" class="text-purpleM hover:text-purpleM-300">Notifications</a>
+										</li>
+				
+									</ul>
+								</div>
+							</div> 
 		</div>
+
+
+		<div class=" bg-fullPink mx-auto flex flex-col items-center justify-center h-screen w-full">
+
+			 <header>
+				<h2 class="text-xl font-bold mb-4">Mon profil</h2>
+			</header>
+
+			<form class="flex flex-col text-xs items-center justify-center p-4 bg-gray-200 rounded-md w-300 shadow-sm">
+
+				<input type="text" id="nom" class="block border w-full p-2 rounded-md focus:ring-blue-500 focus:ring-opacity-50" placeholder="Votre nom">
+				<br>
+				<input type="email" id="email" class="block border w-full p-2 rounded-md focus:ring-blue-500 focus:ring-opacity-50" placeholder="Votre adresse email">
+				<br>
+				<input type="email" id="email" class="block border w-full p-2 rounded-md focus:ring-blue-500 focus:ring-opacity-50" placeholder="Numero de siret">
+				<br>
+				<input type="email" id="email" class="block border w-full p-2 rounded-md focus:ring-blue-500 focus:ring-opacity-50" placeholder="Raison Social ">
+				<br>
+				<input type="email" id="email" class="block border w-full p-2 rounded-md focus:ring-blue-500 focus:ring-opacity-50" placeholder="Votre adresse email">
+				<br>
+
+				<button type="submit" class="bg-purpleM  text-white py-2 px-4 rounded-md focus:ring-blue-500 focus:ring-opacity-50 hover:bg-blue-700">Envoyer</button>
+
+			</form> 
+		</div>
+	</div>
+{% endblock %} #}
+
+
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+	<div class="flex">
+		<div id="TelephoneFormat" class="text-xs p-4 w-64 h-full fixed top-0 left-0 z-10 block md:hidden">
+			<button
+				id="bouton" aria-label="Toggle Menu">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke="currentColor" class="h-6 w-6">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+				</svg>
+			</button>
+		</div>
+
+		<div id="sidebar" class="bg-gray-100 text-xs p-4 w-64 h-full fixed top-0 left-0 z-9 hidden md:block">
 
 
 		<div class=" bg-fullPink mx-auto flex flex-col items-center justify-center h-screen w-full">
@@ -51,18 +100,35 @@
 				<h2 class="text-xl font-bold mb-4">Mon profil</h2>
 			</header>
 
-			<form class="flex flex-col items-center justify-center p-4 bg-gray-200 rounded-md shadow-sm">
+			<form class="flex flex-col text-xs items-center justify-center p-4 bg-gray-200 rounded-md w-300 shadow-sm">
 
 				<input type="text" id="nom" class="block border w-full p-2 rounded-md focus:ring-blue-500 focus:ring-opacity-50" placeholder="Votre nom">
+				<br>
 				<input type="email" id="email" class="block border w-full p-2 rounded-md focus:ring-blue-500 focus:ring-opacity-50" placeholder="Votre adresse email">
+				<br>
 				<input type="email" id="email" class="block border w-full p-2 rounded-md focus:ring-blue-500 focus:ring-opacity-50" placeholder="Numero de siret">
+				<br>
 				<input type="email" id="email" class="block border w-full p-2 rounded-md focus:ring-blue-500 focus:ring-opacity-50" placeholder="Raison Social ">
+				<br>
 				<input type="email" id="email" class="block border w-full p-2 rounded-md focus:ring-blue-500 focus:ring-opacity-50" placeholder="Votre adresse email">
+				<br>
 
+				<button type="submit" class="bg-purpleM  text-white py-2 px-4 rounded-md focus:ring-blue-500 focus:ring-opacity-50 hover:bg-blue-700">Envoyer</button>
 
-				<button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-md focus:ring-blue-500 focus:ring-opacity-50 hover:bg-blue-700">Envoyer</button>
-                
 			</form>
 
 
-		{% endblock %}
+		</div>
+	</div>
+
+	<script>
+		const menuButton = document.getElementById('bouton');
+const sidebar = document.getElementById('sidebar');
+const content = document.getElementById('content');
+
+menuButton.addEventListener('click', () => {
+sidebar.classList.toggle('hidden');
+content.classList.toggle('ml-64'); // Adjust the margin-left value based on your design
+});
+	</script>
+{% endblock %}

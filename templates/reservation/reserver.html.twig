@@ -2,69 +2,15 @@
 
 {% block body %}
 
-	<header class="flex justify-between items-center bg-gray-100 px-4 py-3">
-		<h1 class="flex items-center">
-			<img class="rounded-full w-16 mr-2" src="{{ asset('/images/logo2.png') }}">
+		<header class="flex justify-between items-center bg-gray-200 py-4 px-6">
+			<img src="{{ asset ('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4">
 
 		</h1>
 		<div class="flex items-center gap-2">
-			<button class="bg-white border border-gray-300 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md">Connexion</button>
-			<button class="bg-purple-600 text-white hover:bg-purple-700 px-4 py-2 rounded-md">Inscription</button>
+			<button class="bg-white text-xs border border-gray-300 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md">Connexion</button>
+			<button class="bg-purple-600 text-xs text-white hover:bg-purple-700 px-4 py-2 rounded-md">Inscription</button>
 		</div>
 	</header>
-
-	{# <main class="container mx-auto pt-12">
-								<h2 class="text-center text-2xl font-bold mb-8">Choisissez votre catégorie</h2>
-						
-								<form method="post" class="flex flex-wrap justify-center">
-									<div class="category-group flex flex-wrap gap-4">
-										<div class="category w-48 bg-white rounded-lg shadow-md p-4 flex flex-col justify-center items-center hover:shadow-lg">
-											<img class="w-24 h-24 mb-2" src="{{ asset('/images/anniversaire.jpg') }}">
-											<span class="text-base font-medium">Anniversaire</span>
-											<input type="checkbox" name="" class="mt-2">
-										</div>
-						
-										<div class="category w-48 bg-white rounded-lg shadow-md p-4 flex flex-col justify-center items-center hover:shadow-lg">
-											<img class="w-30 h-24 mb-2" src="{{ asset('/images/Séminaire.jpg') }}">
-											<span class="text-base font-medium">Séminaire</span>
-											<input type="checkbox" name="" class="mt-2">
-										</div>
-										<div class="category w-48 bg-white rounded-lg shadow-md p-4 flex flex-col justify-center items-center hover:shadow-lg">
-											<img class="w-30 h-24 mb-2" src="{{ asset('/images/soiree.jpg') }}">
-											<span class="text-base font-medium">Soirée</span>
-											<input type="checkbox" name="" class="mt-2">
-										</div>
-										<div class="category w-48 bg-white rounded-lg shadow-md p-4 flex flex-col justify-center items-center hover:shadow-lg">
-											<img class="w-30 h-24 mb-2" src="{{ asset('/images/marriage.jpg') }}">
-											<span class="text-base font-medium">Marriage</span>
-											<input type="checkbox" name="" class="mt-2">
-										</div>
-										<div class="category w-48 bg-white rounded-lg shadow-md p-4 flex flex-col justify-center items-center hover:shadow-lg">
-											<img class="w-30 h-24 mb-2" src="{{ asset('/images/spectacle.jpg') }}">
-											<span class="text-base font-medium">Spectacle</span>
-											<input type="checkbox" name="" class="mt-2">
-										</div>
-						
-									</div>
-									<br>
-									<br>
-									<div class="date-and-time-group mt-8 flex flex-col md:flex-row gap-4">
-										<div class="date-input w-full md:w-1/2 flex flex-col">
-											<label class="text-sm font-medium mb-2" for="event-date">Date de l'événement</label>
-											<input type="date" id="event-date" name="event_date" class="p-3 rounded-md focus:ring-purple-500 focus:ring-opacity-50">
-										</div>
-						
-										<div class="time-input w-full md:w-1/2 flex flex-col">
-											<label class="text-sm font-medium mb-2" for="event-time">Heure de l'événement</label>
-											<input type="time" id="event-time" name="event_time" class="p-3 rounded-md focus:ring-purple-500 focus:ring-opacity-50">
-										</div>
-									</div>
-						
-									<div class="description-input mt-8">
-										<label class="text-sm font-medium mb-2" for="event-description">Description</label>
-										<textarea id="event-description" name="event_description" class="p-3 rounded-md h-24 w-full resize-none focus:ring-purple-500 focus:ring-opacity-50"></textarea>
-									</div>
-								</form> #}
 	<main class="container mx-auto pt-12">
 		<div class="mb-4">
 			<label class="block text-gray-700 text-sm font-bold mb-2 text-center">
@@ -79,44 +25,36 @@
 			<form method="post" class="flex flex-wrap justify-center">
 				<div class="grid grid-cols-3 gap-4">
 					<div class="text-center">
-						<img src="{{ asset('/images/marriage.jpg') }}" class="rounded-full mx-auto object-contain w-200 h-100" alt="Mariage" class="rounded-full mx-auto" style="
-														    width: 400px;
-														">
+						<img src="{{ asset('/images/marriage.jpg') }}" class="rounded-full mx-auto object-contain w-343 h-278" alt="Mariage"  >
 						<input type="checkbox" name="" class="mt-2">
 						<span class="text-gray-700">Mariage</span>
 					</div>
 					<div class="text-center">
-						<img src="{{ asset('/images/soiree.jpg') }}" class="rounded-full mx-auto object-contain w-200 h-100" alt="Soirée" class="rounded-full mx-auto" style="
+						<img src="{{ asset('/images/soiree.jpg') }}" class="rounded-full mx-auto object-contain w-343 h-278" alt="Soirée"  style="
 													
 														">
 						<input type="checkbox" name="" class="mt-2">
 						<span class="text-gray-700">Soirée</span>
 					</div>
 					<div class="text-center">
-						<img src="{{ asset('/images/Séminaire.jpg') }}" style="
-														    height: 268px;
-														" class="rounded-full mx-auto object-contain w-200 h-100" alt="Séminaire" class="rounded-full mx-auto">
+						<img src="{{ asset('/images/Séminaire.jpg') }}" class="rounded-full  mx-auto object-contain w-343 h-278" alt="Séminaire">
 						<input type="checkbox" name="" class="mt-2">
 						<span class="text-gray-700">Séminaire</span>
 					</div>
 					<div class="text-center">
-						<img src="{{ asset('/images/spectacle.jpg') }}" style="
-														   height: 268px;
-														" class="rounded-full mx-auto w-200 h-100" alt="Spectacle" class="rounded-full mx-auto">
+						<img src="{{ asset('/images/spectacle.jpg') }}" class="rounded-full mx-auto w-343 h-278" alt="Spectacle" >
 						<input type="checkbox" name="" class="mt-2">
 						<span class="text-gray-700">Spectacle</span>
 					</div>
 					<div class="text-center">
-						<img src="{{ asset('/images/anniversaire.jpg') }}" style="
-														    width: 395px;
-														" alt="Anniversaire" class="rounded-full mx-auto">
+						<img src="{{ asset('/images/anniversaire.jpg') }}" alt="Anniversaire" class="rounded-full mx-auto w-343 h-278">
 						<input type="checkbox" name="" class="mt-2">
 						<span class="text-gray-700">Anniversaire</span>
 					</div>
 				</div>
 			</div>
 
-			<div class="flex mb-4">
+			<div class="flex text-xs w-1/2 mx-auto mb-4">
 				<div class="w-1/2 mr-2">
 					<label class="block text-gray-700 text-sm font-bold mb-2">
 						Date de l'événement
@@ -131,7 +69,7 @@
 				</div>
 			</div>
 
-			<div class="mb-6">
+			<div class="mb-6 text-xs w-1/2 mx-auto">
 				<label class="block text-gray-700 text-sm font-bold mb-2">
 					Description
 				</label>
@@ -139,10 +77,11 @@
 			</div>
 
 			<div class="flex items-center justify-center">
-				<button class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+				<button class=" text-xs bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
 					envoyer
 				</button>
 			</div>
+			<br>
 		</form>
 	</main>
 {% endblock %}
