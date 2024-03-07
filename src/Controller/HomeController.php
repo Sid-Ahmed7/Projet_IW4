@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Repository\CategoryRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,6 +25,14 @@ class HomeController extends AbstractController
     public function index1(UserRepository $userRepository): Response
     {
         return $this->render('/home/entreprise.html.twig');
+    }
+
+    #[Route('/request', name: 'home_request_app', methods: ['GET'])]
+    public function index2(CategoryRepository $categoryRepository): Response
+    {
+        return $this->render('home/request.html.twig', [
+            'categories' => $categoryRepository->findAll(),
+        ]);
     }
 
 

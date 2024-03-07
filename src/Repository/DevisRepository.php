@@ -45,4 +45,10 @@ class DevisRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+public function findAllQuery()
+{
+    return $this->createQueryBuilder('d')
+        ->getQuery();
+}
 }

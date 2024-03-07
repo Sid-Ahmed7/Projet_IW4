@@ -1,0 +1,23 @@
+<div class="container mx-auto px-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+   
+{% for category in categories %}
+      <div class="max-w-xs mx-auto">
+        <div class="flex flex-col items-center p-3 rounded overflow-hidden shadow-lg bg-white">
+          <div class="font-bold text-lg mb-2 text-center">{{ category.title }}</div>
+          <p class="text-gray-600 text-sm mb-2 text-center">
+            {{ category.description }}
+          </p>
+          <div class="w-full h-32 overflow-hidden">
+            <img class="w-full h-full object-cover" src="URL_de_votre_image" alt="Image descriptive">
+          </div>
+          <a href="{{ path('app_company_cat', {'idCat': category.id}) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-sm mt-2">
+            Bouton
+          </a>
+        </div>
+      </div>
+    {% endfor %}
+    <!-- Dupliquez cette section pour les autres cartes si nécessaire -->
+
+  </div>
+</div>

@@ -1,16 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Devis Index{% endblock %}
+{% block title %}Devis Liste{% endblock %}
 
 {% block body %}
-    {% include 'partials/_sidebar.html.twig' %}
+	<!-- This is an example component -->
+	<br>
+<body>
 
-    <div class="flex flex-col bg-fullPink items-center justify-center min-h-screen py-12">
-        <div class="bg-white text-xs shadow-md rounded-lg p-8 max-w-full">
-            <header class="flex justify-center items-center mb-4">
-                <img src="{{ asset('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4" width="93">
-                <h1 class="text-xl font-medium">Devis Index</h1>
-            </header>
+<header>
+    <!-- Importation de l'en-tête -->
+		{% include 'partials/home/header.html.twig' %}
+    
+<header>
+ <!-- carte de la liste de Devis -->
+
+{% include 'partials/devis/liste.html.twig' %}
+ 
+
+
+ <!-- Footer -->
+{% include 'partials/footer.html.twig' %}
+
+
+</body>
+   
+
+
+{% endblock %}
+        {# {% for devi in devis %}
+            <tr>
+                <td>{{ devi.id }}</td>
+                <td>{{ devi.content }}</td>
+                <td>{{ devi.state }}</td>
+                <td>{{ devi.isNegotiable ? 'Yes' : 'No' }}</td>
+                <td>{{ devi.createdAt ? devi.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ devi.deletedAt ? devi.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ devi.updatedAt ? devi.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ devi.slug }}</td>
+                <td>{{ devi.price}}</td>
+                <td>{{ devi.title}}</td>
+
 
             <div class="overflow-x-auto">
                 <table class="table-auto w-full">
@@ -56,9 +85,18 @@
                 </table>
             </div>
 
-            <div class="mt-4">
-                <a href="{{ path('app_devis_new', {'userID': app.user.id}) }}" class="text-blue-600">Create new</a>
-            </div>
-        </div>
-    </div>
-{% endblock %}
+               
+                <td>
+                    <a href="{{ path('app_devis_show', {'id': devi.id}) }}">show</a>
+                    <a href="{{ path('app_devis_edit', {'id': devi.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="10">no records found</td>
+            </tr>
+        {% endfor %} 
+    
+     <a href="{{ path('app_devis_new', {'userID': app.user.id}) }}">Create new</a> #}
+
+

@@ -45,4 +45,13 @@ class CompanyRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+public function findByCategoryId($categoryId)
+{
+    return $this->createQueryBuilder('c')
+        ->join('c.categorie', 'cat')
+        ->where('cat.id = :categoryId')
+        ->setParameter('categoryId', $categoryId)
+        ->getQuery()
+        ->getResult();
+}
 }

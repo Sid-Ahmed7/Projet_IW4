@@ -290,4 +290,9 @@ class Devis
 
         return $this;
     }
+
+    public function getUser(): ?User
+    {
+        return $this->users;
+    }
 }

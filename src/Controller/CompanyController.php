@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Company;
 use App\Entity\User;
 use App\Form\CompanyType;
+use App\Repository\CategoryRepository;
 use App\Repository\CompanyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Customer;
@@ -23,8 +24,23 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/company')]
 class CompanyController extends AbstractController
 {
+    #[Route('{idCat}/', name: 'app_company_cat', methods: ['GET'])]
+    public function index(CompanyRepository $companyRepository, CategoryRepository $categoryRepository, $idCat): Response
+    {
+        $category = $categoryRepository->find($idCat);
+        if (!$category) {
+            throw $this->createNotFoundException('La catégorie n\'a pas été trouvée.');
+        }
+    
+        $companys = $companyRepository->findBy(['categorie' => $category->getName()]);
+    
+        return $this->render('company/index.html.twig', [
+            'companys' => $companys,
+        ]);
+    }
+
     #[Route('/', name: 'app_company_index', methods: ['GET'])]
-    public function index(CompanyRepository $companyRepository, User $user): Response
+    public function index1(CompanyRepository $companyRepository, $id): Response
     {
         return $this->render('company/index.html.twig', [
             'companys' => $companyRepository->findAll(),

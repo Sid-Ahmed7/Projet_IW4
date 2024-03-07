@@ -95,8 +95,14 @@ class Company
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $stripeCustomerID = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 40, nullable: true)]
     private ?string $categorie = null;
+
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: Category::class)]
+    private Collection $categories;
+
+    #[ORM\OneToMany(mappedBy: 'usr', targetEntity: Like::class)]
+    private Collection $likees;
 
    
 
@@ -108,6 +114,8 @@ class Company
         $this->negotiations = new ArrayCollection();
         $this->usr = new ArrayCollection();
         $this->reques = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+        $this->likees = new ArrayCollection();
     }
     public function __toString(): string
     {
@@ -446,6 +454,66 @@ public function getCategorie(): ?string
 public function setCategorie(?string $categorie): static
 {
     $this->categorie = $categorie;
+
+    return $this;
+}
+
+/**
+ * @return Collection<int, Category>
+ */
+public function getCategories(): Collection
+{
+    return $this->categories;
+}
+
+public function addCategory(Category $category): static
+{
+    if (!$this->categories->contains($category)) {
+        $this->categories->add($category);
+        $category->setCompany($this);
+    }
+
+    return $this;
+}
+
+public function removeCategory(Category $category): static
+{
+    if ($this->categories->removeElement($category)) {
+        // set the owning side to null (unless already changed)
+        if ($category->getCompany() === $this) {
+            $category->setCompany(null);
+        }
+    }
+
+    return $this;
+}
+
+/**
+ * @return Collection<int, Like>
+ */
+public function getLikees(): Collection
+{
+    return $this->likees;
+}
+
+public function addLikee(Like $likee): static
+{
+    if (!$this->likees->contains($likee)) {
+        $this->likees->add($likee);
+        $likee->setComp($this);
+    }
+
+    return $this;
+}
+
+public function removeLikee(Like $likee): static
+{
+    if ($this->likees->removeElement($likee)) {
+        // set the owning side to null (unless already changed)
+        if ($likee->getComp() === $this) {
+            $likee->setComp(null);
+        }
+    }
 
     return $this;
 }

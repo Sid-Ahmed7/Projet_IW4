@@ -30,41 +30,40 @@ public function index(RequeRepository $requeRepository, $companyId): Response
 }
 
 
-    #[Route('/new/{companyId}', name: 'app_reque_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager,$companyId): Response
-    {
-        $reque = new Reque();
-        $form = $this->createForm(RequeType::class, $reque);
-        $form->handleRequest($request);
-    
-        
+#[Route('/new/{companyId}', name: 'app_reque_new', methods: ['GET', 'POST'])]
+public function new(Request $request, EntityManagerInterface $entityManager, CompanyRepository $companyRepository, $companyId): Response
+{
+    $reque = new Reque();
+    $form = $this->createForm(RequeType::class, $reque);
+    $form->handleRequest($request);
 
+    $user = $this->getUser();
 
-        $user = $this->getUser();
-
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $reque->setUsr($user);
-            $now = new \DateTimeImmutable();
-            $reque->setCreatedAt($now);
-            $reque->setState('pending');
-            $reque->setCompanie($companyId);
-
-            
-
-
-            $entityManager->persist($reque);
-            $entityManager->flush();
-            // dd($user);
-            return $this->redirectToRoute('app_test_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('reque/new.html.twig', [
-            'reque' => $reque,
-            'form' => $form,
-        ]);
+    $company = $companyRepository->find($companyId);
+    if (!$company) {
+        throw $this->createNotFoundException('La company demandée n\'existe pas.');
     }
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $reque->setUsr($user);
+        $now = new \DateTimeImmutable();
+        $reque->setCreatedAt($now);
+        $reque->setState('pending');
+        $reque->setCompanie($companyId); 
+
+        $entityManager->persist($reque);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_test_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    return $this->render('reque/new.html.twig', [
+        'reque' => $reque,
+        'form' => $form->createView(),
+        'company' => $company, 
+    ]);
+}
+
 
     #[Route('/{id}', name: 'app_reque_show', methods: ['GET'])]
     public function show(Reque $reque): Response

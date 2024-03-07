@@ -9,6 +9,7 @@ use App\Repository\DevisAssetRepository;
 use App\Repository\DevisRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,12 +19,26 @@ use Symfony\Component\Routing\Annotation\Route;
 class DevisController extends AbstractController
 {
     #[Route('/', name: 'app_devis_index', methods: ['GET'])]
-    public function index(DevisRepository $devisRepository): Response
-    {
-        return $this->render('devis/index.html.twig', [
-            'devis' => $devisRepository->findAll(),
-        ]);
-    }
+public function index(DevisRepository $devisRepository, PaginatorInterface $paginator, Request $request): Response
+{
+    // Récupérer la page actuelle depuis la requête HTTP, la page par défaut est 1
+    $currentPage = $request->query->getInt('page', 1);
+
+    // Nombre de devis à afficher par page
+    $limit = 10;
+
+    // Récupérer la liste des devis et les paginer
+    $pagination = $paginator->paginate(
+        $devisRepository->findAll(), /* requête non exécutée */
+        $currentPage, /* le numéro de la page */
+        $limit /* limite de devis par page */
+    );
+
+    return $this->render('devis/index.html.twig', [
+        'pagination' => $pagination,
+    ]);
+}
+
 
     #[Route('/new/{userID}', name: 'app_devis_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, $userID, UserRepository $userRepository): Response

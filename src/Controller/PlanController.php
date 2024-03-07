@@ -50,7 +50,7 @@ class PlanController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_plan_show', methods: ['GET'])]
+    #[Route('/show', name: 'app_plan_show', methods: ['GET'])]
     public function show(Plan $plan): Response
     {
         return $this->render('plan/show.html.twig', [
