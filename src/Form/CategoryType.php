@@ -13,12 +13,9 @@ class CategoryType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('slug')
-            ->add('uuid')
             ->add('title')
             ->add('description')
             ->add('picture')
-            ->add('company')
         ;
     }
 

@@ -12,6 +12,7 @@
         "doctrine/orm": "^2.18",
         "dompdf/dompdf": "^2.0",
         "gedmo/doctrine-extensions": "^3.14",
+        "knplabs/knp-paginator-bundle": "^6.3",
         "stof/doctrine-extensions-bundle": "^1.10",
         "stripe/stripe-php": "^13.9",
         "symfony/console": "6.3.*",

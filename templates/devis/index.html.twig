@@ -1,29 +1,33 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Devis index{% endblock %}
+{% block title %}Devis Liste{% endblock %}
 
 {% block body %}
-    <h1>Devis index</h1>
+	<!-- This is an example component -->
+	<br>
+<body>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Content</th>
-                <th>State</th>
-                <th>IsNegotiable</th>
-                <th>CreatedAt</th>
-                <th>DeletedAt</th>
-                <th>UpdatedAt</th>
-                <th>Slug</th>
-                <th>Prix</th>
-                <th>Title</th>
-                <th>actions</th>
-               
-            </tr>
-        </thead>
-        <tbody>
-        {% for devi in devis %}
+<header>
+    <!-- Importation de l'en-tête -->
+		{% include 'partials/home/header.html.twig' %}
+    
+<header>
+ <!-- carte de la liste de Devis -->
+
+{% include 'partials/devis/liste.html.twig' %}
+ 
+
+
+ <!-- Footer -->
+{% include 'partials/footer.html.twig' %}
+
+
+</body>
+   
+
+
+{% endblock %}
+        {# {% for devi in devis %}
             <tr>
                 <td>{{ devi.id }}</td>
                 <td>{{ devi.content }}</td>
@@ -47,11 +51,8 @@
             <tr>
                 <td colspan="10">no records found</td>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        {% endfor %} 
     
-    <a href="{{ path('app_devis_new', {'userID': app.user.id}) }}">Create new</a>
+     <a href="{{ path('app_devis_new', {'userID': app.user.id}) }}">Create new</a> #}
 
-    {# <a href="{{ path('app_devis_new'), {'id': reque.id} }}">Create new</a> #}
-{% endblock %}
+

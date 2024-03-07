@@ -149,6 +149,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $stripeCustomerID = null;
 
+    #[ORM\OneToMany(mappedBy: 'hazer', targetEntity: Like::class)]
+    private Collection $likes;
+
    
 
     public function __construct()
@@ -162,6 +165,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->userRoleUpdateBy = new ArrayCollection();
         $this->emailVerificationToken = null;
         $this->userPlans = new ArrayCollection();
+        $this->likes = new ArrayCollection();
 
 
     }
@@ -588,6 +592,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setStripeCustomerID(?string $stripeCustomerID): static
     {
         $this->stripeCustomerID = $stripeCustomerID;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Like>
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(Like $like): static
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes->add($like);
+            $like->setHazer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLike(Like $like): static
+    {
+        if ($this->likes->removeElement($like)) {
+            // set the owning side to null (unless already changed)
+            if ($like->getHazer() === $this) {
+                $like->setHazer(null);
+            }
+        }
 
         return $this;
     }
