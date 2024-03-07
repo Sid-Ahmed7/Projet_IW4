@@ -49,10 +49,9 @@ class RegistrationFormType extends AbstractType
         //     'required' => false, // Le logo n'est pas obligatoire lors de la création
         // ])
         ->add('lastname', TextType::class, ['required' => false])
-        ->add('firstname', TextType::class, ['required' => false]);       
+        ->add('firstname', TextType::class, ['required' => false])     
 
 
-            ])
             ->add('birthdate', DateType::class, [
                 'label' => 'Date de naissance',
                 'widget' => 'single_text',

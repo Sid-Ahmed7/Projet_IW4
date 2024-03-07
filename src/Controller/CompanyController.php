@@ -110,10 +110,8 @@ class CompanyController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_company_show', methods: ['GET'])]
-    public function show(Company $company, $slug): Response
+    public function show(Company $company, $id): Response
     {
-        $slug;
-        dd($slug);
         return $this->render('company/show.html.twig', [
             'company' => $company,
         ]);

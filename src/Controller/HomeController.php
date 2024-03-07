@@ -35,5 +35,9 @@ class HomeController extends AbstractController
         ]);
     }
 
-
+    #[Route('/admin', name: 'dashboard_app', methods: ['GET'])]
+    public function index3(): Response
+    {
+        return $this->render('/admin/DashboardAdmin.html.twig');
+    }
 }

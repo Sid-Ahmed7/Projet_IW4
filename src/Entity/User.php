@@ -177,40 +177,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->userPlans = new ArrayCollection();
         $this->likes = new ArrayCollection();
 
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: 'App\Entity\User')]
-    private Collection $requests;
-    public function getRequests(): Collection
-    {
-        return $this->requests;
     }
-    public function __toString(): string
-    {
-        return $this->username; // ou return $this->email;
-    }
-
-
-    public function addRequest(Request $request): self
-    {
-    if (!$this->requests->contains($request)) {
-        $this->requests[] = $request;
-        $request->setUser($this);
-    }
-
-    return $this;
-}
-
-public function removeRequest(Request $request): self
-{
-    if ($this->requests->removeElement($request)) {
-        // set the owning side to null (unless already changed)
-        if ($request->getUser() === $this) {
-            $request->setUser(null);
-        }
-    }
-
-    return $this;
-}
+   
 
     public function getId(): ?int
     {
