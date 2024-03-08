@@ -267,15 +267,17 @@
 						<th data-priority="2">Etat</th>
 						<th data-priority="3">Nom</th>
 						<th data-priority="4">Date de Creation</th>
-						<th data-priority="5">Plan</th>
+						<th data-priority="5">Email</th>
 						<th data-priority="6">Title</th>
+                        <th data-priority="7">Plan</th>
+
 					</tr>
 				</thead>
 
 				<tbody>
                     {% for devi in devis %}
 					<tr>
-						<td>{{devi.id}}</td>
+						<td>#{{devi.id}}</td>
                         {% if devi.state == 'accepted' %}
 
 						<td><div class="inline-flex items-center px-3 py-1 rounded-full gap-x-2 text-emerald-500 bg-emerald-100/60 dark:bg-gray-800">
@@ -290,10 +292,13 @@
     <h2 class="text-sm font-normal">{{ devi.state }}</h2>
   </div></td>
 {% endif %}
-						<td>{{ devi.user.lastname }} {{ devi.user.firstname }}</td>
+						<td> <div class="flex items-center gap-x-2">
+                                       <img class="w-10 h-10 rounded" src="{{ asset('Uploads/profilePicture/' ~ devi.user.picture) }}" class="object-cover w-8 h-8 rounded-full"  alt="">
+                                        <div>{{ devi.user.lastname }} {{ devi.user.firstname }}</td>
 						<td>{{ devi.createdAt ? devi.createdAt|date('D d M y ') : '' }} </td>
 						<td>{{ devi.user.email }}</td>
 						<td>{{ devi.title }}</td>
+                        <td>{{ devi.user.userPlan.plan.name }}</td>
 					</tr>
                     {% endfor %}
 					
