@@ -78,7 +78,7 @@
                                     </td>
                                     <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                         <div class="flex items-center justify-end space-x-3">
-                                            <button type="button" onclick="showDevisDrawer('{{ path('app_devis_show', {'id': devi.id}) }}')" class="text-blue-600 hover:text-blue-900">Voir</button>
+                                            <a href="{{ path('app_devis_show', {'id': devi.id}) }}" class="text-blue-600 hover:text-blue-900">Voir</a>
                                             <a href="{{ path('app_devis_edit', {'id': devi.id}) }}" class="text-blue-600 hover:text-blue-900">Modifier</a>
                                             <a href="{{ path('app_devis_pdf', {'id': devi.id}) }}" class="text-blue-600 hover:text-blue-900">PDF</a>
                                         </div>
@@ -91,37 +91,6 @@
                             {% endfor %}
                         </tbody>
                     </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {# Drawer pour afficher les détails du devis #}
-    <div id="devisDrawer" class="fixed inset-0 overflow-hidden z-50 hidden" role="dialog" aria-modal="true">
-        <div class="absolute inset-0 overflow-hidden">
-            <div class="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onclick="hideDevisDrawer()"></div>
-            <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
-                <div class="pointer-events-auto relative w-screen max-w-2xl">
-                    <div class="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
-                        <div class="px-4 sm:px-6">
-                            <div class="flex items-start justify-between">
-                                <h2 class="text-lg font-medium text-gray-900" id="devisDrawerTitle">Détails du devis</h2>
-                                <div class="ml-3 flex h-7 items-center">
-                                    <button type="button" onclick="hideDevisDrawer()" class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                        <span class="sr-only">Fermer</span>
-                                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="relative mt-6 flex-1 px-4 sm:px-6">
-                            <div id="devisDrawerContent" class="absolute inset-0 px-4 sm:px-6">
-                                {# Le contenu sera chargé dynamiquement ici #}
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -159,42 +128,6 @@ document.addEventListener('DOMContentLoaded', function() {
     searchInput.addEventListener('input', filterTable);
     dateStartInput.addEventListener('change', filterTable);
     dateEndInput.addEventListener('change', filterTable);
-});
-
-function showDevisDrawer(url) {
-    const drawer = document.getElementById('devisDrawer');
-    const content = document.getElementById('devisDrawerContent');
-    
-    // Afficher le drawer
-    drawer.classList.remove('hidden');
-    document.body.style.overflow = 'hidden'; // Empêcher le défilement de la page
-    
-    // Charger les détails du devis
-    fetch(url)
-        .then(response => response.text())
-        .then(html => {
-            content.innerHTML = html;
-        })
-        .catch(error => {
-            console.error('Erreur lors du chargement des détails:', error);
-            content.innerHTML = 'Erreur lors du chargement des détails.';
-        });
-}
-
-function hideDevisDrawer() {
-    const drawer = document.getElementById('devisDrawer');
-    const content = document.getElementById('devisDrawerContent');
-    
-    drawer.classList.add('hidden');
-    document.body.style.overflow = ''; // Réactiver le défilement de la page
-    content.innerHTML = '';
-}
-
-// Fermer le drawer avec la touche Escape
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape') {
-        hideDevisDrawer();
-    }
 });
 </script>
 {% endblock %} 
