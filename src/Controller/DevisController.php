@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Devis;
+use App\Entity\DevisAsset;
 use App\Entity\Notification;
 use App\Form\DevisType;
 use App\Repository\DevisAssetRepository;
@@ -13,64 +14,74 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\User;
 
-#[Route('/devis')]
+#[Route('account')]
 class DevisController extends AbstractController
 {
-    #[Route('/', name: 'app_devis_index', methods: ['GET'])]
+    #[Route('/devis', name: 'app_devis_index', methods: ['GET'])]
     public function index(DevisRepository $devisRepository): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        $devis = $devisRepository->findBy(['hubuser' => $user]);
+
         return $this->render('devis/index.html.twig', [
-            'devis' => $devisRepository->findAll(),
+            'devis' => $devis,
         ]);
     }
 
-    #[Route('/new/{userID}', name: 'app_devis_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, $userID, UserRepository $userRepository): Response
+    #[Route('/new', name: 'app_devis_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $devi = new Devis();
-        $form = $this->createForm(DevisType::class, $devi);
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $user = $this->getUser();
+        
+        $devis = new Devis();
+        $form = $this->createForm(DevisType::class, $devis);
         $form->handleRequest($request);
-        $usr = $userRepository->findOneBy(['id' => $userID]);
-        // dd($id);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $now = new \DateTimeImmutable();
-            $devi->setCreatedAt($now);
-            $devi->setUpdatedAt($now);
-            $devi->setPrice('0');
-            $devi->setUsers($usr);
+            // Récupérer les assets du formulaire HTML
+            $assetsData = $request->request->all()['devis_assets'] ?? [];
+            $totalPrice = 0;
 
-            $entityManager->persist($devi);
-            $user = $devi->getUsers();
-
-            // Notification
-            $notification = new Notification();
-            $now = new \DateTimeImmutable();
-            $devi->getId();
-            $notification->setUsers($devi->getUsers()); // ID du devis
-            $notification->setNotificationTemplate(1); // je pense que nous n'aurons plus besoin du notification template mais je laisse au cas ou 
-            $notification->setType('Systeme'); // Quel type de notification c'est 
-            $notification->setTitle('Votre devis est disponible ');
-            if ($user) {
-                $username = $user->getUsername(); // Récupérez le nom d'utilisateur
-                $notification->setMessage("Salut {$username}, votre devis est disponible.");
+            foreach ($assetsData as $assetData) {
+                $asset = new DevisAsset();
+                $asset->setName($assetData['name']);
+                $asset->setDescription($assetData['description']);
+                $unitPrice = floatval($assetData['unitPrice']);
+                $size = floatval($assetData['size']);
+                $price = $unitPrice * $size;
+                
+                $asset->setUnitPrice($unitPrice);
+                $asset->setPrice($price);
+                $asset->setSize($size);
+                $asset->setDevis($devis);
+                $asset->setCreatedAt(new \DateTimeImmutable());
+                $asset->setUpdatedAt(new \DateTimeImmutable());
+                $asset->setState('online');
+                
+                $totalPrice += $price;
+                $entityManager->persist($asset);
             }
-            $notification->setIsRead(false);
-            $notification->setCreatedAt($now);
-            // dd($notification);
 
-            $entityManager->persist($notification);
-
-
+            $devis->setHubuser($user);
+            $devis->setPrice((string)$totalPrice);
+            $devis->setState('En attente');
+            
+            $entityManager->persist($devis);
             $entityManager->flush();
+
+            $this->addFlash('success', 'Le devis a été créé avec succès.');
             return $this->redirectToRoute('app_devis_index', [], Response::HTTP_SEE_OTHER);
         }
 
-
         return $this->render('devis/new.html.twig', [
-            'devi' => $devi,
+            'devis' => $devis,
             'form' => $form,
-
         ]);
     }
 
@@ -92,10 +103,42 @@ class DevisController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $now = new \DateTimeImmutable();
-            $devi->setUpdatedAt($now);
+            // Supprimer les anciens assets
+            foreach ($devi->getDevisAssets() as $asset) {
+                $entityManager->remove($asset);
+            }
             $entityManager->flush();
 
+            // Ajouter les nouveaux assets
+            $assetsData = $request->request->all()['devis_assets'] ?? [];
+            $totalPrice = 0;
+
+            foreach ($assetsData as $assetData) {
+                $asset = new DevisAsset();
+                $asset->setName($assetData['name']);
+                $asset->setDescription($assetData['description']);
+                $unitPrice = floatval($assetData['unitPrice']);
+                $size = floatval($assetData['size']);
+                $price = $unitPrice * $size;
+                
+                $asset->setUnitPrice($unitPrice);
+                $asset->setPrice($price);
+                $asset->setSize($size);
+                $asset->setDevis($devi);
+                $asset->setCreatedAt(new \DateTimeImmutable());
+                $asset->setUpdatedAt(new \DateTimeImmutable());
+                $asset->setState('online');
+                
+                $totalPrice += $price;
+                $entityManager->persist($asset);
+            }
+
+            $now = new \DateTimeImmutable();
+            $devi->setUpdatedAt($now);
+            $devi->setPrice((string)$totalPrice);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Le devis a été modifié avec succès.');
             return $this->redirectToRoute('app_devis_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -142,5 +185,20 @@ class DevisController extends AbstractController
         }
 
         return $this->redirectToRoute('app_devis_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/company/{companyId}/devis', name: 'app_company_devis')]
+    public function companyDevis(int $companyId, DevisRepository $devisRepository): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        $devis = $devisRepository->findBy(['hubuser' => $user, 'company' => $companyId]);
+
+        return $this->render('devis/company.html.twig', [
+            'devis' => $devis,
+            'companyId' => $companyId,
+        ]);
     }
 }

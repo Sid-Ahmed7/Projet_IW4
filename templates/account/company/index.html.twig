@@ -1,0 +1,65 @@
+{% extends 'account/company/base.html.twig' %}
+
+{% block company_content %}
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold">Mes entreprises</h1>
+    <a href="{{ path('app_account_company_new') }}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+        Nouvelle entreprise
+    </a>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for company in companys %}
+        <div class="bg-white rounded-lg shadow-md p-6 border border-gray-200">
+            <div class="flex items-center mb-4">
+                {% if company.logo %}
+                    <img src="{{ asset('uploads/logos/' ~ company.logo) }}" alt="{{ company.name }}" class="h-12 w-12 rounded-full mr-4">
+                {% endif %}
+                <h2 class="text-xl font-semibold">{{ company.name }}</h2>
+            </div>
+            
+            <div class="space-y-2 text-sm text-gray-600">
+                <p><i class="bx bx-map mr-2"></i> {{ company.address }}</p>
+                <p><i class="bx bx-phone mr-2"></i> {{ company.phoneNumber }}</p>
+                <p><i class="bx bx-envelope mr-2"></i> {{ company.email }}</p>
+            </div>
+
+            <div class="mt-4 flex justify-between items-center">
+                <span class="px-2 py-1 rounded-full text-sm
+                    {% if company.state == 'Online' %}
+                        bg-green-100 text-green-800
+                    {% else %}
+                        bg-gray-100 text-gray-800
+                    {% endif %}">
+                    {{ company.state }}
+                </span>
+
+                <div class="flex space-x-2">
+                    <a href="{{ path('app_account_company_show', {'id': company.id}) }}" 
+                       class="text-blue-500 hover:text-blue-700">
+                        <i class="bx bx-show"></i>
+                    </a>
+                    <a href="{{ path('app_account_company_edit', {'id': company.id}) }}" 
+                       class="text-green-500 hover:text-green-700">
+                        <i class="bx bx-edit"></i>
+                    </a>
+                    <form action="{{ path('app_account_company_delete', {'id': company.id}) }}" 
+                          method="post" 
+                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette entreprise ?');"
+                          class="inline">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ company.id) }}">
+                        <button type="submit" class="text-red-500 hover:text-red-700">
+                            <i class="bx bx-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="col-span-full text-center py-8 text-gray-500">
+            Aucune entreprise trouvée
+        </div>
+    {% endfor %}
+</div>
+{% endblock %} 

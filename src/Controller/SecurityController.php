@@ -71,7 +71,7 @@ public function reset(Request $request, MailerInterface $mailer, UserRepository 
 
             // Créer l'email
             $email = (new Email())
-                ->from('ibrahim60200@gmail.com')
+                ->from('leonceyopa@gmail.com')
                 ->to($user->getEmail())
                 ->subject('Your password reset request')
                 ->html('<p>To reset your password, please click the link below</p><a href="http://localhost:8000/reset-password?token=' . $resetToken . '">Reset Password</a>');
@@ -123,7 +123,7 @@ public function resetPassword(Request $request, UserRepository $userRepository, 
 
         // Envoyer un e-mail de confirmation
         $email = (new Email())
-        ->from('ibrahim60200@gmail.com')
+        ->from('leonceyopa@gmail.com')
         ->to($user->getEmail())
         ->subject('Confirmation de changement de mot de passe')
         ->text('Votre mot de passe a été changé avec succès.')

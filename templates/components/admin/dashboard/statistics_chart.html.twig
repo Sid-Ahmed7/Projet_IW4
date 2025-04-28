@@ -1,0 +1,37 @@
+{% block statistics_chart %}
+<div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md lg:col-span-2">
+    <div class="flex justify-between mb-4 items-start">
+        <div class="font-medium">{{ title }}</div>
+        <div class="dropdown">
+            <button type="button" class="dropdown-toggle text-gray-400 hover:text-gray-600">
+                <i class="ri-more-fill"></i>
+            </button>
+            <ul class="dropdown-menu shadow-md shadow-black/5 z-30 hidden py-1.5 rounded-md bg-white border border-gray-100 w-full max-w-[140px]">
+                <li>
+                    <a href="#" class="flex items-center text-[13px] py-1.5 px-4 text-gray-600 hover:text-blue-500 hover:bg-gray-50">Profile</a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center text-[13px] py-1.5 px-4 text-gray-600 hover:text-blue-500 hover:bg-gray-50">Settings</a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center text-[13px] py-1.5 px-4 text-gray-600 hover:text-blue-500 hover:bg-gray-50">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+        {% for stat in stats %}
+            <div class="rounded-md border border-dashed border-gray-200 p-4">
+                <div class="flex items-center mb-0.5">
+                    <div class="text-xl font-semibold">{{ stat.count }}</div>
+                    <span class="p-1 rounded text-[12px] font-semibold {{ stat.color_class }} leading-none ml-1">{{ stat.value }}</span>
+                </div>
+                <span class="text-gray-400 text-sm">{{ stat.label }}</span>
+            </div>
+        {% endfor %}
+    </div>
+    <div>
+        <canvas id="{{ chart_id }}"></canvas>
+    </div>
+</div>
+{% endblock %} 

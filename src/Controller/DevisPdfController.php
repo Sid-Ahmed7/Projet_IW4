@@ -85,7 +85,7 @@ class DevisPdfController extends AbstractController
 
         // Créer l'e-mail
         $email = (new Email())
-            ->from('ibrahim60200@gmail.com')
+            ->from('leonceyopa@gmail.com')
             ->to($userEmail)
             ->subject('Votre devis')
             ->html($this->renderView('devis/devis_pdf.html.twig', ['devi' => $devis]))

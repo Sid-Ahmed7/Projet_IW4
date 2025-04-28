@@ -1,79 +1,93 @@
- <!--sidenav -->
-    <div class="fixed left-0 top-0 w-64 h-full bg-[#0000] p-4 z-50 sidebar-menu transition-transform">
-        <a href="#" class="flex items-center pb-4 border-b border-b-gray-800">
+{# templates/_sidebar.html.twig #}
+<aside class="fixed inset-y-0 left-0 w-64 bg-gray-800 text-gray-100 flex flex-col">
+  {# — Header — #}
+  <div class="px-4 py-6 border-b border-gray-700">
+    <a href="{{ path('app_account') }}" class="flex items-center space-x-2">
+      <img src="/build/logo.svg" alt="Logo" class="h-8 w-8" />
+      <span class="text-lg font-semibold">HUBREFUND</span>
+    </a>
+  </div>
 
-             <span class="bg-[#9999] text-white px-2 rounded-md">HAZE</span></h2>
-        </a>
-        <ul class="mt-4">
-            <span class="text-gray-400 font-bold">ADMIN</span>
-            <li class="mb-1 group">
-                <a href="" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
-                    <i class="ri-home-2-line mr-3 text-lg"></i>
-                    <span class="text-sm">Dashboard</span>
+  {# — Nav principal — #}
+  <nav class="flex-1 overflow-y-auto px-4 py-6">
+    {# Dropdown "Mes entreprises" #}
+    <h2 class="text-xs font-semibold text-gray-400 uppercase">Mes entreprises</h2>
+    <details class="mt-2 group">
+      <summary class="flex items-center justify-between cursor-pointer py-2 px-2 rounded hover:bg-gray-700">
+        <div class="flex items-center space-x-2">
+          <i class="bx bx-building text-xl"></i>
+          <span class="font-medium">Entreprises</span>
+        </div>
+        <i class="ri-arrow-down-s-line transition-transform group-open:rotate-180"></i>
+      </summary>
+      <ul class="mt-2 space-y-1 pl-6">
+        {% for company in app.user.companies %}
+          <li>
+            <span class="block text-sm font-medium">{{ company.name }}</span>
+            <ul class="mt-1 space-y-1 pl-4">
+              <li>
+                <a href="{{ path('app_company_devis',    {'companyId': company.id}) }}"
+                   class="flex items-center text-sm hover:text-white">
+                  <i class="bx bx-file mr-2"></i> Devis
                 </a>
-            </li>
-            <li class="mb-1 group">
-                <a href="" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100 sidebar-dropdown-toggle">
-                    <i class='bx bx-user mr-3 text-lg'></i>                
-                    <span class="text-sm">Users</span>
-                    <i class="ri-arrow-right-s-line ml-auto group-[.selected]:rotate-90"></i>
+              </li>
+              <li>
+                <a href="{{ path('app_company_invoices', {'companyId': company.id}) }}"
+                   class="flex items-center text-sm hover:text-white">
+                  <i class="bx bx-receipt mr-2"></i> Factures
                 </a>
-                <ul class="pl-7 mt-2 hidden group-[.selected]:block">
-                    <li class="mb-4">
-                        <a href="" class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">Mes Devis</a>
-                    </li> 
-                    <li class="mb-4">
-                        <a href="" class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">Mes Factures</a>
-                    </li> 
-                     <li class="mb-4">
-                        <a href="" class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">Mes Informations</a>
-                    </li> 
-                     <li class="mb-4">
-                        <a href="" class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">Mes Demandes de Devis</a>
-                    </li> 
-                </ul>
-            </li>
-            
-            <span class="text-gray-400 font-bold">MON ENTREPRISE</span>
-            <li class="mb-1 group">
-                <a href="" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100 sidebar-dropdown-toggle">
-                    <i class='bx bxl-blogger mr-3 text-lg' ></i>                 
-                    <span class="text-sm">SYlo*</span>
-                    <i class="ri-arrow-right-s-line ml-auto group-[.selected]:rotate-90"></i>
-                </a>
-                <ul class="pl-7 mt-2 hidden group-[.selected]:block">
-                   
-                    <li class="mb-4">
-                        <a href="" class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">DEVIS</a>
-                    </li> 
-                     <li class="mb-4">
-                        <a href="" class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">DEMANDES</a>
-                    </li> 
-                    <li class="mb-4">
-                        <a href="" class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">FACTURES</a>
-                    </li> 
-                     <li class="mb-4">
-                        <a href="" class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">EQUIPE</a>
-                    </li> 
-                    
-                </ul>
-            </li>
-            <li class="mb-1 group">
-                <a href="" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
-                    <i class='bx bx-archive mr-3 text-lg'></i>                
-                    <span class="text-sm">Archive</span>
-                </a>
-            </li>
-            <span class="text-gray-400 font-bold">PERSONAL</span>
-            <li class="mb-1 group">
-                <a href="" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
-                    <i class='bx bx-bell mr-3 text-lg' ></i>                
-                    <span class="text-sm">Notifications</span>
-                    <span class=" md:block px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-red-600 bg-red-200 rounded-full">5</span>
-                </a>
-            </li>
-            
-        </ul>
+              </li>
+            </ul>
+          </li>
+        {% else %}
+          <li class="py-2 text-sm text-gray-500">Aucune entreprise</li>
+        {% endfor %}
+        <li class="mt-4">
+          <a href="{{ path('app_account_company_new') }}"
+             class="flex items-center text-sm text-gray-300 hover:text-white">
+            <i class="bx bx-plus mr-2"></i> Nouvelle entreprise
+          </a>
+        </li>
+      </ul>
+    </details>
+
+    {# Liens rapides personnels #}
+    <div class="mt-6 border-t border-gray-700 pt-6 space-y-2">
+      <a href="{{ path('app_devis_index') }}"
+         class="flex items-center py-2 px-2 rounded hover:bg-gray-700">
+        <i class="bx bx-file text-xl mr-3"></i>
+        <span class="text-sm">Mes devis</span>
+      </a>
+      <a href="{{ path('app_invoice_index') }}"
+         class="flex items-center py-2 px-2 rounded hover:bg-gray-700">
+        <i class="bx bx-receipt text-xl mr-3"></i>
+        <span class="text-sm">Mes factures</span>
+      </a>
+      <a href="{{ path('app_haze_ia') }}"
+         class="flex items-center py-2 px-2 rounded hover:bg-gray-700">
+        <i class="bx bx-robot text-xl mr-3"></i>
+        <span class="text-sm">Haze IA</span>
+      </a>
     </div>
-    <div class="fixed top-0 left-0 w-full h-full bg-black/50 z-40 md:hidden sidebar-overlay"></div>
-    <!-- end sidenav -->
+
+    {# Section compte #}
+    <h2 class="mt-8 text-xs font-semibold text-gray-400 uppercase">Mon compte</h2>
+    <div class="mt-2 space-y-2">
+      <a href="{{ path('app_account_profile') }}"
+         class="flex items-center py-2 px-2 rounded hover:bg-gray-700">
+        <i class="bx bx-user-circle text-xl mr-3"></i>
+        <span class="text-sm">Mon profil</span>
+      </a>
+      <a href="{{ path('app_logout') }}"
+         class="flex items-center py-2 px-2 rounded hover:bg-gray-700">
+        <i class="bx bx-log-out text-xl mr-3"></i>
+        <span class="text-sm">Déconnexion</span>
+      </a>
+    </div>
+  </nav>
+
+  {# Footer #}
+  <div class="px-4 py-4 text-xs text-gray-500 border-t border-gray-700">
+    {# © {{ \"now\"|date('Y') }} Haze #}
+  </div>
+</aside>

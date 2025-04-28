@@ -1,0 +1,70 @@
+{% block recent_users %}
+<div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
+    <div class="flex justify-between mb-4 items-start">
+        <div class="font-medium">{{ title }}</div>
+        <div class="dropdown">
+            <button type="button" class="dropdown-toggle text-gray-400 hover:text-gray-600">
+                <i class="ri-more-fill"></i>
+            </button>
+            <ul class="dropdown-menu shadow-md shadow-black/5 z-30 hidden py-1.5 rounded-md bg-white border border-gray-100 w-full max-w-[140px]">
+                <li>
+                    <a href="#" class="flex items-center text-[13px] py-1.5 px-4 text-gray-600 hover:text-blue-500 hover:bg-gray-50">View All</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full min-w-[540px]">
+            <thead>
+                <tr>
+                    <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tl-md rounded-bl-md">User</th>
+                    <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Role</th>
+                    <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Status</th>
+                    <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td class="py-2 px-4 border-b border-b-gray-50">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                                    <img src="{{ user.avatar }}" alt="" class="w-full h-full object-cover">
+                                </div>
+                                <div class="ml-3">
+                                    <span class="text-sm font-medium text-gray-700">{{ user.name }}</span>
+                                    <span class="block text-[11px] text-gray-500">{{ user.email }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-2 px-4 border-b border-b-gray-50">
+                            <span class="text-[13px] font-medium text-gray-600">{{ user.role }}</span>
+                        </td>
+                        <td class="py-2 px-4 border-b border-b-gray-50">
+                            <span class="inline-block p-1 rounded {{ user.status_class }} text-[12px] font-semibold leading-none">{{ user.status }}</span>
+                        </td>
+                        <td class="py-2 px-4 border-b border-b-gray-50">
+                            <div class="dropdown">
+                                <button type="button" class="dropdown-toggle text-gray-400 hover:text-gray-600 text-sm">
+                                    <i class="ri-more-2-fill"></i>
+                                </button>
+                                <ul class="dropdown-menu shadow-md shadow-black/5 z-30 hidden py-1.5 rounded-md bg-white border border-gray-100 w-full max-w-[140px]">
+                                    <li>
+                                        <a href="#" class="flex items-center text-[13px] py-1.5 px-4 text-gray-600 hover:text-blue-500 hover:bg-gray-50">Profile</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="flex items-center text-[13px] py-1.5 px-4 text-gray-600 hover:text-blue-500 hover:bg-gray-50">Edit</a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="flex items-center text-[13px] py-1.5 px-4 text-gray-600 hover:text-blue-500 hover:bg-gray-50">Delete</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %} 

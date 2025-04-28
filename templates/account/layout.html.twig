@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="flex min-h-screen bg-gray-100">
+    {# Sidebar #}
+    {% include 'partials/admin/sidebare.html.twig' %}
+
+    {# Main content #}
+    <main class="flex-1 ml-64">
+        {# Header #}
+        {% include 'partials/admin/header.html.twig' %}
+
+        {# Content area #}
+        <div class="p-6">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</div>
+{% endblock %} 

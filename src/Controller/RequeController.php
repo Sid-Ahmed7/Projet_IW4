@@ -9,6 +9,8 @@ use App\Repository\CompanyRepository;
 use App\Repository\RequeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,54 +18,70 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/reque')]
 class RequeController extends AbstractController
 {
-    #[Route('/all/{companyId}', name: 'app_reque_index', methods: ['GET'])]
-public function index(RequeRepository $requeRepository, $companyId): Response
-{
-    if (!is_numeric($companyId)) {
-        throw $this->createNotFoundException('Company ID must be a number.');
-    }
-    $reques = $requeRepository->findBy(['companie' => $companyId]);
+    #[Route('/my-requests', name: 'app_my_reque_index', methods: ['GET'])]
+    public function myRequests(RequeRepository $requeRepository, Security $security): Response
+    {
+        $user = $security->getUser();
+        if (!$user) {
+            throw new AccessDeniedException('Vous devez être connecté pour voir cette page.');
+        }
 
-    return $this->render('reque/index.html.twig', [
-        'reques' => $reques,
-    ]);
-}
+        // Obtenez toutes les requêtes pour l'utilisateur connecté
+        $reques = $requeRepository->findBy(['usr' => $user]);
 
-
-#[Route('/new/{companyId}', name: 'app_reque_new', methods: ['GET', 'POST'])]
-public function new(Request $request, EntityManagerInterface $entityManager, CompanyRepository $companyRepository, $companyId): Response
-{
-    $reque = new Reque();
-    $form = $this->createForm(RequeType::class, $reque);
-    $form->handleRequest($request);
-
-    $user = $this->getUser();
-
-    $company = $companyRepository->find($companyId);
-    if (!$company) {
-        throw $this->createNotFoundException('La company demandée n\'existe pas.');
+        return $this->render('account/dashboard.html.twig', [
+            'user' => $user,
+            'reques' => $reques,
+        ]);
     }
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        $reque->setUsr($user);
-        $now = new \DateTimeImmutable();
-        $reque->setCreatedAt($now);
-        $reque->setState('pending');
-        $reque->setCompanie($companyId); 
+    #[Route('/company/{companyId}', name: 'app_reque_company_index', methods: ['GET'])]
+    public function companyRequests(RequeRepository $requeRepository, CompanyRepository $companyRepository, int $companyId): Response
+    {
+        $company = $companyRepository->find($companyId);
+        if (!$company) {
+            throw $this->createNotFoundException('L\'entreprise demandée n\'existe pas.');
+        }
 
-        $entityManager->persist($reque);
-        $entityManager->flush();
+        $reques = $requeRepository->findBy(['companie' => $companyId]);
 
-        return $this->redirectToRoute('app_test_index', [], Response::HTTP_SEE_OTHER);
+        return $this->render('account/dashboard.html.twig', [
+            'user' => $this->getUser(),
+            'reques' => $reques,
+            'company' => $company,
+        ]);
     }
 
-    return $this->render('reque/new.html.twig', [
-        'reque' => $reque,
-        'form' => $form->createView(),
-        'company' => $company, 
-    ]);
-}
+    #[Route('/new/{companyId}', name: 'app_reque_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager, CompanyRepository $companyRepository, $companyId): Response
+    {
+        $reque = new Reque();
+        $form = $this->createForm(RequeType::class, $reque);
+        $form->handleRequest($request);
+        $company = $companyRepository->find($companyId);
+        if (!$company) {
+            throw $this->createNotFoundException('La company demandée n\'existe pas.');
+        }
 
+        if ($form->isSubmitted() && $form->isValid()) {
+            $now = new \DateTimeImmutable();
+            $reque->setCreatedAt($now);
+            $reque->setState('en attente');
+            $reque->setCompanie($companyId);
+            $reque->setUsr($this->getUser());
+
+            $entityManager->persist($reque);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_reque_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('account/dashboard.html.twig', [
+            'reque' => $reque,
+            'form' => $form->createView(),
+            'company' => $company,
+        ]);
+    }
 
     #[Route('/{id}', name: 'app_reque_show', methods: ['GET'])]
     public function show(Reque $reque): Response

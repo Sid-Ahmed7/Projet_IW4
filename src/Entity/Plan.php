@@ -13,8 +13,6 @@ use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 #[ORM\Entity(repositoryClass: PlanRepository::class)]
 class Plan
 {
-
-   
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -23,11 +21,20 @@ class Plan
     #[ORM\ManyToOne(inversedBy: 'plans')]
     private ?User $author = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0')]
-    private ?string $price = null;
+    #[ORM\Column]
+    private ?float $price = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $description = null;
+
+    #[ORM\Column]
+    private ?int $duration = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $stripeId = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $features = null;
@@ -47,20 +54,14 @@ class Plan
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $stripePlanID = null;
 
-    
-    
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
-
-    #[ORM\OneToMany(mappedBy: 'plan', targetEntity: UserPlan::class)]
-    private Collection $userPlans;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $stripePaymentID = null;
 
     public function __construct()
     {
-        $this->userPlans = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -92,14 +93,38 @@ class Plan
         return $this;
     }
 
-    public function getPrice(): ?string
+    public function getPrice(): ?float
     {
         return $this->price;
     }
 
-    public function setPrice(string $price): static
+    public function setPrice(float $price): static
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getDuration(): ?int
+    {
+        return $this->duration;
+    }
+
+    public function setDuration(int $duration): static
+    {
+        $this->duration = $duration;
 
         return $this;
     }
@@ -164,8 +189,6 @@ class Plan
         return $this;
     }
 
-    
-
     public function getSlug(): ?string
     {
         return $this->slug;
@@ -174,36 +197,6 @@ class Plan
     public function setSlug(?string $slug): static
     {
         $this->slug = $slug;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, UserPlan>
-     */
-    public function getUserPlans(): Collection
-    {
-        return $this->userPlans;
-    }
-
-    public function addUserPlan(UserPlan $userPlan): static
-    {
-        if (!$this->userPlans->contains($userPlan)) {
-            $this->userPlans->add($userPlan);
-            $userPlan->setPlan($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserPlan(UserPlan $userPlan): static
-    {
-        if ($this->userPlans->removeElement($userPlan)) {
-            // set the owning side to null (unless already changed)
-            if ($userPlan->getPlan() === $this) {
-                $userPlan->setPlan(null);
-            }
-        }
 
         return $this;
     }
@@ -228,6 +221,18 @@ class Plan
     public function setStripePaymentID(?string $stripePaymentID): static
     {
         $this->stripePaymentID = $stripePaymentID;
+
+        return $this;
+    }
+
+    public function getStripeId(): ?string
+    {
+        return $this->stripeId;
+    }
+
+    public function setStripeId(string $stripeId): static
+    {
+        $this->stripeId = $stripeId;
 
         return $this;
     }

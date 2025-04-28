@@ -7,28 +7,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Uid\Uuid;
-use Gedmo\Mapping\Annotation as Gedmo;
-
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: '`user`')]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-#[UniqueEntity(fields: ['username'], message: 'ce nom d utilisateur est déja utilisé veuillez en selectionner un autre')]
-#[UniqueEntity(fields: ['username'], message: 'ce nom d utilisateur est déja utilisé veuillez en selectionner un autre')]
-
-
-
+#[ORM\Table(name: 'hubuser')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
+    #[ORM\SequenceGenerator(sequenceName: 'hubuser_id_seq', initialValue: 1, allocationSize: 1)]
     #[ORM\Column]
-    
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
@@ -37,148 +26,50 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(length: 50, nullable: true)]
-    private ?string $lastname = null;
-
-    #[ORM\Column(length: 50, nullable: true)] 
+    #[ORM\Column(length: 50)]
     private ?string $firstname = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $lastname = null;
 
     #[ORM\Column(length: 50)]
     private ?string $username = null;
 
-    // #[ORM\Column(type: 'uuid', unique: true)]
-    // #[ORM\GeneratedValue(strategy: 'CUSTOM')]
-    // #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    // private $uuid;
-    
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private  ?string $resetToken;
-
-    // Les getters et setters...
-    public function getResetToken(): ?string
-    {
-        return $this->resetToken;
-    }
-
-    public function setResetToken(?string $resetToken): self
-    {
-        $this->resetToken = $resetToken;
-        return $this;
-    }
-
-
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private  ?string $emailVerificationToken;
-
-    public function getEmailVerificationToken(): ?string
-    {
-        return $this->emailVerificationToken;
-    }
-
-    public function setEmailVerificationToken(string $emailVerificationToken): self
-    {
-        $this->emailVerificationToken = $emailVerificationToken;
-
-        return $this;
-    }
-
-    
-
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $picture = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $signupDate ;
-
-    #[ORM\Column(length: 20, nullable: true)]
-    private ?string $state = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updateAt = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $deletedAt = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Gedmo\Slug(fields: ['username'])]
-    private ?string $slug = null;
-
-    #[ORM\ManyToOne(inversedBy: 'users')]
-    private ?Company $company = null;
-
-    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Plan::class)]
-    private Collection $plans;
-
-    #[ORM\ManyToOne(inversedBy: 'users')]
-    private ?UserPlan $userPlan = null;
-
-   
-    #[ORM\OneToMany(mappedBy: 'users', targetEntity: Devis::class)]
-    private Collection $devis;
-
-    #[ORM\OneToMany(mappedBy: 'senderID', targetEntity: Message::class)]
-    private Collection $messages;
-
-    #[ORM\OneToMany(mappedBy: 'users', targetEntity: Notification::class)]
-    private Collection $notifications;
-
-    #[ORM\OneToMany(mappedBy: 'users', targetEntity: ConversationUser::class)]
-    private Collection $conversationUsers;
-
-    #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
-
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
-
-    public function setIsVerified(bool $isVerified): self
-    {
-        $this->isVerified = $isVerified;
-        return $this;
-    }
-
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $birthdate = null;
 
-    #[ORM\OneToMany(mappedBy: 'usr', targetEntity: Reque::class)]
-    private Collection $reques;
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $picture = null;
 
-    #[ORM\OneToMany(mappedBy: 'usr', targetEntity: UserPlan::class)]
-    private Collection $userPlans;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\Column]
+    private bool $isVerified = false;
+
+    #[ORM\ManyToOne(targetEntity: Company::class, inversedBy: 'hubusers')]
+    private ?Company $company = null;
+
+    #[ORM\OneToMany(mappedBy: 'hubuser', targetEntity: Devis::class)]
+    private Collection $devis;
+
+    #[ORM\OneToMany(mappedBy: 'hubuser', targetEntity: Invoice::class)]
+    private Collection $invoices;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $stripeCustomerID = null;
-
-    #[ORM\OneToMany(mappedBy: 'hazer', targetEntity: Like::class)]
-    private Collection $likes;
-
+    private ?string $emailVerificationToken = null;
 
     public function __construct()
     {
-        $this->plans = new ArrayCollection();
         $this->devis = new ArrayCollection();
-        $this->messages = new ArrayCollection();
-        $this->notifications = new ArrayCollection();
-        $this->conversationUsers = new ArrayCollection();
-        // $this->userRoles = new ArrayCollection();
-        // $this->userRoleUpdateBy = new ArrayCollection();
-        $this->emailVerificationToken = null;
-        $this->userPlans = new ArrayCollection();
-        $this->likes = new ArrayCollection();
-
+        $this->invoices = new ArrayCollection();
     }
-   
 
     public function getId(): ?int
     {
@@ -193,42 +84,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
-
         return array_unique($roles);
     }
 
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
-
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): string
     {
         return $this->password;
@@ -237,36 +113,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): static
     {
         $this->password = $password;
-
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
-
-    public function getLastname(): ?string
-    {
-        return $this->lastname;
-    }
-
-    // public function getUuid(): ?string
-    // {
-    //     return $this->uuid->toString();
-    // }
-
-    
-
-    public function setLastname(?string $lastname): static
-    {
-        $this->lastname = $lastname;
-
-        return $this;
     }
 
     public function getFirstname(): ?string
@@ -274,10 +126,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->firstname;
     }
 
-    public function setFirstname(?string $firstname): static
+    public function setFirstname(string $firstname): static
     {
         $this->firstname = $firstname;
+        return $this;
+    }
 
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(string $lastname): static
+    {
+        $this->lastname = $lastname;
         return $this;
     }
 
@@ -289,7 +151,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUsername(string $username): static
     {
         $this->username = $username;
+        return $this;
+    }
 
+    public function getBirthdate(): ?\DateTimeInterface
+    {
+        return $this->birthdate;
+    }
+
+    public function setBirthdate(?\DateTimeInterface $birthdate): self
+    {
+        $this->birthdate = $birthdate;
         return $this;
     }
 
@@ -301,67 +173,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPicture(?string $picture): static
     {
         $this->picture = $picture;
-
         return $this;
     }
 
-    public function getSignupDate(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->signupDate;
+        return $this->createdAt;
     }
 
-    public function setSignupDate(\DateTimeInterface $signupDate): self
+    public function setCreatedAt(?\DateTimeImmutable $createdAt): static
     {
-        $this->signupDate = $signupDate;
-
+        $this->createdAt = $createdAt;
         return $this;
     }
 
-    public function getState(): ?string
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->state;
+        return $this->updatedAt;
     }
 
-    public function setState(?string $state): static
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
     {
-        $this->state = $state;
-
+        $this->updatedAt = $updatedAt;
         return $this;
     }
 
-    public function getUpdateAt(): ?\DateTimeImmutable
+    public function isVerified(): bool
     {
-        return $this->updateAt;
+        return $this->isVerified;
     }
 
-    public function setUpdateAt(?\DateTimeImmutable $updateAt): static
+    public function setIsVerified(bool $isVerified): static
     {
-        $this->updateAt = $updateAt;
-
-        return $this;
-    }
-
-    public function getDeletedAt(): ?\DateTimeImmutable
-    {
-        return $this->deletedAt;
-    }
-
-    public function setDeletedAt(?\DateTimeImmutable $deletedAt): static
-    {
-        $this->deletedAt = $deletedAt;
-
-        return $this;
-    }
-
-    public function getSlug(): ?string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(?string $slug): static
-    {
-        $this->slug = $slug;
-
+        $this->isVerified = $isVerified;
         return $this;
     }
 
@@ -373,53 +217,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCompany(?Company $company): static
     {
         $this->company = $company;
-
         return $this;
     }
 
     /**
-     * @return Collection<int, Plan>
+     * @return Collection<int, Devis>
      */
-    public function getPlans(): Collection
-    {
-        return $this->plans;
-    }
-
-    public function addPlan(Plan $plan): static
-    {
-        if (!$this->plans->contains($plan)) {
-            $this->plans->add($plan);
-            $plan->setAuthor($this);
-        }
-
-        return $this;
-    }
-
-    public function removePlan(Plan $plan): static
-    {
-        if ($this->plans->removeElement($plan)) {
-            // set the owning side to null (unless already changed)
-            if ($plan->getAuthor() === $this) {
-                $plan->setAuthor(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getUserPlan(): ?UserPlan
-    {
-        return $this->userPlan;
-    }
-
-    public function setUserPlan(?UserPlan $userPlan): static
-    {
-        $this->userPlan = $userPlan;
-
-        return $this;
-    }
-
-    
     public function getDevis(): Collection
     {
         return $this->devis;
@@ -429,210 +232,64 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->devis->contains($devi)) {
             $this->devis->add($devi);
-            $devi->setUsers($this);
+            $devi->setHubuser($this);
         }
-
         return $this;
     }
 
     public function removeDevi(Devis $devi): static
     {
         if ($this->devis->removeElement($devi)) {
-            // set the owning side to null (unless already changed)
-            if ($devi->getUsers() === $this) {
-                $devi->setUsers(null);
+            if ($devi->getHubuser() === $this) {
+                $devi->setHubuser(null);
             }
         }
-
-        return $this;
-    }
-   
-    /**
-     * @return Collection<int, Message>
-     */
-    public function getMessages(): Collection
-    {
-        return $this->messages;
-    }
-
-    public function addMessage(Message $message): static
-    {
-        if (!$this->messages->contains($message)) {
-            $this->messages->add($message);
-            $message->setSenderID($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMessage(Message $message): static
-    {
-        if ($this->messages->removeElement($message)) {
-            // set the owning side to null (unless already changed)
-            if ($message->getSenderID() === $this) {
-                $message->setSenderID(null);
-            }
-        }
-
         return $this;
     }
 
     /**
-     * @return Collection<int, Notification>
+     * @return Collection<int, Invoice>
      */
-    public function getNotifications(): Collection
+    public function getInvoices(): Collection
     {
-        return $this->notifications;
+        return $this->invoices;
     }
 
-    public function addNotification(Notification $notification): static
+    public function addInvoice(Invoice $invoice): static
     {
-        if (!$this->notifications->contains($notification)) {
-            $this->notifications->add($notification);
-            $notification->setUsers($this);
+        if (!$this->invoices->contains($invoice)) {
+            $this->invoices->add($invoice);
+            $invoice->setHubuser($this);
         }
-
         return $this;
     }
 
-    public function removeNotification(Notification $notification): static
+    public function removeInvoice(Invoice $invoice): static
     {
-        if ($this->notifications->removeElement($notification)) {
-            // set the owning side to null (unless already changed)
-            if ($notification->getUsers() === $this) {
-                $notification->setUsers(null);
+        if ($this->invoices->removeElement($invoice)) {
+            if ($invoice->getHubuser() === $this) {
+                $invoice->setHubuser(null);
             }
         }
+        return $this;
+    }
 
+    public function getEmailVerificationToken(): ?string
+    {
+        return $this->emailVerificationToken;
+    }
+
+    public function setEmailVerificationToken(?string $emailVerificationToken): static
+    {
+        $this->emailVerificationToken = $emailVerificationToken;
         return $this;
     }
 
     /**
-     * @return Collection<int, ConversationUser>
+     * @return array<Company>
      */
-    public function getConversationUsers(): Collection
+    public function getCompanies(): array
     {
-        return $this->conversationUsers;
+        return $this->company ? [$this->company] : [];
     }
-
-    public function addConversationUser(ConversationUser $conversationUser): static
-    {
-        if (!$this->conversationUsers->contains($conversationUser)) {
-            $this->conversationUsers->add($conversationUser);
-            $conversationUser->setUsers($this);
-        }
-
-        return $this;
-    }
-
-    public function removeConversationUser(ConversationUser $conversationUser): static
-    {
-        if ($this->conversationUsers->removeElement($conversationUser)) {
-            // set the owning side to null (unless already changed)
-            if ($conversationUser->getUsers() === $this) {
-                $conversationUser->setUsers(null);
-            }
-        }
-
-        return $this;
-    }
-
-
-
-    public function getBirthdate(): ?\DateTimeInterface
-    {
-        return $this->birthdate;
-    }
-
-    public function setBirthdate(?\DateTimeInterface $birthdate): static
-    {
-        $this->birthdate = $birthdate;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Reque>
-     */
-    public function getReques(): Collection
-    {
-        return $this->reques;
-    }
-
-    /**
-     * @return Collection<int, UserPlan>
-     */
-    public function getUserPlans(): Collection
-    {
-        return $this->userPlans;
-    }
-
-    public function addUserPlan(UserPlan $userPlan): static
-    {
-        if (!$this->userPlans->contains($userPlan)) {
-            $this->userPlans->add($userPlan);
-            $userPlan->setUsr($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserPlan(UserPlan $userPlan): static
-    {
-        if ($this->userPlans->removeElement($userPlan)) {
-            // set the owning side to null (unless already changed)
-            if ($userPlan->getUsr() === $this) {
-                $userPlan->setUsr(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getStripeCustomerID(): ?string
-    {
-        return $this->stripeCustomerID;
-    }
-
-    public function setStripeCustomerID(?string $stripeCustomerID): static
-    {
-        $this->stripeCustomerID = $stripeCustomerID;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Like>
-     */
-    public function getLikes(): Collection
-    {
-        return $this->likes;
-    }
-
-    public function addLike(Like $like): static
-    {
-        if (!$this->likes->contains($like)) {
-            $this->likes->add($like);
-            $like->setHazer($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLike(Like $like): static
-    {
-        if ($this->likes->removeElement($like)) {
-            // set the owning side to null (unless already changed)
-            if ($like->getHazer() === $this) {
-                $like->setHazer(null);
-            }
-        }
-
-        return $this;
-    }
-
-   
-   
-
-   
 }

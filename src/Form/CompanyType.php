@@ -3,8 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Company;
+use App\Entity\Category;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,9 +17,11 @@ class CompanyType extends AbstractType
         $builder
             ->add('name', null, [
                 'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
+                'label' => 'Nom de l\'entreprise',
             ])
             ->add('address', null, [
                 'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
+                'label' => 'Adresse',
             ])
             ->add('logo', FileType::class, [
                 'label' => 'Logo (image)',
@@ -32,32 +35,27 @@ class CompanyType extends AbstractType
             ])
             ->add('email', null, [
                 'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
+                'label' => 'Email',
             ])
-
-            ->add('email')
-            ->add('categorie', ChoiceType::class, [
-                'choices' => [
-                    'Événement' => 'EVENEMENT',
-                    'Anniversaire' => 'ANNIVERSAIRE',
-                    'Mariage' => 'MARIAGE', 
-                    'Concert' => 'CONCERT', 
-                ]
+            ->add('category', null, [
+                'label' => 'Catégorie',
+                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
             ])
-            ->add('phoneNumber')
-            ->add('taxNumber')
-            ->add('siretNumber');
-
-
-
-
-            // Il faudrait voire comment faire le 
-        ;
+            ->add('phoneNumber', null, [
+                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
+                'label' => 'Numéro de téléphone',
+            ])
+            ->add('siretNumber', null, [
+                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2'],
+                'label' => 'Numéro SIRET',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Company::class,
+            'categories' => [],
         ]);
     }
 }

@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Demande envoyée{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-3xl mx-auto">
+        <div class="bg-white shadow sm:rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <div class="text-center">
+                    <svg class="mx-auto h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2002000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <h2 class="mt-6 text-2xl font-bold text-gray-900">Demande envoyée avec succès !</h2>
+                    <p class="mt-2 text-base text-gray-500">
+                        Nous avons bien reçu votre demande de devis. Notre équipe l'examinera dans les plus brefs délais et vous contactera bientôt.
+                    </p>
+                    <div class="mt-6">
+                        <a href="{{ path('app_home_index') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Retour à l'accueil
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

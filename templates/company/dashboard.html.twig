@@ -1,0 +1,138 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard {{ company.name }}{% endblock %}
+
+{% block body %}
+    {% include 'partials/admin/sidebare.html.twig' %}
+
+    <main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-100 min-h-screen transition-all main">
+        {% include 'partials/admin/header.html.twig' %}
+
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+                    <div class="flex justify-between mb-6">
+                        <div>
+                            <div class="flex items-center mb-1">
+                                <div class="text-2xl font-semibold">{{ company.users|length }}</div>
+                            </div>
+                            <div class="text-sm font-medium text-gray-400">Membres de l'équipe</div>
+                        </div>
+                    </div>
+                    <a href="{{ path('app_company_team') }}" class="text-blue-500 font-medium text-sm hover:text-blue-600">Gérer l'équipe</a>
+                </div>
+
+                <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+                    <div class="flex justify-between mb-4">
+                        <div>
+                            <div class="flex items-center mb-1">
+                                <div class="text-2xl font-semibold">{{ company.devis|length }}</div>
+                            </div>
+                            <div class="text-sm font-medium text-gray-400">Demandes</div>
+                        </div>
+                    </div>
+                    <a href="{{ path('app_company_requests') }}" class="text-blue-500 font-medium text-sm hover:text-blue-600">Voir les demandes</a>
+                </div>
+
+                <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+                    <div class="flex justify-between mb-6">
+                        <div>
+                            <div class="text-2xl font-semibold mb-1">{{ company.categories|length }}</div>
+                            <div class="text-sm font-medium text-gray-400">Catégories</div>
+                        </div>
+                    </div>
+                    <a href="{{ path('app_company_settings') }}" class="text-blue-500 font-medium text-sm hover:text-blue-600">Gérer les paramètres</a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
+                    <div class="flex justify-between mb-4 items-start">
+                        <div class="font-medium">Dernières demandes</div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full min-w-[540px]">
+                            <thead>
+                                <tr>
+                                    <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tl-md rounded-bl-md">Titre</th>
+                                    <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Statut</th>
+                                    <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Date</th>
+                                    <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for devis in company.devis|slice(0, 5) %}
+                                    <tr>
+                                        <td class="py-2 px-4 border-b border-b-gray-50">
+                                            <div class="flex items-center">
+                                                <span class="text-[13px] font-medium text-gray-900">{{ devis.title }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="py-2 px-4 border-b border-b-gray-50">
+                                            <span class="text-[13px] font-medium text-gray-900">{{ devis.state }}</span>
+                                        </td>
+                                        <td class="py-2 px-4 border-b border-b-gray-50">
+                                            <span class="text-[13px] font-medium text-gray-900">{{ devis.createdAt|date('d/m/Y') }}</span>
+                                        </td>
+                                        <td class="py-2 px-4 border-b border-b-gray-50">
+                                            <a href="#" class="text-blue-500 hover:text-blue-600 text-[13px] font-medium">Voir</a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="4" class="py-4 px-4 text-center text-gray-500">Aucune demande</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-gray-100 shadow-md shadow-black/5 p-6 rounded-md">
+                    <div class="flex justify-between mb-4 items-start">
+                        <div class="font-medium">Derniers membres</div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full min-w-[540px]">
+                            <thead>
+                                <tr>
+                                    <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tl-md rounded-bl-md">Nom</th>
+                                    <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left">Email</th>
+                                    <th class="text-[12px] uppercase tracking-wide font-medium text-gray-400 py-2 px-4 bg-gray-50 text-left rounded-tr-md rounded-br-md">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in company.users|slice(0, 5) %}
+                                    <tr>
+                                        <td class="py-2 px-4 border-b border-b-gray-50">
+                                            <div class="flex items-center">
+                                                {% if user.picture %}
+                                                    <img src="{{ user.picture }}" alt="" class="w-8 h-8 rounded-full object-cover block">
+                                                {% else %}
+                                                    <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+                                                        <span class="text-sm font-medium text-gray-500">{{ user.firstname|first }}{{ user.lastname|first }}</span>
+                                                    </div>
+                                                {% endif %}
+                                                <span class="text-[13px] font-medium text-gray-900 ml-2">{{ user.firstname }} {{ user.lastname }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="py-2 px-4 border-b border-b-gray-50">
+                                            <span class="text-[13px] font-medium text-gray-900">{{ user.email }}</span>
+                                        </td>
+                                        <td class="py-2 px-4 border-b border-b-gray-50">
+                                            <a href="#" class="text-blue-500 hover:text-blue-600 text-[13px] font-medium">Voir</a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="3" class="py-4 px-4 text-center text-gray-500">Aucun membre</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock %} 

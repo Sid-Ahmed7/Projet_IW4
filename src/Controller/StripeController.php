@@ -78,43 +78,37 @@ class StripeController extends AbstractController
     #[Route('/plans/create/{wplanID}', name: 'create_subscription_plan')]
     public function createSubscriptionPlan(Plan $plan, $wplanID, PlanRepository $planRepository, EntityManagerInterface $entityManager): Response
     {
-        // Configurez votre clé d'API Stripe
+        //  clé d'API Stripe, elle est dans le .env
         Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
         $wplanID = (int) $wplanID;
         $planW =  $planRepository->findOneBy(['id' => $wplanID]);
 
-        // Vérifier si le plan existe
+        // Vérifie si le plan existe
         if (!$planW) {
             throw $this->createNotFoundException('Le plan avec l\'ID ' . $wplanID . ' n\'a pas été trouvé.');
         }
 
-        // Créez un produit dans Stripe (si vous ne l'avez pas déjà fait)
+        //cree le produit dans stripe 
         $product = Product::create([
             'name' => 'Abonnement fonctionnalité Wizzard',
         ]);
 
-        // Créez un plan d'abonnement dans Stripe en associant ce plan au produit que vous avez créé
         $wplan = StripePlan::create([
-            'amount' => $planW->getPrice() * 100, // Montant en centimes (10.00$ dans cet exemple)
+            'amount' => $planW->getPrice() * 100, 
             'currency' => 'eur',
             'interval' => 'month',
             'product' => $product->id, // ID du produit auquel ce plan est associé
             'nickname' => $planW->getName(),
         ]);
-
-        // L'ID du plan nouvellement créé dans Stripe
         $stripePlanID = $wplan->id;
 
         // Mettre à jour le plan existant avec l'ID du plan Stripe
         $planW->setStripePlanID($stripePlanID);
 
-        // Enregistrer les changements dans la base de données
         $entityManager->persist($planW);
         $entityManager->flush();
 
-        // Vous pouvez retourner une réponse JSON ou rediriger l'utilisateur vers une autre page après la mise à jour du plan
-
-        // Par exemple, retourner une réponse JSON
+    
         // return $this->json(['success' => true, 'message' => 'Plan mis à jour avec succès', 'stripe_plan_id' => $stripePlanID]);
         return $this->redirectToRoute('app_plan_index', [], Response::HTTP_SEE_OTHER);
     }
@@ -141,7 +135,7 @@ class StripeController extends AbstractController
         $entityManager->flush();
 
         return $this->redirectToRoute('newsubscribe', [
-            'userId' => $userPlan->getUsr()->getId(),
+            'userId' => $userPlan->getUsr()->getId(), 
             'planId' => $userPlan->getPlan()->getId(),
         ]);
     }
@@ -178,18 +172,18 @@ class StripeController extends AbstractController
     {
         $YOUR_DOMAIN = 'http://127.0.0.1:8000';
 
-        // Configurez votre clé d'API Stripe
+        // clé d'API Stripe
         Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
 
         $user = $this->getUser();
         $planStripe =  $planRepository->findOneBy(['id' => $planId]);
-        // Initialisez et configurez Stripe ici...
+       
         Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
         $price = Price::create([
-            'unit_amount' => $planStripe->getPrice() * 100, // Le prix en centimes *100
+            'unit_amount' => $planStripe->getPrice() * 100, // Le prix est en centimes *100
             'currency' => 'eur', // La devise (ici l'euro)
             'product_data' => [
-                'name' => $planStripe->getName(), // Le titre de l'annonce comme nom du produit
+                'name' => $planStripe->getName(), // Le titre du Plan comme nom du produit
             ],
             'recurring' => [
                 'interval' => 'month', //  chaque mois ducoup 

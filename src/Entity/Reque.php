@@ -29,26 +29,11 @@ class Reque
     #[ORM\ManyToOne(inversedBy: 'reques')]
     private ?Company $company = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $eventLocation = null;
-
     #[ORM\Column(length: 40)]
     private ?string $eventCountry = null;
 
-    #[ORM\Column(length: 40, nullable: true)]
-    private ?string $eventCity = null;
-
-    #[ORM\Column]
-    private ?int $eventCode = null;
-
-    #[ORM\Column(length: 50)]
-    private ?string $lastame = null;
-
     #[ORM\Column(length: 50)]
     private ?string $firstname = null;
-
-    #[ORM\Column]
-    private ?int $phoneNumber = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $maxBudget = null;
@@ -59,14 +44,17 @@ class Reque
     #[ORM\Column(length: 255)]
     private ?string $mail = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $object = null;
-
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column]
     private ?int $companie = null;
+
+    #[ORM\Column(length: 255,nullable: true)]
+    private ?string $pic1 = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $pic�2 = null;
 
     public function getId(): ?int
     {
@@ -133,17 +121,6 @@ class Reque
         return $this;
     }
 
-    public function getEventLocation(): ?string
-    {
-        return $this->eventLocation;
-    }
-
-    public function setEventLocation(?string $eventLocation): static
-    {
-        $this->eventLocation = $eventLocation;
-
-        return $this;
-    }
 
     public function getEventCountry(): ?string
     {
@@ -153,42 +130,6 @@ class Reque
     public function setEventCountry(string $eventCountry): static
     {
         $this->eventCountry = $eventCountry;
-
-        return $this;
-    }
-
-    public function getEventCity(): ?string
-    {
-        return $this->eventCity;
-    }
-
-    public function setEventCity(?string $eventCity): static
-    {
-        $this->eventCity = $eventCity;
-
-        return $this;
-    }
-
-    public function getEventCode(): ?int
-    {
-        return $this->eventCode;
-    }
-
-    public function setEventCode(int $eventCode): static
-    {
-        $this->eventCode = $eventCode;
-
-        return $this;
-    }
-
-    public function getLastame(): ?string
-    {
-        return $this->lastame;
-    }
-
-    public function setLastame(string $lastame): static
-    {
-        $this->lastame = $lastame;
 
         return $this;
     }
@@ -205,17 +146,6 @@ class Reque
         return $this;
     }
 
-    public function getPhoneNumber(): ?int
-    {
-        return $this->phoneNumber;
-    }
-
-    public function setPhoneNumber(int $phoneNumber): static
-    {
-        $this->phoneNumber = $phoneNumber;
-
-        return $this;
-    }
 
     public function getMaxBudget(): ?int
     {
@@ -253,17 +183,6 @@ class Reque
         return $this;
     }
 
-    public function getObject(): ?string
-    {
-        return $this->object;
-    }
-
-    public function setObject(string $object): static
-    {
-        $this->object = $object;
-
-        return $this;
-    }
 
     public function getDescription(): ?string
     {
@@ -285,6 +204,30 @@ class Reque
     public function setCompanie(int $companie): static
     {
         $this->companie = $companie;
+
+        return $this;
+    }
+
+    public function getPic1(): ?string
+    {
+        return $this->pic1;
+    }
+
+    public function setPic1(string $pic1): static
+    {
+        $this->pic1 = $pic1;
+
+        return $this;
+    }
+
+    public function getPic�2(): ?string
+    {
+        return $this->pic�2;
+    }
+
+    public function setPic�2(?string $pic�2): static
+    {
+        $this->pic�2 = $pic�2;
 
         return $this;
     }

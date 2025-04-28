@@ -16,131 +16,58 @@ class Invoice
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'invoices')]
-    private ?Devis $devis = null;
-
     #[ORM\Column(length: 255)]
-    private ?string $stripePaymentID = null;
-
-    #[ORM\Column(length: 50)]
-    private ?string $paymentType = null;
-
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0', nullable: true)]
-    private ?string $Vat = null;
+    private ?string $number = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $paymentDetails = null;
-
-    #[ORM\Column(length: 50)]
-    private ?string $state = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updatedAt = null;
+    private ?string $description = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $deletedAt = null;
+    #[ORM\Column]
+    private ?float $amount = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    // #[Gedmo\Slug(fields: ['name',"id"])]
+    #[ORM\ManyToOne(inversedBy: 'invoices')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Company $company = null;
 
+    #[ORM\ManyToOne(inversedBy: 'invoices')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $hubuser = null;
 
-    private ?string $slug = null;
+    #[ORM\Column(length: 255)]
+    private ?string $status = 'pending';
 
-    #[ORM\Column(nullable: true)]
-    private ?int $HTPrice = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $ttcprice = null;
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getDevis(): ?devis
+    public function getNumber(): ?string
     {
-        return $this->devis;
+        return $this->number;
     }
 
-    public function setDevis(?devis $devis): static
+    public function setNumber(string $number): static
     {
-        $this->devis = $devis;
-
+        $this->number = $number;
         return $this;
     }
 
-    public function getStripePaymentID(): ?string
+    public function getDescription(): ?string
     {
-        return $this->stripePaymentID;
+        return $this->description;
     }
 
-    public function setStripePaymentID(string $stripePaymentID): static
+    public function setDescription(?string $description): static
     {
-        $this->stripePaymentID = $stripePaymentID;
-
-        return $this;
-    }
-
-    public function getPaymentType(): ?string
-    {
-        return $this->paymentType;
-    }
-
-    public function setPaymentType(string $paymentType): static
-    {
-        $this->paymentType = $paymentType;
-
-        return $this;
-    }
-
-    public function getVat(): ?string
-    {
-        return $this->Vat;
-    }
-
-    public function setVat(?string $Vat): static
-    {
-        $this->Vat = $Vat;
-
-        return $this;
-    }
-
-    public function getPaymentDetails(): ?string
-    {
-        return $this->paymentDetails;
-    }
-
-    public function setPaymentDetails(?string $paymentDetails): static
-    {
-        $this->paymentDetails = $paymentDetails;
-
-        return $this;
-    }
-
-    public function getState(): ?string
-    {
-        return $this->state;
-    }
-
-    public function setState(string $state): static
-    {
-        $this->state = $state;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
-    {
-        $this->updatedAt = $updatedAt;
-
+        $this->description = $description;
         return $this;
     }
 
@@ -152,55 +79,50 @@ class Invoice
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTimeImmutable
+    public function getAmount(): ?float
     {
-        return $this->deletedAt;
+        return $this->amount;
     }
 
-    public function setDeletedAt(?\DateTimeImmutable $deletedAt): static
+    public function setAmount(float $amount): static
     {
-        $this->deletedAt = $deletedAt;
-
+        $this->amount = $amount;
         return $this;
     }
 
-    public function getSlug(): ?string
+    public function getCompany(): ?Company
     {
-        return $this->slug;
+        return $this->company;
     }
 
-    public function setSlug(?string $slug): static
+    public function setCompany(?Company $company): static
     {
-        $this->slug = $slug;
-
+        $this->company = $company;
         return $this;
     }
 
-    public function getHTPrice(): ?int
+    public function getHubuser(): ?User
     {
-        return $this->HTPrice;
+        return $this->hubuser;
     }
 
-    public function setHTPrice(int $HTPrice): static
+    public function setHubuser(?User $hubuser): static
     {
-        $this->HTPrice = $HTPrice;
-
+        $this->hubuser = $hubuser;
         return $this;
     }
 
-    public function getTtcprice(): ?int
+    public function getStatus(): ?string
     {
-        return $this->ttcprice;
+        return $this->status;
     }
 
-    public function setTtcprice(?int $ttcprice): static
+    public function setStatus(string $status): static
     {
-        $this->ttcprice = $ttcprice;
-
+        $this->status = $status;
         return $this;
     }
 }

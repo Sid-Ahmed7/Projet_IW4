@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Company;
 use App\Entity\User;
 use App\Form\CompanyType;
-use App\Repository\CategoryRepository;
 use App\Repository\CompanyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Customer;
@@ -19,43 +18,28 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-
-
-#[Route('/company')]
+#[Route('/account/company')]
 class CompanyController extends AbstractController
 {
-    #[Route('{idCat}/', name: 'app_company_cat', methods: ['GET'])]
-    public function index(CompanyRepository $companyRepository, CategoryRepository $categoryRepository, $idCat): Response
+    #[Route('/', name: 'app_account_company_index', methods: ['GET'])]
+    public function index(CompanyRepository $companyRepository): Response
     {
-        $category = $categoryRepository->find($idCat);
-        if (!$category) {
-            throw $this->createNotFoundException('La catégorie n\'a pas été trouvée.');
-        }
-    
-        $companys = $companyRepository->findBy(['categorie' => $category->getName()]);
-    
-        return $this->render('company/index.html.twig', [
-            'companys' => $companys,
-        ]);
-    }
-
-    #[Route('/', name: 'app_company_index', methods: ['GET'])]
-    public function index1(CompanyRepository $companyRepository, $id): Response
-    {
-        return $this->render('company/index.html.twig', [
+        return $this->render('account/company/index.html.twig', [
             'companys' => $companyRepository->findAll(),
         ]);
     }
 
-    #[Route('{id}/new', name: 'app_company_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, Security $security, $id): Response
+    #[Route('/new', name: 'app_account_company_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager, Security $security): Response
     {
         $company = new Company();
+        /** @var User $user */
         $user = $security->getUser();
 
         if (!$security->isGranted('ROLE_USER')) {
-            throw $this->createAccessDeniedException('Vous devez vous connecter pour crer une company petit malin...');
+            throw $this->createAccessDeniedException('Vous devez vous connecter pour créer une entreprise.');
         }
+
         $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
 
@@ -64,9 +48,8 @@ class CompanyController extends AbstractController
             $company->setCreatedAt($now);
             $company->setState('Online');
             $company->setVerified(false);
-            $company->setCreatedBy($id);
-
-            $entityManager->persist($company);
+            $company->setCreatedBy($user->getId());
+            $company->addhubUser($user);
 
             // Gestion du logo
             $logoFile = $form->get('logo')->getData();
@@ -86,57 +69,46 @@ class CompanyController extends AbstractController
                 $company->setBanner($bannerFileName);
             }
 
-
-            // Création de l'identifiant client dans Stripe
-            Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
-            $stripeCustomer = Customer::create([
-                'email' => $company->getEmail(),
-                'name' => $company->getName(),
-
-            ]);
-
-            // Associez l'identifiant client à l'utilisateur dans votre application
-            $company->setStripeCustomerId($stripeCustomer->id);
             $entityManager->persist($company);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_company_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', 'Votre entreprise a été créée avec succès !');
+            return $this->redirectToRoute('app_account_company_index');
         }
 
-        return $this->render('company/new.html.twig', [
+        return $this->render('account/company/new.html.twig', [
             'company' => $company,
             'form' => $form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_company_show', methods: ['GET'])]
-    public function show(Company $company, $id): Response
+    #[Route('/{id}', name: 'app_account_company_show', methods: ['GET'])]
+    public function show(Company $company): Response
     {
-        return $this->render('company/show.html.twig', [
+        return $this->render('account/company/show.html.twig', [
             'company' => $company,
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_company_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_account_company_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
-
         $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_company_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_account_company_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('company/edit.html.twig', [
+        return $this->render('account/company/edit.html.twig', [
             'company' => $company,
             'form' => $form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_company_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_account_company_delete', methods: ['POST'])]
     public function delete(Request $request, Company $company, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $company->getId(), $request->request->get('_token'))) {
@@ -144,6 +116,6 @@ class CompanyController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_company_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_account_company_index', [], Response::HTTP_SEE_OTHER);
     }
 }

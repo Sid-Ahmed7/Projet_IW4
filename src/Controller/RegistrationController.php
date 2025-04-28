@@ -6,104 +6,114 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit\Util\Filesystem;
+use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
-
-use App\Repository\UserRepository;
-use Stripe\Customer;
-use Stripe\Stripe;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RegistrationController extends AbstractController
 {
     private EmailVerifier $emailVerifier;
+    private LoggerInterface $logger;
 
-    public function __construct(EmailVerifier $emailVerifier)
+    public function __construct(EmailVerifier $emailVerifier, LoggerInterface $logger)
     {
         $this->emailVerifier = $emailVerifier;
+        $this->logger      = $logger;
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
-    {
+    public function register(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        EntityManagerInterface $entityManager
+    ): Response {
+        $this->logger->info('Début du processus d\'inscription');
+
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('password')->getData()
-                )
-            );
+        if ($form->isSubmitted()) {
+            $this->logger->info('Formulaire soumis', ['data' => $form->getData()]);
 
-            $user->setSignupDate(new \DateTime());
-            $user->setRoles(['ROLE_USER']);
-                $defaultPictureFileName = $this->getParameter('profilePicture_directory') . '/no-user.jpg';
-                $user->setPicture($defaultPictureFileName);
+            if ($form->isValid()) {
+                $this->logger->info('Formulaire valide');
 
+                // --- Unicité de l'email et du username
+                if ($entityManager->getRepository(User::class)->findOneBy(['email' => $user->getEmail()])) {
+                    $this->addFlash('error', 'Cette adresse email est déjà utilisée.');
+                    return $this->render('registration/register.html.twig', [
+                        'registrationForm' => $form->createView(),
+                    ]);
+                }
+                if ($entityManager->getRepository(User::class)->findOneBy(['username' => $user->getUsername()])) {
+                    $this->addFlash('error', 'Ce nom d\'utilisateur est déjà pris.');
+                    return $this->render('registration/register.html.twig', [
+                        'registrationForm' => $form->createView(),
+                    ]);
+                }
 
-            // Gestion du picture
-            // $pictureFile = $form->get('picture')->getData();
-            // if ($pictureFile instanceof UploadedFile) {
-            //     $filesystem = new Filesystem();
-            //     $pictureFileName = md5(uniqid()) . '.' . $pictureFile->guessExtension();
-            //     $pictureFile->move($this->getParameter('profilePicture_directory'), $pictureFileName);
-            //     $user->setPicture($pictureFileName);
-            // } else {
-            //     // si l'utilisateur ne souhaite pas mettre de pp cela rest à voir !!
-            //     $defaultPictureFileName = $this->getParameter('profilePicture_directory') . '/no-user.jpg';
-            //     $user->setPicture($defaultPictureFileName);
-            // }
+                // --- Hashage du mot de passe
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $user,
+                        $form->get('password')->getData()
+                    )
+                );
 
-            $entityManager->persist($user);
+                // --- Valeurs par défaut
+                $user
+                    ->setCreatedAt(new \DateTimeImmutable())
+                    ->setRoles(['ROLE_USER'])
+                    ->setEmailVerificationToken(bin2hex(random_bytes(32)))
+                    ->setIsVerified(false)
+                    ->setPicture('no-user.jpg') // valeur par défaut si vous en avez besoin
+                ;
 
-            // Création de l'identifiant client dans Stripe
-            Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
-            $stripeCustomer = Customer::create([
-                'email' => $user->getEmail(),
-                'name' => $user->getFirstName() . ' ' . $user->getLastName(),
+                // --- Persist + Flush
+                $entityManager->persist($user);
+                $entityManager->flush();
+                $this->logger->info('Utilisateur enregistré', ['id' => $user->getId()]);
 
-            ]);
-
-            // Associez l'identifiant client à l'utilisateur dans votre application
-            $user->setStripeCustomerId($stripeCustomer->id);
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            // Dans votre méthode register du RegistrationController EMAIL
-            $this->emailVerifier->sendEmailConfirmation(
-                'app_verify_email',
-                $user,
-                (new TemplatedEmail())
-                    ->from(new Address('ibrahim60200@gmail.Com', 'Haze'))
+                // --- Envoi de l'email de confirmation
+                $email = (new TemplatedEmail())
+                    ->from(new Address('leonceyopa@gmail.com', 'Haze'))
                     ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
+                    ->subject('Veuillez confirmer votre adresse email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
                     ->context([
                         'verifyEmailUrl' => $this->generateUrl(
                             'app_verify_email',
-                            ['id' => $user->getId(), 'token' => $user->getEmailVerificationToken()],
+                            [
+                                'id'    => $user->getId(),
+                                'token' => $user->getEmailVerificationToken(),
+                            ],
                             UrlGeneratorInterface::ABSOLUTE_URL
                         ),
                     ])
-            );
+                ;
+                $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user, $email);
 
-            // do anything else you need here, like send an email
-            $this->addFlash('success', 'Your account has been created. Please check your email to verify your account before logging in.');
+                $this->addFlash('success', 'Votre compte a été créé. Veuillez vérifier votre email.');
+                $this->logger->info('Email de confirmation envoyé');
 
-            return $this->redirectToRoute('app_login');
+                return $this->redirectToRoute('app_login');
+            }
+
+            // --- Form invalid: log & flash
+            $this->logger->error('Formulaire invalide', [
+                'errors' => (string) $form->getErrors(true, false)
+            ]);
+            foreach ($form->getErrors(true) as $error) {
+                $this->addFlash('error', $error->getMessage());
+            }
         }
 
         return $this->render('registration/register.html.twig', [
@@ -116,18 +126,14 @@ class RegistrationController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        // validate email confirmation link, sets User::isVerified=true and persists
         try {
             $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $exception->getReason());
-
             return $this->redirectToRoute('app_login');
         }
 
-        // @TODO Change the redirect on success and handle or remove the flash message in your templates
-        $this->addFlash('success', 'Your email address has been verified.');
-
+        $this->addFlash('success', 'Votre adresse email a été vérifiée.');
         return $this->redirectToRoute('app_login');
     }
 }

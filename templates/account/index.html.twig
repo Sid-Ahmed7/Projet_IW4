@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Compte - Haze{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h1 class="text-2xl font-bold mb-6">Bienvenue sur votre espace personnel</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h2 class="text-xl font-semibold mb-4">Informations personnelles</h2>
+                <div class="space-y-2">
+                    <p><span class="font-medium">Nom :</span> {{ user.lastname }}</p>
+                    <p><span class="font-medium">Prénom :</span> {{ user.firstname }}</p>
+                    <p><span class="font-medium">Email :</span> {{ user.email }}</p>
+                    <p><span class="font-medium">Nom d'utilisateur :</span> {{ user.username }}</p>
+                    {% if user.birthdate %}
+                        <p><span class="font-medium">Date de naissance :</span> {{ user.birthdate|date('d/m/Y') }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <h2 class="text-xl font-semibold mb-4">Actions rapides</h2>
+                <div class="space-y-2">
+                    <a href="{{ path('app_user_profile') }}" class="block text-blue-600 hover:text-blue-800">
+                        Modifier mon profil
+                    </a>
+                    <a href="{{ path('app_change_password') }}" class="block text-blue-600 hover:text-blue-800">
+                        Changer mon mot de passe
+                    </a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('app_admin_dashboard') }}" class="block text-blue-600 hover:text-blue-800">
+                            Accéder au panneau d'administration
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

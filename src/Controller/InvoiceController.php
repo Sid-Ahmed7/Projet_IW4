@@ -15,20 +15,42 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/invoice')]
+#[Route('/account')]
 class InvoiceController extends AbstractController
 {
-    #[Route('/', name: 'app_invoice_index', methods: ['GET'])]
-    public function index(InvoiceRepository $invoiceRepository): Response
+    #[Route('/invoice', name: 'app_invoice_index', methods: ['GET'])]
+    public function index(InvoiceRepository $invoiceRepository, DevisRepository $devisRepository): Response
     {
-        return $this->render('invoice/index.html.twig', [
-            'invoices' => $invoiceRepository->findAll(),
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        $invoices = $invoiceRepository->findBy(['hubuser' => $user]);
+        $devis = $devisRepository->findBy(['hubuser' => $user, 'state' => 'En attente']);
+
+        return $this->render('account/invoice/index.html.twig', [
+            'invoices' => $invoices,
+            'devis' => $devis,
         ]);
     }
 
+    #[Route('/company/{companyId}/invoices', name: 'app_company_invoices')]
+    public function companyInvoices(int $companyId, InvoiceRepository $invoiceRepository): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        $invoices = $invoiceRepository->findBy(['hubuser' => $user, 'company' => $companyId]);
+
+        return $this->render('invoice/company.html.twig', [
+            'invoices' => $invoices,
+            'companyId' => $companyId,
+        ]);
+    }
 
     #[Route('/new/{id}', name: 'app_invoice_new', methods: ['GET'])]
-    public function new(EntityManagerInterface $entityManager, DevisRepository $devisRepository, $id, InvoiceRepository $invoice ): Response
+    public function new(EntityManagerInterface $entityManager, DevisRepository $devisRepository, $id, InvoiceRepository $invoice): Response
     {
         $devis = $devisRepository->find($id);
 
@@ -36,24 +58,19 @@ class InvoiceController extends AbstractController
             throw $this->createNotFoundException('Le devis avec l\'id "' . $id . '" n\'existe pas.');
         }
 
-         // Voir si une facture n'existe pas déja , je oense qu'il faut supprimer les factures existantes soit au bout d'un certain temps sans paiement soit si le devis est mofifié(meme si la facturation se fait une fois le devis validé)
-         // mise en place du paiment en plusieurs fois ou trop compliqué ? are ca pour le moment
-         $existingInvoice = $invoice->findOneBy(['devis' => $devis]);
+        $existingInvoice = $invoice->findOneBy(['devis' => $devis]);
 
-    if ($existingInvoice) {
-       // Il faut une page de redirection soit sur la page show de la facture existante 
-        return $this->redirectToRoute('app_invoice_show', ['id' => $existingInvoice->getId()]);
-    }
+        if ($existingInvoice) {
+            return $this->redirectToRoute('app_invoice_show', ['id' => $existingInvoice->getId()]);
+        }
 
         $invoice = new Invoice();
-
-        $invoice->setDevis($devis); // lier la facture au devis 
-        $invoice->setState('pending');
-        $invoice->setCreatedAt(new \DateTimeImmutable());
-        $invoice->setHTPrice($devis->getPrice()*0,80);
-        $invoice->setTtcprice($devis->getPrice());
-
-
+        $invoice->setHubuser($this->getUser());
+        $invoice->setCompany($devis->getCompany());
+        $invoice->setAmount($devis->getPrice());
+        $invoice->setNumber(date('YmdHis') . '-' . $devis->getId());
+        $invoice->setDescription('Facture pour le devis: ' . $devis->getTitle());
+        $invoice->setStatus('pending');
 
         // Initialisez et configurez Stripe ici...
         Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
@@ -64,16 +81,12 @@ class InvoiceController extends AbstractController
                 'name' => $devis->getTitle(), // Le titre de l'annonce comme nom du produit
             ],
         ]);
-        //ici on set toutes les données dont la facture à besoin dont l'ID de paiment construit en haut` 
-        $invoice->setStripePaymentID($price->id);
-        $invoice->setPaymentType('carte');
+
         $entityManager->persist($invoice);
         $entityManager->flush();
 
-        return $this->redirectToRoute('stripe', ['id' => $invoice->getId(),'devisID' => $devis->getId()]);
+        return $this->redirectToRoute('stripe', ['id' => $invoice->getId(), 'devisID' => $devis->getId()]);
     }
-
-
 
     #[Route('/{id}', name: 'app_invoice_show', methods: ['GET'])]
     public function show(Invoice $invoice): Response

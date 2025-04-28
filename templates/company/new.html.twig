@@ -32,7 +32,7 @@ Creez votre organisation                        </div>
 Le debut d'une grande aventure !                        </div>
 
                         <!-- Formulaire -->
-                        <form class="mt-8" action="{{ path('app_company_new', {'id': app.user.id}) }}" method="post">
+                        <form class="mt-8" action="{{ path('app_account_company_new') }}" method="post">
                             <div class="mx-auto max-w-lg">
                                 <!-- Champ Nom -->
                                 <div class="py-2">
@@ -83,14 +83,9 @@ Le debut d'une grande aventure !                        </div>
 
                                 <!-- Champ Catégorie -->
                                 <div class="py-2">
-                                    <label for="categorie" class="px-1 text-sm text-gray-600">Catégorie</label>
-                                    <select name="categorie" id="categorie"
-                                            class="text-md block px-3 py-2 rounded-lg w-full bg-white border-2 border-gray-300 placeholder-gray-600 shadow-md focus:placeholder-gray-500 focus:bg-white focus:border-gray-600 focus:outline-none">
-                                        <option value="EVENEMENT">Événement</option>
-                                        <option value="ANNIVERSAIRE">Anniversaire</option>
-                                        <option value="MARIAGE">Mariage</option>
-                                        <option value="CONCERT">Concert</option>
-                                    </select>
+                                    <label for="category" class="px-1 text-sm text-gray-600">Catégorie</label>
+                                    <input type="text" name="category" id="category" placeholder="Catégorie de l'entreprise"
+                                           class="text-md block px-3 py-2 rounded-lg w-full bg-white border-2 border-gray-300 placeholder-gray-600 shadow-md focus:placeholder-gray-500 focus:bg-white focus:border-gray-600 focus:outline-none">
                                 </div>
 
                                 <!-- Champ Numéro de téléphone -->
