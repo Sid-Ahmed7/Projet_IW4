@@ -18,16 +18,82 @@ use Symfony\Bundle\SecurityBundle\Security;
 class AccountController extends AbstractController
 {
     #[Route('/', name: 'app_account')]
-    public function index(RequeRepository $requeRepository, Security $security): Response
-    {
+    public function index(
+        RequeRepository $requeRepository,
+        Security $security,
+        InvoiceRepository $invoiceRepository,
+        DevisRepository $devisRepository
+    ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
         $user = $security->getUser();
         $reques = $requeRepository->findBy(['usr' => $user]);
+        
+        // Récupérer les devis et factures
+        $devis = $devisRepository->findBy(['hubuser' => $user]);
+        $invoices = $invoiceRepository->findBy(['hubuser' => $user]);
+        $paid_invoices = array_filter($invoices, fn($i) => $i->getStatus() === 'paid');
+        $total_paid = array_sum(array_map(fn($i) => $i->getAmount(), $paid_invoices));
+        $finalized_devis = array_filter($devis, fn($d) => $d->getState() === 'Finalisé');
+        $conversion_rate = count($devis) > 0 ? round((count($finalized_devis) / count($devis)) * 100, 1) : 0;
+
+        // Préparer les données pour le graphique
+        $monthly_data = [];
+        $current_year = (new \DateTime())->format('Y');
+        
+        // Initialiser les montants mensuels à 0
+        for ($i = 1; $i <= 12; $i++) {
+            $monthly_data[date('F', mktime(0, 0, 0, $i, 1))] = 0;
+        }
+
+        // Calculer les montants mensuels
+        foreach ($invoices as $invoice) {
+            if ($invoice->getCreatedAt()->format('Y') === $current_year) {
+                $month = $invoice->getCreatedAt()->format('F');
+                $monthly_data[$month] += $invoice->getAmount();
+            }
+        }
+
+        // Générer les activités récentes
+        $recent_activities = [];
+
+        // Ajouter les devis récents
+        foreach ($devis as $d) {
+            $recent_activities[] = [
+                'title' => 'Devis ' . $d->getTitle(),
+                'description' => 'État : ' . $d->getState() . ' - Montant : ' . $d->getPrice() . '€',
+                'date' => $d->getCreatedAt(),
+                'type' => 'devis'
+            ];
+        }
+
+        // Ajouter les factures récentes
+        foreach ($invoices as $i) {
+            $recent_activities[] = [
+                'title' => 'Facture ' . $i->getNumber(),
+                'description' => 'État : ' . $i->getStatus() . ' - Montant : ' . $i->getAmount() . '€',
+                'date' => $i->getCreatedAt(),
+                'type' => 'invoice'
+            ];
+        }
+
+        // Trier les activités par date (les plus récentes d'abord)
+        usort($recent_activities, function($a, $b) {
+            return $b['date'] <=> $a['date'];
+        });
 
         return $this->render('account/dashboard.html.twig', [
             'user' => $user,
             'reques' => $reques,
+            'devis' => $devis,
+            'invoices' => $invoices,
+            'paid_invoices' => $paid_invoices,
+            'total_paid' => $total_paid,
+            'finalized_devis' => $finalized_devis,
+            'conversion_rate' => $conversion_rate,
+            'months' => array_keys($monthly_data),
+            'monthly_amounts' => array_values($monthly_data),
+            'recent_activities' => $recent_activities
         ]);
     }
 

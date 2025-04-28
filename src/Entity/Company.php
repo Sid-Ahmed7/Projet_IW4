@@ -9,7 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CompanyRepository::class)]
-class Company
+class Company implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -61,7 +61,17 @@ class Company
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: Devis::class)]
     private Collection $devis;
 
+    #[ORM\Column(length: 34, nullable: true)]
+    private ?string $iban = null;
 
+    #[ORM\Column(length: 11, nullable: true)]
+    private ?string $bic = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    private ?string $balance = '0.00';
+
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $stripeMetadata = [];
 
     public function __construct()
     {
@@ -278,5 +288,52 @@ class Company
         return $this;
     }
 
-   
+    public function getIban(): ?string
+    {
+        return $this->iban;
+    }
+
+    public function setIban(?string $iban): static
+    {
+        $this->iban = $iban;
+        return $this;
+    }
+
+    public function getBic(): ?string
+    {
+        return $this->bic;
+    }
+
+    public function setBic(?string $bic): static
+    {
+        $this->bic = $bic;
+        return $this;
+    }
+
+    public function getBalance(): ?string
+    {
+        return $this->balance;
+    }
+
+    public function setBalance(?string $balance): static
+    {
+        $this->balance = $balance;
+        return $this;
+    }
+
+    public function getStripeMetadata(): ?array
+    {
+        return $this->stripeMetadata;
+    }
+
+    public function setStripeMetadata(?array $stripeMetadata): static
+    {
+        $this->stripeMetadata = $stripeMetadata;
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->name ?? '';
+    }
 }

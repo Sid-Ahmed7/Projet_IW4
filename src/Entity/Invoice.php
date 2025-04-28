@@ -39,6 +39,10 @@ class Invoice
     #[ORM\Column(length: 255)]
     private ?string $status = 'pending';
 
+    #[ORM\ManyToOne(targetEntity: Devis::class, inversedBy: 'invoices')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Devis $devis = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -123,6 +127,17 @@ class Invoice
     public function setStatus(string $status): static
     {
         $this->status = $status;
+        return $this;
+    }
+
+    public function getDevis(): ?Devis
+    {
+        return $this->devis;
+    }
+
+    public function setDevis(?Devis $devis): static
+    {
+        $this->devis = $devis;
         return $this;
     }
 }

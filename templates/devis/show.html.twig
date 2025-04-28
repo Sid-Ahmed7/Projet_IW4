@@ -36,10 +36,14 @@
                 <div>{{ app.user.email }}</div>
                 {# <div>{{ app.user.company.phone }}</div> #}
             </div>
+            {% if devi.company %}
             <div class="text-right">
-                <div class="font-medium">{{ devi.company ? devi.company.name : 'N/A' }}</div>
-                <div>{{ devi.company ? devi.company.address : '' }}</div>
+                <div class="font-medium">{{ devi.company.name }}</div>
+                <div>{{ devi.company.address }}</div>
+                <div>{{ devi.company.email }}</div>
+                <div>{{ devi.company.phoneNumber }}</div>
             </div>
+            {% endif %}
         </div>
 
         {# Description du devis #}
@@ -49,41 +53,47 @@
         </div>
 
         {# Tableau des items #}
-        <div class="overflow-hidden">
-            <table class="w-full text-sm">
-                <thead>
-                    <tr class="border-b border-gray-200">
-                        <th class="py-2 text-left">Description</th>
-                        <th class="py-2 text-right">Qté</th>
-                        <th class="py-2 text-right">PU (€)</th>
-                        <th class="py-2 text-right">Total (€)</th>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Qté</th>
+                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">PU (€)</th>
+                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total (€)</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="bg-white divide-y divide-gray-200">
                     {% for asset in assets %}
-                        <tr class="border-b border-gray-100">
-                            <td class="py-3">
-                                <div class="font-medium">{{ asset.name }}</div>
-                                <div class="text-gray-500 text-xs">{{ asset.description }}</div>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">{{ asset.name }}</div>
+                                <div class="text-sm text-gray-500">{{ asset.description }}</div>
                             </td>
-                            <td class="py-3 text-right">{{ asset.size }}</td>
-                            <td class="py-3 text-right">{{ asset.unitPrice|number_format(2, ',', ' ') }}</td>
-                            <td class="py-3 text-right">{{ asset.price|number_format(2, ',', ' ') }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
+                                {{ asset.size }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
+                                {{ asset.unitPrice|number_format(2, ',', ' ') }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
+                                {{ asset.price|number_format(2, ',', ' ') }}
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
-                <tfoot>
+                <tfoot class="bg-gray-50">
                     <tr>
-                        <td colspan="3" class="py-3 text-right font-medium">Total HT</td>
-                        <td class="py-3 text-right">{{ devi.price|number_format(2, ',', ' ') }} €</td>
+                        <td colspan="3" class="px-6 py-4 text-right text-sm font-medium text-gray-900">Total HT</td>
+                        <td class="px-6 py-4 text-right text-sm font-medium text-gray-900">{{ devi.price|number_format(2, ',', ' ') }} €</td>
                     </tr>
                     <tr>
-                        <td colspan="3" class="py-3 text-right font-medium">TVA (20%)</td>
-                        <td class="py-3 text-right">{{ (devi.price * 0.2)|number_format(2, ',', ' ') }} €</td>
+                        <td colspan="3" class="px-6 py-4 text-right text-sm font-medium text-gray-900">TVA (20%)</td>
+                        <td class="px-6 py-4 text-right text-sm font-medium text-gray-900">{{ (devi.price * 0.2)|number_format(2, ',', ' ') }} €</td>
                     </tr>
-                    <tr class="border-t border-gray-200">
-                        <td colspan="3" class="py-3 text-right font-bold">Total TTC</td>
-                        <td class="py-3 text-right font-bold">{{ (devi.price * 1.2)|number_format(2, ',', ' ') }} €</td>
+                    <tr class="bg-gray-100">
+                        <td colspan="3" class="px-6 py-4 text-right text-sm font-bold text-gray-900">Total TTC</td>
+                        <td class="px-6 py-4 text-right text-sm font-bold text-gray-900">{{ (devi.price * 1.2)|number_format(2, ',', ' ') }} €</td>
                     </tr>
                 </tfoot>
             </table>
@@ -103,12 +113,10 @@
             <a href="{{ path('app_devis_pdf', {'id': devi.id}) }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
                 Télécharger PDF
             </a>
-            {% if devi.state != 'accepted' %}
-                {# <form method="post" action="{{ path('app_devis_accept', {'id': devi.id}) }}" class="inline">
-                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
-                        Accepter le devis
-                    </button>
-                </form> #}
+            {% if devi.state == 'accepted' and not devi.invoices.empty %}
+                <a href="{{ path('app_invoice_new', {'devis': devi.id}) }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                    Générer une facture
+                </a>
             {% endif %}
         </div>
     </div>

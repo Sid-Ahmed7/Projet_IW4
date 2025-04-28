@@ -37,10 +37,13 @@ class DevisController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
         
         $devis = new Devis();
-        $form = $this->createForm(DevisType::class, $devis);
+        $form = $this->createForm(DevisType::class, $devis, [
+            'user' => $user
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -71,6 +74,7 @@ class DevisController extends AbstractController
             $devis->setHubuser($user);
             $devis->setPrice((string)$totalPrice);
             $devis->setState('En attente');
+            $devis->setUpdatedAt(new \DateTimeImmutable());
             
             $entityManager->persist($devis);
             $entityManager->flush();
