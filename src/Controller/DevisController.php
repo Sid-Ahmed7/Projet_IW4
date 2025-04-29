@@ -107,6 +107,12 @@ class DevisController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Gérer le changement de statut
+            $newState = $request->request->get('devis')['state'] ?? null;
+            if ($newState && $devi->getState() !== 'accepted') {
+                $devi->setState($newState);
+            }
+
             // Supprimer les anciens assets
             foreach ($devi->getDevisAssets() as $asset) {
                 $entityManager->remove($asset);
@@ -143,7 +149,7 @@ class DevisController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Le devis a été modifié avec succès.');
-            return $this->redirectToRoute('app_devis_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_devis_show', ['id' => $devi->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('devis/edit.html.twig', [
