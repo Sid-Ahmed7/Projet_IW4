@@ -1,93 +1,117 @@
 {# templates/_sidebar.html.twig #}
-<aside class="fixed inset-y-0 left-0 w-64 bg-gray-800 text-gray-100 flex flex-col">
-  {# — Header — #}
-  <div class="px-4 py-6 border-b border-gray-700">
-    <a href="{{ path('app_account') }}" class="flex items-center space-x-2">
-      <img src="/build/logo.svg" alt="Logo" class="h-8 w-8" />
-      <span class="text-lg font-semibold">HUBREFUND</span>
-    </a>
-  </div>
-
-  {# — Nav principal — #}
-  <nav class="flex-1 overflow-y-auto px-4 py-6">
-    {# Dropdown "Mes entreprises" #}
-    <h2 class="text-xs font-semibold text-gray-400 uppercase">Mes entreprises</h2>
-    <details class="mt-2 group">
-      <summary class="flex items-center justify-between cursor-pointer py-2 px-2 rounded hover:bg-gray-700">
-        <div class="flex items-center space-x-2">
-          <i class="bx bx-building text-xl"></i>
-          <span class="font-medium">Entreprises</span>
+<aside class="fixed inset-y-0 left-0 w-64 bg-gray-900 text-gray-100">
+    <div class="flex grow flex-col gap-y-5 overflow-y-auto px-6">
+        {# Header #}
+        <div class="flex h-16 shrink-0 items-center">
+            <a href="{{ path('app_account') }}" class="flex items-center space-x-2">
+                <img src="/build/logo.svg" alt="Logo" class="h-8 w-auto" />
+                <span class="text-lg font-semibold text-white">HUBREFUND</span>
+            </a>
         </div>
-        <i class="ri-arrow-down-s-line transition-transform group-open:rotate-180"></i>
-      </summary>
-      <ul class="mt-2 space-y-1 pl-6">
-        {% for company in app.user.companies %}
-          <li>
-            <span class="block text-sm font-medium">{{ company.name }}</span>
-            <ul class="mt-1 space-y-1 pl-4">
-              <li>
-                <a href="{{ path('app_company_devis',    {'companyId': company.id}) }}"
-                   class="flex items-center text-sm hover:text-white">
-                  <i class="bx bx-file mr-2"></i> Devis
-                </a>
-              </li>
-              <li>
-                <a href="{{ path('app_company_invoices', {'companyId': company.id}) }}"
-                   class="flex items-center text-sm hover:text-white">
-                  <i class="bx bx-receipt mr-2"></i> Factures
-                </a>
-              </li>
+
+        {# Navigation principale #}
+        <nav class="flex flex-1 flex-col">
+            <ul role="list" class="flex flex-1 flex-col gap-y-7">
+                {# Section Entreprises #}
+                <li>
+                    <div class="text-xs font-semibold text-gray-400 uppercase mb-3">Mes entreprises</div>
+                    <ul role="list" class="-mx-2 space-y-1">
+                        {% for company in app.user.companies %}
+                            <li>
+                                <details class="group">
+                                    <summary class="flex items-center justify-between cursor-pointer rounded-md p-2 text-gray-400 hover:bg-gray-800 hover:text-white group">
+                                        <div class="flex items-center gap-x-3">
+                                            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-[0.625rem] font-medium text-gray-400 group-hover:text-white">
+                                                {{ company.name|first|upper }}
+                                            </span>
+                                            <span class="text-sm/6 font-semibold">{{ company.name }}</span>
+                                        </div>
+                                        <i class="ri-arrow-down-s-line transition-transform group-open:rotate-180"></i>
+                                    </summary>
+                                    <ul class="mt-1 space-y-1 px-8">
+                                        <li>
+                                            <a href="{{ path('app_company_devis', {'companyId': company.id}) }}"
+                                               class="flex items-center gap-x-3 rounded-md p-2 text-sm text-gray-400 hover:bg-gray-800 hover:text-white">
+                                                <i class="bx bx-file text-lg"></i>
+                                                <span>Devis</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ path('app_company_invoices', {'companyId': company.id}) }}"
+                                               class="flex items-center gap-x-3 rounded-md p-2 text-sm text-gray-400 hover:bg-gray-800 hover:text-white">
+                                                <i class="bx bx-receipt text-lg"></i>
+                                                <span>Factures</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </details>
+                            </li>
+                        {% else %}
+                            <li class="text-sm text-gray-500 px-2">Aucune entreprise</li>
+                        {% endfor %}
+                        <li class="mt-2">
+                            <a href="{{ path('app_account_company_new') }}"
+                               class="group flex gap-x-3 rounded-md p-2 text-sm text-gray-400 hover:bg-gray-800 hover:text-white">
+                                <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-lg group-hover:text-white">
+                                    <i class="bx bx-plus"></i>
+                                </span>
+                                <span class="font-semibold">Nouvelle entreprise</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                {# Section Liens Rapides #}
+                <li>
+                    <div class="text-xs font-semibold text-gray-400 uppercase mb-3">Liens rapides</div>
+                    <ul role="list" class="-mx-2 space-y-1">
+                        <li>
+                            <a href="{{ path('app_devis_index') }}"
+                               class="group flex gap-x-3 rounded-md p-2 text-sm text-gray-400 hover:bg-gray-800 hover:text-white">
+                                <i class="bx bx-file text-xl"></i>
+                                <span class="font-semibold">Mes devis</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_invoice_index') }}"
+                               class="group flex gap-x-3 rounded-md p-2 text-sm text-gray-400 hover:bg-gray-800 hover:text-white">
+                                <i class="bx bx-receipt text-xl"></i>
+                                <span class="font-semibold">Mes factures</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('app_haze_ia') }}"
+                               class="group flex gap-x-3 rounded-md p-2 text-sm text-gray-400 hover:bg-gray-800 hover:text-white">
+                                <i class="bx bx-robot text-xl"></i>
+                                <span class="font-semibold">Haze IA</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                {# Section Profil (en bas) #}
+                <li class="-mx-6 mt-auto">
+                    <div class="flex flex-col gap-y-1">
+                        <a href="{{ path('app_account_profile') }}"
+                           class="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold text-white hover:bg-gray-800">
+                            {% if app.user.picture %}
+                                <img src="{{ app.user.picture }}" alt="" class="h-8 w-8 rounded-full bg-gray-800"/>
+                            {% else %}
+                                <div class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-800 text-sm font-medium text-white">
+                                    {{ app.user.firstname|first|upper }}{{ app.user.lastname|first|upper }}
+                                </div>
+                            {% endif %}
+                            <span class="sr-only">Votre profil</span>
+                            <span aria-hidden="true">{{ app.user.firstname }} {{ app.user.lastname }}</span>
+                        </a>
+                        <a href="{{ path('app_logout') }}"
+                           class="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold text-gray-400 hover:bg-gray-800 hover:text-white">
+                            <i class="bx bx-log-out text-xl"></i>
+                            <span>Déconnexion</span>
+                        </a>
+                    </div>
+                </li>
             </ul>
-          </li>
-        {% else %}
-          <li class="py-2 text-sm text-gray-500">Aucune entreprise</li>
-        {% endfor %}
-        <li class="mt-4">
-          <a href="{{ path('app_account_company_new') }}"
-             class="flex items-center text-sm text-gray-300 hover:text-white">
-            <i class="bx bx-plus mr-2"></i> Nouvelle entreprise
-          </a>
-        </li>
-      </ul>
-    </details>
-
-    {# Liens rapides personnels #}
-    <div class="mt-6 border-t border-gray-700 pt-6 space-y-2">
-      <a href="{{ path('app_devis_index') }}"
-         class="flex items-center py-2 px-2 rounded hover:bg-gray-700">
-        <i class="bx bx-file text-xl mr-3"></i>
-        <span class="text-sm">Mes devis</span>
-      </a>
-      <a href="{{ path('app_invoice_index') }}"
-         class="flex items-center py-2 px-2 rounded hover:bg-gray-700">
-        <i class="bx bx-receipt text-xl mr-3"></i>
-        <span class="text-sm">Mes factures</span>
-      </a>
-      <a href="{{ path('app_haze_ia') }}"
-         class="flex items-center py-2 px-2 rounded hover:bg-gray-700">
-        <i class="bx bx-robot text-xl mr-3"></i>
-        <span class="text-sm">Haze IA</span>
-      </a>
+        </nav>
     </div>
-
-    {# Section compte #}
-    <h2 class="mt-8 text-xs font-semibold text-gray-400 uppercase">Mon compte</h2>
-    <div class="mt-2 space-y-2">
-      <a href="{{ path('app_account_profile') }}"
-         class="flex items-center py-2 px-2 rounded hover:bg-gray-700">
-        <i class="bx bx-user-circle text-xl mr-3"></i>
-        <span class="text-sm">Mon profil</span>
-      </a>
-      <a href="{{ path('app_logout') }}"
-         class="flex items-center py-2 px-2 rounded hover:bg-gray-700">
-        <i class="bx bx-log-out text-xl mr-3"></i>
-        <span class="text-sm">Déconnexion</span>
-      </a>
-    </div>
-  </nav>
-
-  {# Footer #}
-  <div class="px-4 py-4 text-xs text-gray-500 border-t border-gray-700">
-    {# © {{ \"now\"|date('Y') }} Haze #}
-  </div>
 </aside>

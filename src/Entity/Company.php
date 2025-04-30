@@ -73,11 +73,22 @@ class Company implements \Stringable
     #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?array $stripeMetadata = [];
 
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: Invoice::class)]
+    private Collection $invoices;
+
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: Reque::class)]
+    private Collection $reques;
+
+    #[ORM\ManyToOne(inversedBy: 'companies')]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->hubusers = new ArrayCollection();
         $this->devis = new ArrayCollection();
+        $this->invoices = new ArrayCollection();
+        $this->reques = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -332,8 +343,73 @@ class Company implements \Stringable
         return $this;
     }
 
+    /**
+     * @return Collection<int, Invoice>
+     */
+    public function getInvoices(): Collection
+    {
+        return $this->invoices;
+    }
+
+    public function addInvoice(Invoice $invoice): static
+    {
+        if (!$this->invoices->contains($invoice)) {
+            $this->invoices->add($invoice);
+            $invoice->setCompany($this);
+        }
+        return $this;
+    }
+
+    public function removeInvoice(Invoice $invoice): static
+    {
+        if ($this->invoices->removeElement($invoice)) {
+            if ($invoice->getCompany() === $this) {
+                $invoice->setCompany(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reque>
+     */
+    public function getReques(): Collection
+    {
+        return $this->reques;
+    }
+
+    public function addReque(Reque $reque): static
+    {
+        if (!$this->reques->contains($reque)) {
+            $this->reques->add($reque);
+            $reque->setCompany($this);
+        }
+        return $this;
+    }
+
+    public function removeReque(Reque $reque): static
+    {
+        if ($this->reques->removeElement($reque)) {
+            if ($reque->getCompany() === $this) {
+                $reque->setCompany(null);
+            }
+        }
+        return $this;
+    }
+
     public function __toString(): string
     {
         return $this->name ?? '';
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+        return $this;
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\NotificationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,8 +16,8 @@ class Notification
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'notifications')]
-    private ?User $users = null;
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'notifications')]
+    private Collection $users;
 
     #[ORM\Column(length: 50)]
     private ?string $type = null;
@@ -41,20 +43,37 @@ class Notification
     #[ORM\Column(nullable: true)]
     private ?int $notificationTemplate = null;
 
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
+        $this->isRead = false;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getUsers(): ?User
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
     {
         return $this->users;
     }
 
-    public function setUsers(?User $users): static
+    public function addUser(User $user): static
     {
-        $this->users = $users;
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+        }
+        return $this;
+    }
 
+    public function removeUser(User $user): static
+    {
+        $this->users->removeElement($user);
         return $this;
     }
 
@@ -66,7 +85,6 @@ class Notification
     public function setType(string $type): static
     {
         $this->type = $type;
-
         return $this;
     }
 
@@ -78,7 +96,6 @@ class Notification
     public function setTitle(string $title): static
     {
         $this->title = $title;
-
         return $this;
     }
 
@@ -90,7 +107,6 @@ class Notification
     public function setMessage(?string $message): static
     {
         $this->message = $message;
-
         return $this;
     }
 
@@ -102,7 +118,6 @@ class Notification
     public function setIsRead(bool $isRead): static
     {
         $this->isRead = $isRead;
-
         return $this;
     }
 
@@ -114,7 +129,6 @@ class Notification
     public function setLink(?string $link): static
     {
         $this->link = $link;
-
         return $this;
     }
 
@@ -126,7 +140,6 @@ class Notification
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 
@@ -138,7 +151,6 @@ class Notification
     public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
-
         return $this;
     }
 
@@ -150,7 +162,6 @@ class Notification
     public function setNotificationTemplate(?int $notificationTemplate): static
     {
         $this->notificationTemplate = $notificationTemplate;
-
         return $this;
     }
 }

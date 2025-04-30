@@ -68,10 +68,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $phoneNumber = null;
 
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Plan::class)]
+    private Collection $plans;
+
+    #[ORM\OneToMany(mappedBy: 'usr', targetEntity: Reque::class)]
+    private Collection $reques;
+
+    #[ORM\ManyToMany(targetEntity: Notification::class, mappedBy: 'users')]
+    private Collection $notifications;
+
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: Company::class)]
+    private Collection $hubusers;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Company::class)]
+    private Collection $companies;
+
     public function __construct()
     {
         $this->devis = new ArrayCollection();
         $this->invoices = new ArrayCollection();
+        $this->roles = [];
+        $this->createdAt = new \DateTimeImmutable();
+        $this->plans = new ArrayCollection();
+        $this->reques = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
+        $this->companies = new ArrayCollection();
+        $this->hubusers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -300,10 +322,107 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return array<Company>
+     * @return Collection<int, Company>
      */
-    public function getCompanies(): array
+    public function getCompanies(): Collection
     {
-        return $this->company ? [$this->company] : [];
+        // Retourner toutes les entreprises liées à l'utilisateur
+        if ($this->company && !$this->companies->contains($this->company)) {
+            $this->companies->add($this->company);
+        }
+        return $this->companies;
+    }
+
+    public function addCompany(Company $company): static
+    {
+        if (!$this->getCompanies()->contains($company)) {
+            $this->companies->add($company);
+        }
+        return $this;
+    }
+
+    public function removeCompany(Company $company): static
+    {
+        $this->companies->removeElement($company);
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Plan>
+     */
+    public function getPlans(): Collection
+    {
+        return $this->plans;
+    }
+
+    public function addPlan(Plan $plan): static
+    {
+        if (!$this->plans->contains($plan)) {
+            $this->plans->add($plan);
+            $plan->setAuthor($this);
+        }
+        return $this;
+    }
+
+    public function removePlan(Plan $plan): static
+    {
+        if ($this->plans->removeElement($plan)) {
+            if ($plan->getAuthor() === $this) {
+                $plan->setAuthor(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reque>
+     */
+    public function getReques(): Collection
+    {
+        return $this->reques;
+    }
+
+    public function addReque(Reque $reque): static
+    {
+        if (!$this->reques->contains($reque)) {
+            $this->reques->add($reque);
+            $reque->setUsr($this);
+        }
+        return $this;
+    }
+
+    public function removeReque(Reque $reque): static
+    {
+        if ($this->reques->removeElement($reque)) {
+            if ($reque->getUsr() === $this) {
+                $reque->setUsr(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notification>
+     */
+    public function getNotifications(): Collection
+    {
+        return $this->notifications;
+    }
+
+    public function addNotification(Notification $notification): static
+    {
+        if (!$this->notifications->contains($notification)) {
+            $this->notifications->add($notification);
+            $notification->addUser($this);
+        }
+        return $this;
+    }
+
+    public function removeNotification(Notification $notification): static
+    {
+        if ($this->notifications->removeElement($notification)) {
+            $notification->removeUser($this);
+        }
+        return $this;
     }
 }

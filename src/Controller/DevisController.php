@@ -109,7 +109,7 @@ class DevisController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // Gérer le changement de statut
             $newState = $request->request->get('devis')['state'] ?? null;
-            if ($newState && $devi->getState() !== 'accepted') {
+            if ($newState) {
                 $devi->setState($newState);
             }
 
@@ -146,6 +146,19 @@ class DevisController extends AbstractController
             $now = new \DateTimeImmutable();
             $devi->setUpdatedAt($now);
             $devi->setPrice((string)$totalPrice);
+            
+            // Créer une notification pour le changement de statut
+            if ($newState === 'accepted' && $devi->getState() !== 'accepted') {
+                $notification = new Notification();
+                $notification->setType('devis_accepted');
+                $notification->setTitle('Devis accepté');
+                $notification->setMessage('Le devis #' . $devi->getId() . ' a été accepté');
+                $notification->setIsRead(false);
+                $notification->setCreatedAt(new \DateTimeImmutable());
+                $notification->addUser($devi->getHubuser());
+                $entityManager->persist($notification);
+            }
+            
             $entityManager->flush();
 
             $this->addFlash('success', 'Le devis a été modifié avec succès.');
