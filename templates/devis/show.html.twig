@@ -14,9 +14,9 @@
                 {# <div>Valide jusqu'au : {{ devi.validUntil|date('d/m/Y') }}</div> #}
                 <div class="mt-2">
                     <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium
-                        {% if devi.state == 'accepted' %}
-                            bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20
-                        {% elseif devi.state == 'pending' %}
+                        {% if devi.state == 'Facturé' %}
+                            bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/20
+                        {% elseif devi.state == 'En attente' %}
                             bg-yellow-50 text-yellow-700 ring-1 ring-inset ring-yellow-600/20
                         {% else %}
                             bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20
@@ -26,6 +26,16 @@
                     </span>
                 </div>
             </div>
+            {% if devi.state != 'Facturé' %}
+                <div>
+                    <a href="{{ path('app_invoice_new', {'id': devi.id}) }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                        <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        </svg>
+                        Générer une facture
+                    </a>
+                </div>
+            {% endif %}
         </div>
 
         {# Coordonnées #}
@@ -113,11 +123,6 @@
             <a href="{{ path('app_devis_pdf', {'id': devi.id}) }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
                 Télécharger PDF
             </a>
-            {% if devi.state == 'accepted' and not devi.invoices.empty %}
-                <a href="{{ path('app_invoice_new', {'devis': devi.id}) }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
-                    Générer une facture
-                </a>
-            {% endif %}
         </div>
     </div>
 </div>

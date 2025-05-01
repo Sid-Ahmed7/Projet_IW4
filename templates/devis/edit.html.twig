@@ -8,6 +8,25 @@
             <div class="sm:flex-auto">
                 <h1 class="text-2xl font-bold mb-6">Modifier le devis</h1>
             </div>
+            {% if devi.state != 'Facturé' %}
+                <div class="sm:mt-0 sm:ml-16 sm:flex-none">
+                    <a href="{{ path('app_invoice_new', {'id': devi.id}) }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                        <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        </svg>
+                        Générer une facture
+                    </a>
+                </div>
+            {% else %}
+                <div class="sm:mt-0 sm:ml-16 sm:flex-none">
+                    <span class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700">
+                        <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        Devis déjà facturé
+                    </span>
+                </div>
+            {% endif %}
         </div>
 
         <div class="mt-8">
@@ -27,23 +46,6 @@
                         'label_attr': {'class': 'text-sm font-medium text-gray-700'},
                         'attr': {'class': 'rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 h-4 w-4'}
                     }) }}
-
-                    {% if devi.state != 'accepted' %}
-                        <div class="flex items-center justify-between">
-                            <label for="status-toggle" class="text-sm font-medium text-gray-700">Statut du devis</label>
-                            <div class="relative inline-block w-12 mr-2 align-middle select-none">
-                                <input type="hidden" name="devis[state]" id="state-input" value="{{ devi.state }}">
-                                <input type="checkbox" id="status-toggle" 
-                                    class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
-                                    {% if devi.state == 'accepted' %}checked{% endif %}>
-                                <label for="status-toggle" 
-                                    class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                            </div>
-                            <span id="status-text" class="text-sm text-gray-600">
-                                {% if devi.state == 'accepted' %}Accepté{% else %}En attente{% endif %}
-                            </span>
-                        </div>
-                    {% endif %}
                 </div>
 
                 <div class="mt-8">
@@ -121,24 +123,6 @@
 
 {% block javascripts %}
 {{ parent() }}
-<style>
-    /* Style pour le switch button */
-    .toggle-checkbox:checked {
-        right: 0;
-        border-color: #68D391;
-    }
-    .toggle-checkbox:checked + .toggle-label {
-        background-color: #68D391;
-    }
-    .toggle-checkbox {
-        right: 0;
-        transition: all 0.3s;
-    }
-    .toggle-label {
-        transition: all 0.3s;
-    }
-</style>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     let lineCount = {{ devi.devisAssets|length }};
@@ -225,32 +209,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     addLineButton.addEventListener('click', createDevisLine);
-
-    // Mise à jour du code pour le switch button
-    const statusToggle = document.getElementById('status-toggle');
-    const statusText = document.getElementById('status-text');
-    const stateInput = document.getElementById('state-input');
-
-    if (statusToggle && stateInput) {
-        statusToggle.addEventListener('change', function() {
-            if (this.checked) {
-                statusText.textContent = 'Accepté';
-                stateInput.value = 'accepted';
-            } else {
-                statusText.textContent = 'En attente';
-                stateInput.value = 'pending';
-            }
-        });
-
-        // Initialiser l'état du switch en fonction de la valeur actuelle
-        if (stateInput.value === 'accepted') {
-            statusToggle.checked = true;
-            statusText.textContent = 'Accepté';
-        } else {
-            statusToggle.checked = false;
-            statusText.textContent = 'En attente';
-        }
-    }
 });
 </script>
 {% endblock %}

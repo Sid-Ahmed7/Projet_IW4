@@ -49,7 +49,7 @@ class InvoiceController extends AbstractController
         ]);
     }
 
-    #[Route('/new/{id}', name: 'app_invoice_new', methods: ['GET'])]
+    #[Route('/devis/{id}/invoice/new', name: 'app_invoice_new', methods: ['GET'])]
     public function new(EntityManagerInterface $entityManager, DevisRepository $devisRepository, $id, InvoiceRepository $invoice): Response
     {
         $devis = $devisRepository->find($id);
@@ -71,24 +71,19 @@ class InvoiceController extends AbstractController
         $invoice->setNumber(date('YmdHis') . '-' . $devis->getId());
         $invoice->setDescription('Facture pour le devis: ' . $devis->getTitle());
         $invoice->setStatus('pending');
+        $invoice->setDevis($devis);
+        $invoice->setCreatedAt(new \DateTimeImmutable());
 
-        // Initialisez et configurez Stripe ici...
-        Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
-        $price = Price::create([
-            'unit_amount' => $devis->getPrice() * 100, // Le prix en centimes *100
-            'currency' => 'eur', // La devise (ici l'euro)
-            'product_data' => [
-                'name' => $devis->getTitle(), // Le titre de l'annonce comme nom du produit
-            ],
-        ]);
-
+        // Mettre à jour le statut du devis
+        $devis->setState('Facturé');
+        
         $entityManager->persist($invoice);
         $entityManager->flush();
 
-        return $this->redirectToRoute('stripe', ['id' => $invoice->getId(), 'devisID' => $devis->getId()]);
+        return $this->redirectToRoute('app_invoice_show', ['id' => $invoice->getId()]);
     }
 
-    #[Route('/{id}', name: 'app_invoice_show', methods: ['GET'])]
+    #[Route('/invoice/{id}', name: 'app_invoice_show', methods: ['GET'])]
     public function show(Invoice $invoice): Response
     {
         return $this->render('invoice/show.html.twig', [
@@ -96,7 +91,7 @@ class InvoiceController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_invoice_edit', methods: ['GET', 'POST'])]
+    #[Route('/invoice/{id}/edit', name: 'app_invoice_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Invoice $invoice, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(InvoiceType::class, $invoice);
@@ -114,7 +109,7 @@ class InvoiceController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_invoice_delete', methods: ['POST'])]
+    #[Route('/invoice/{id}', name: 'app_invoice_delete', methods: ['POST'])]
     public function delete(Request $request, Invoice $invoice, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $invoice->getId(), $request->request->get('_token'))) {

@@ -12,46 +12,52 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Security\Core\Security;
 
 class DevisType extends AbstractType
 {
+    private $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $user = $this->security->getUser();
+
         $builder
             ->add('title', TextType::class, [
                 'label' => 'Titre',
-                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2']
+                'required' => true,
             ])
             ->add('content', TextareaType::class, [
                 'label' => 'Description',
-                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2']
-            ])
-            ->add('company', EntityType::class, [
-                'class' => Company::class,
-                'choice_label' => 'name',
-                'required' => false,
-                'placeholder' => 'Sélectionnez une organisation (optionnel)',
-                'query_builder' => function (EntityRepository $er) use ($options) {
-                    return $er->createQueryBuilder('c')
-                        ->join('c.hubusers', 'u')
-                        ->where('u = :user')
-                        ->setParameter('user', $options['user']);
-                },
-                'label' => 'Organisation',
-                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 w-full mb-2']
+                'required' => true,
             ])
             ->add('isNegotiable', CheckboxType::class, [
                 'label' => 'Négociable',
                 'required' => false,
-                'attr' => ['class' => 'border border-gray-300 rounded-md p-2 mb-2']
-            ]);
+            ])
+            ->add('company', EntityType::class, [
+                'class' => Company::class,
+                'choice_label' => 'name',
+                'label' => 'Organisation',
+                'required' => true,
+                'query_builder' => function (EntityRepository $er) use ($user) {
+                    return $er->createQueryBuilder('c')
+                        ->where('c.createdBy = :userId')
+                        ->setParameter('userId', $user->getId());
+                },
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Devis::class,
-            'user' => null,
         ]);
     }
 }
