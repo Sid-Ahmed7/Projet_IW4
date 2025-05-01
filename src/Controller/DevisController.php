@@ -8,6 +8,7 @@ use App\Entity\Notification;
 use App\Form\DevisType;
 use App\Repository\DevisAssetRepository;
 use App\Repository\DevisRepository;
+use App\Repository\CompanyRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,17 +35,25 @@ class DevisController extends AbstractController
     }
 
     #[Route('/company/{companyId}/devis', name: 'app_company_devis')]
-    public function companyDevis(int $companyId, DevisRepository $devisRepository): Response
+    public function companyDevis(int $companyId, DevisRepository $devisRepository, CompanyRepository $companyRepository): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
-        $devis = $devisRepository->findBy(['hubuser' => $user, 'company' => $companyId]);
+        
+        // Vérifier que l'entreprise appartient à l'utilisateur
+        $company = $companyRepository->findOneBy(['id' => $companyId, 'createdBy' => $user->getId()]);
+        
+        if (!$company) {
+            throw $this->createNotFoundException('Organisation non trouvée ou accès non autorisé.');
+        }
+
+        $devis = $devisRepository->findBy(['company' => $company]);
 
         return $this->render('devis/company.html.twig', [
             'devis' => $devis,
-            'companyId' => $companyId,
+            'company' => $company,
         ]);
     }
 
@@ -62,7 +71,7 @@ class DevisController extends AbstractController
             $devis->setHubuser($user);
             $devis->setPrice('0');
             $devis->setState('En attente');
-
+            
             $entityManager->persist($devis);
             
             // Notification

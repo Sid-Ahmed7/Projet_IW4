@@ -19,22 +19,20 @@ use Symfony\Component\Routing\Annotation\Route;
 class InvoiceController extends AbstractController
 {
     #[Route('/invoice', name: 'app_invoice_index', methods: ['GET'])]
-    public function index(InvoiceRepository $invoiceRepository, DevisRepository $devisRepository): Response
+    public function index(InvoiceRepository $invoiceRepository): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
         $invoices = $invoiceRepository->findBy(['hubuser' => $user]);
-        $devis = $devisRepository->findBy(['hubuser' => $user, 'state' => 'En attente']);
 
-        return $this->render('account/invoice/index.html.twig', [
+        return $this->render('invoice/index.html.twig', [
             'invoices' => $invoices,
-            'devis' => $devis,
         ]);
     }
 
-    #[Route('/company/{companyId}/invoices', name: 'app_company_invoices')]
+    #[Route('/company/{companyId}/invoice', name: 'app_company_invoice')]
     public function companyInvoices(int $companyId, InvoiceRepository $invoiceRepository): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -49,43 +47,68 @@ class InvoiceController extends AbstractController
         ]);
     }
 
-    #[Route('/devis/{id}/invoice/new', name: 'app_invoice_new', methods: ['GET'])]
-    public function new(EntityManagerInterface $entityManager, DevisRepository $devisRepository, $id, InvoiceRepository $invoice): Response
+    #[Route('/devis/{id}/invoice/new', name: 'app_invoice_new_from_devis', methods: ['GET', 'POST'])]
+    public function newFromDevis(Devis $devis, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $devis = $devisRepository->find($id);
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
 
-        if (!$devis) {
-            throw $this->createNotFoundException('Le devis avec l\'id "' . $id . '" n\'existe pas.');
+        // Vérifier que l'utilisateur est propriétaire du devis
+        if ($devis->getHubuser() !== $user) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce devis.');
         }
 
-        $existingInvoice = $invoice->findOneBy(['devis' => $devis]);
-
-        if ($existingInvoice) {
-            return $this->redirectToRoute('app_invoice_show', ['id' => $existingInvoice->getId()]);
+        // Vérifier que le devis n'est pas déjà facturé
+        if ($devis->getState() === 'Facturé') {
+            $this->addFlash('error', 'Ce devis a déjà été facturé.');
+            return $this->redirectToRoute('app_devis_show', ['id' => $devis->getId()]);
         }
 
         $invoice = new Invoice();
-        $invoice->setHubuser($this->getUser());
+        $invoice->setHubuser($user);
         $invoice->setCompany($devis->getCompany());
-        $invoice->setAmount($devis->getPrice());
-        $invoice->setNumber(date('YmdHis') . '-' . $devis->getId());
-        $invoice->setDescription('Facture pour le devis: ' . $devis->getTitle());
-        $invoice->setStatus('pending');
         $invoice->setDevis($devis);
-        $invoice->setCreatedAt(new \DateTimeImmutable());
-
-        // Mettre à jour le statut du devis
-        $devis->setState('Facturé');
+        $invoice->setAmount((float)$devis->getPrice());
+        $invoice->setDescription($devis->getContent());
         
-        $entityManager->persist($invoice);
-        $entityManager->flush();
+        // Générer un numéro unique pour la facture (année + mois + ID)
+        $invoice->setNumber(date('Ym') . '-' . uniqid());
+        
+        $form = $this->createForm(InvoiceType::class, $invoice);
+        $form->handleRequest($request);
 
-        return $this->redirectToRoute('app_invoice_show', ['id' => $invoice->getId()]);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Mettre à jour le statut du devis
+            $devis->setState('Facturé');
+            
+            $entityManager->persist($invoice);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'La facture a été créée avec succès.');
+            return $this->redirectToRoute('app_invoice_show', ['id' => $invoice->getId()]);
+        }
+
+        return $this->render('invoice/new.html.twig', [
+            'invoice' => $invoice,
+            'form' => $form,
+            'devis' => $devis,
+        ]);
     }
 
     #[Route('/invoice/{id}', name: 'app_invoice_show', methods: ['GET'])]
     public function show(Invoice $invoice): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        if ($invoice->getHubuser() !== $user) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas accès à cette facture.');
+        }
+
         return $this->render('invoice/show.html.twig', [
             'invoice' => $invoice,
         ]);
@@ -94,6 +117,15 @@ class InvoiceController extends AbstractController
     #[Route('/invoice/{id}/edit', name: 'app_invoice_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Invoice $invoice, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        if ($invoice->getHubuser() !== $user) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas accès à cette facture.');
+        }
+
         $form = $this->createForm(InvoiceType::class, $invoice);
         $form->handleRequest($request);
 
@@ -112,7 +144,16 @@ class InvoiceController extends AbstractController
     #[Route('/invoice/{id}', name: 'app_invoice_delete', methods: ['POST'])]
     public function delete(Request $request, Invoice $invoice, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $invoice->getId(), $request->request->get('_token'))) {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        if ($invoice->getHubuser() !== $user) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas accès à cette facture.');
+        }
+
+        if ($this->isCsrfTokenValid('delete'.$invoice->getId(), $request->request->get('_token'))) {
             $entityManager->remove($invoice);
             $entityManager->flush();
         }

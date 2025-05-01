@@ -1,26 +1,73 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Invoice
-{% endblock %}
+{% block title %}Nouvelle facture à partir du devis #{{ devis.id }}{% endblock %}
 
 {% block body %}
-	<div class="flex flex-col bg-fullPink items-center justify-center min-h-screen py-12">
-		<div class="bg-white text-xs shadow-md rounded-lg p-8 w-full max-w-md">
-			<header class="flex justify-center items-center">
-				<img src="{{ asset ('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4" width="93">
-			</header>
-
-
-			<div class="flex justify-center items-center mt-4 ">
-				<h2 class=" block mb-2 text-xl font-medium ">Modifier les options
-				</h2>
+	<div class="container mx-auto px-4 py-8">
+		<div class="max-w-3xl mx-auto">
+			<div class="mb-8">
+				<h1 class="text-2xl font-bold mb-2">Nouvelle facture</h1>
+				<p class="text-gray-600">Création d'une facture à partir du devis #{{ devis.id }}</p>
 			</div>
-			<br>
 
-			{{ include('invoice/_form.html.twig') }}
+			<div class="bg-white shadow-lg rounded-lg p-6 mb-6">
+				<h2 class="text-lg font-semibold mb-4">Détails du devis</h2>
+				<div class="grid grid-cols-2 gap-4 mb-6">
+					<div>
+						<p class="text-sm text-gray-500">Titre</p>
+						<p class="text-gray-900">{{ devis.title }}</p>
+					</div>
+					<div>
+						<p class="text-sm text-gray-500">Montant</p>
+						<p class="text-gray-900">{{ devis.price|number_format(2, ',', ' ') }} €</p>
+					</div>
+					<div>
+						<p class="text-sm text-gray-500">Organisation</p>
+						<p class="text-gray-900">{{ devis.company ? devis.company.name : 'Non assigné' }}</p>
+					</div>
+					<div>
+						<p class="text-sm text-gray-500">Date de création</p>
+						<p class="text-gray-900">{{ devis.createdAt|date('d/m/Y') }}</p>
+					</div>
+				</div>
 
-			<a href="{{ path('app_invoice_index') }}">back to list</a>
+				{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+					<div class="grid grid-cols-1 gap-6">
+						<div class="col-span-1">
+							{{ form_row(form.number, {
+								'label_attr': {'class': 'block text-sm font-medium text-gray-700'},
+								'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'}
+							}) }}
+						</div>
 
+						<div class="col-span-1">
+							{{ form_row(form.description, {
+								'label_attr': {'class': 'block text-sm font-medium text-gray-700'},
+								'attr': {
+									'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm',
+									'rows': '4'
+								}
+							}) }}
+						</div>
+
+						<div class="col-span-1">
+							{{ form_row(form.amount, {
+								'label_attr': {'class': 'block text-sm font-medium text-gray-700'},
+								'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'}
+							}) }}
+						</div>
+					</div>
+
+					<div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+						<a href="{{ path('app_devis_show', {'id': devis.id}) }}" class="py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+							Annuler
+						</a>
+						<button type="submit" class="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+							Créer la facture
+						</button>
+					</div>
+				{{ form_end(form) }}
+			</div>
 		</div>
 	</div>
 {% endblock %}

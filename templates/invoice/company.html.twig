@@ -1,54 +1,71 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Factures de l'entreprise - Haze{% endblock %}
+{% block title %}Factures de l'organisation{% endblock %}
 
 {% block body %}
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-2xl font-bold mb-6">Factures de l'entreprise</h1>
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold">Factures de l'organisation</h1>
+        </div>
 
-        {% if invoices|length > 0 %}
-            <div class="bg-white shadow-md rounded-lg overflow-hidden">
-                <table class="min-w-full">
-                    <thead class="bg-gray-50">
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Numéro</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Montant</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Devis associé</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for invoice in invoices %}
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Numéro</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Montant</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ invoice.number }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ invoice.createdAt|date('d/m/Y') }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ invoice.amount|number_format(2, ',', ' ') }} €</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                    {% if invoice.status == 'paid' %}
+                                        bg-green-100 text-green-800
+                                    {% elseif invoice.status == 'pending' %}
+                                        bg-yellow-100 text-yellow-800
+                                    {% else %}
+                                        bg-gray-100 text-gray-800
+                                    {% endif %}">
+                                    {{ invoice.status }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {% if invoice.devis %}
+                                    <a href="{{ path('app_devis_show', {'id': invoice.devis.id}) }}" class="text-blue-600 hover:text-blue-900">
+                                        Devis #{{ invoice.devis.id }}
+                                    </a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                <a href="{{ path('app_invoice_show', {'id': invoice.id}) }}" class="text-blue-600 hover:text-blue-900">Voir</a>
+                                <a href="{{ path('app_invoice_edit', {'id': invoice.id}) }}" class="text-indigo-600 hover:text-indigo-900">Modifier</a>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        {% for invoice in invoices %}
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ invoice.number }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ invoice.createdAt|date('d/m/Y') }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">{{ invoice.amount }} €</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                        {% if invoice.status == 'paid' %}bg-green-100 text-green-800
-                                        {% elseif invoice.status == 'pending' %}bg-yellow-100 text-yellow-800
-                                        {% else %}bg-red-100 text-red-800{% endif %}">
-                                        {{ invoice.status }}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <a href="{{ path('app_invoice_show', {'id': invoice.id}) }}" class="text-indigo-600 hover:text-indigo-900">Voir</a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% else %}
-            <div class="text-center py-8">
-                <p class="text-gray-500">Aucune facture trouvée pour cette entreprise.</p>
-            </div>
-        {% endif %}
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                                Aucune facture trouvée pour cette organisation.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
         <div class="mt-4">
-            <a href="{{ path('app_invoice_index') }}" class="text-indigo-600 hover:text-indigo-900">
-                ← Retour à mes factures
+            <a href="{{ path('app_invoice_index') }}" class="text-gray-600 hover:text-gray-900">
+                Retour à la liste des factures
             </a>
         </div>
     </div>

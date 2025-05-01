@@ -21,7 +21,7 @@
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Numéro</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assignation</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organisation</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Montant</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -32,25 +32,35 @@
                         <tr class="hover:bg-gray-50">
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ devi.id }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ devi.createdAt|date('d/m/Y') }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ devi.client }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ devi.price }} €</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {% if devi.company %}
+                                    {{ devi.company.name }}
+                                {% else %}
+                                    <span class="text-gray-400">Non assigné</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ devi.price|number_format(2, ',', ' ') }} €</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                    {% if devi.state == 'accepted' %}bg-green-100 text-green-800
-                                    {% elseif devi.state == 'pending' %}bg-yellow-100 text-yellow-800
-                                    {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                    {% if devi.state == 'Facturé' %}
+                                        bg-blue-100 text-blue-800
+                                    {% elseif devi.state == 'En attente' %}
+                                        bg-yellow-100 text-yellow-800
+                                    {% else %}
+                                        bg-gray-100 text-gray-800
+                                    {% endif %}">
                                     {{ devi.state }}
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex items-center space-x-3">
-                                    <button onclick="showDevisDrawer({{ devi.id }})" class="text-indigo-600 hover:text-indigo-900 flex items-center">
+                                    <a href="{{ path('app_devis_show', {'id': devi.id}) }}" class="text-indigo-600 hover:text-indigo-900 flex items-center">
                                         <svg class="h-5 w-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                                         </svg>
                                         Détails
-                                    </button>
+                                    </a>
                                     <div class="h-4 w-px bg-gray-300"></div>
                                     <a href="{{ path('app_devis_edit', {'id': devi.id}) }}" class="text-indigo-600 hover:text-indigo-900 flex items-center">
                                         <svg class="h-5 w-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
