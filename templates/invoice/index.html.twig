@@ -6,12 +6,14 @@
 <div class="container mx-auto">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold">Liste des factures</h1>
-        <a href="{{ path('app_invoice_new') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-            </svg>
-            Nouvelle facture
-        </a>
+        {% if app.user.company %}
+            <a href="{{ path('app_account_company_invoice_new', {'companyId': app.user.company.id}) }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Nouvelle facture
+            </a>
+        {% endif %}
     </div>
 
     {% if invoices|length > 0 %}
@@ -32,7 +34,7 @@
                         <tr class="hover:bg-gray-50">
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ invoice.number }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ invoice.createdAt|date('d/m/Y') }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ invoice.client }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ invoice.company.name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ invoice.amount }} €</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
@@ -97,7 +99,7 @@
                                                         <dl class="grid grid-cols-2 gap-4">
                                                             <div>
                                                                 <dt class="text-sm font-medium text-gray-500">Client</dt>
-                                                                <dd class="mt-1 text-sm text-gray-900">{{ invoice.client }}</dd>
+                                                                <dd class="mt-1 text-sm text-gray-900">{{ invoice.company.name }}</dd>
                                                             </div>
                                                             <div>
                                                                 <dt class="text-sm font-medium text-gray-500">Date de création</dt>
@@ -125,21 +127,20 @@
                                                     <div>
                                                         <h3 class="text-lg font-medium text-gray-900">Détails du paiement</h3>
                                                         <div class="mt-4 bg-gray-50 p-4 rounded-md">
-                                                            <dl class="grid grid-cols-2 gap-4">
+                                                            <dl class="grid grid-cols-1 gap-4">
                                                                 <div>
-                                                                    <dt class="text-sm font-medium text-gray-500">Méthode de paiement</dt>
-                                                                    <dd class="mt-1 text-sm text-gray-900">{{ invoice.paymentType }}</dd>
+                                                                    <dt class="text-sm font-medium text-gray-500">Statut du paiement</dt>
+                                                                    <dd class="mt-1">
+                                                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                                                            {% if invoice.status == 'paid' %}bg-green-100 text-green-800
+                                                                            {% elseif invoice.status == 'pending' %}bg-yellow-100 text-yellow-800
+                                                                            {% else %}bg-red-100 text-red-800{% endif %}">
+                                                                            {% if invoice.status == 'paid' %}Payé
+                                                                            {% elseif invoice.status == 'pending' %}En attente de paiement
+                                                                            {% else %}Non payé{% endif %}
+                                                                        </span>
+                                                                    </dd>
                                                                 </div>
-                                                                <div>
-                                                                    <dt class="text-sm font-medium text-gray-500">TVA</dt>
-                                                                    <dd class="mt-1 text-sm text-gray-900">{{ invoice.Vat }}%</dd>
-                                                                </div>
-                                                                {% if invoice.stripePaymentID %}
-                                                                <div>
-                                                                    <dt class="text-sm font-medium text-gray-500">ID Stripe</dt>
-                                                                    <dd class="mt-1 text-sm text-gray-900">{{ invoice.stripePaymentID }}</dd>
-                                                                </div>
-                                                                {% endif %}
                                                             </dl>
                                                         </div>
                                                     </div>
@@ -171,9 +172,11 @@
     {% else %}
         <div class="text-center py-8">
             <p class="text-gray-500">Vous n'avez pas encore de factures.</p>
-            <a href="{{ path('app_invoice_new') }}" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
-                Créer une facture
-            </a>
+            {% if app.user.company %}
+                <a href="{{ path('app_account_company_invoice_new', {'companyId': app.user.company.id}) }}" class="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                    Créer une facture
+                </a>
+            {% endif %}
         </div>
     {% endif %}
 </div>

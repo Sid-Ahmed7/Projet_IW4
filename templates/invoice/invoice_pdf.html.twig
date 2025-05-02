@@ -1,67 +1,76 @@
 {# templates/invoice/invoice_pdf.html.twig #}
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Facture {{ invo.id }}</title>
+    <title>Facture #{{ invo.number }}</title>
     <style>
-        body { font-family: Arial, sans-serif; }
-        header { margin-bottom: 30px; }
-        .logo { height: 100px; /* Ajustez selon la taille de votre logo */ }
-        .invoice-header { background-color: #007BFF; color: white; padding: 10px 0; text-align: center; }
-        .invoice-header h1 { margin: 0; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #ddd; padding: 8px; }
-        th { background-color: #f2f2f2; color: #333; }
-        .total { font-weight: bold; background-color: #f2f2f2; }
-        .footer { margin-top: 30px; text-align: center; color: #777; font-size: 12px; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        .header {
+            margin-bottom: 30px;
+        }
+        .company-info {
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f9fa;
+        }
+        .total {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-    <header>
-        <img src="path/to/your/logo.png" alt="Logo de l'entreprise" class="logo">
-    </header>
+    <div class="header">
+        <h1>Facture #{{ invo.number }}</h1>
+        <p>Date : {{ invo.createdAt|date('d/m/Y') }}</p>
+    </div>
 
-    <div class="invoice-header">
-        <h1>Facture {{ invo.id }}</h1>
+    <div class="company-info">
+        <h2>Informations client</h2>
+        <p>{{ invo.company.name }}</p>
+        <p>{{ invo.company.address }}</p>
+        <p>SIRET : {{ invo.company.siretNumber }}</p>
     </div>
 
     <table>
         <tbody>
             <tr>
-                <th>Type de paiement</th>
-                <td>{{ invo.paymentType }}</td>
+                <th>Statut du paiement</th>
+                <td>
+                    {% if invo.status == 'paid' %}Payé
+                    {% elseif invo.status == 'pending' %}En attente de paiement
+                    {% else %}Non payé{% endif %}
+                </td>
             </tr>
             <tr>
-                <th>Détails du paiement</th>
-                <td>{{ invo.paymentDetails }}</td>
+                <th>Description</th>
+                <td>{{ invo.description }}</td>
             </tr>
             <tr>
-                <th>TVA</th>
-                <td>{{ invo.Vat }} %</td>
-            </tr>
-            <tr>
-                <th>État</th>
-                <td>{{ invo.state }}</td>
-            </tr>
-            <tr>
-                <th>Créé le</th>
-                <td>{{ invo.createdAt ? invo.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Mis à jour le</th>
-                <td>{{ invo.updatedAt ? invo.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr class="total">
-                <th>Total</th>
-                {# <!-- Remplacez 'calculTotal' par la logique ou la méthode que vous utilisez pour calculer le total de la facture -->
-                <td>{{ calculTotal(invoice) }}</td> #}
+                <th>Montant</th>
+                <td>{{ invo.amount }} €</td>
             </tr>
         </tbody>
     </table>
 
-    <div class="footer">
-        Merci pour votre entreprise. N'hésitez pas à nous contacter pour toute question concernant cette facture.
+    <div class="total">
+        <p>Total : {{ invo.amount }} €</p>
     </div>
 </body>
 </html>
