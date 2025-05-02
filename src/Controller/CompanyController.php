@@ -50,6 +50,8 @@ class CompanyController extends AbstractController
             $company->setVerified(false);
             $company->setCreatedBy($user->getId());
             $company->addhubUser($user);
+            $company->setUser($user);
+            $user->addCompany($company);
 
             // Gestion du logo
             $logoFile = $form->get('logo')->getData();

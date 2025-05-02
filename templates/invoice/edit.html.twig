@@ -1,29 +1,47 @@
-{% extends 'base.html.twig' %}
+{% extends 'account/layout.html.twig' %}
 
-{% block title %}Edit Invoice
-{% endblock %}
+{% block title %}Modifier la facture{% endblock %}
 
-{% block body %}
-	<div class="flex flex-col bg-fullPink items-center justify-center min-h-screen py-12">
-		<div class="bg-white text-xs shadow-md rounded-lg p-8 w-full max-w-md">
-			<header class="flex justify-center items-center">
-				<img src="{{ asset ('/images/logo2.png') }}" alt="Logo" class="h-12 rounded-full mr-4" width="93">
-			</header>
-
-
-			<div class="flex justify-center items-center mt-4 ">
-				<h2 class=" block mb-2 text-xl font-medium ">Modifier les options
-				</h2>
+{% block content %}
+	<div class="bg-white shadow rounded-lg p-6">
+		<div class="sm:flex sm:items-center">
+			<div class="sm:flex-auto">
+				<h1 class="text-2xl font-bold mb-6">Modifier la facture #{{ invoice.number }}</h1>
 			</div>
-			<br>
+		</div>
 
-			{{ include('invoice/_form.html.twig', {'button_label': 'Update'}) }}
+		<div class="mt-8">
+			{{ form_start(form, {'attr': {'class': 'space-y-6'}}) }}
+				<div class="space-y-4">
+					{{ form_row(form.description, {
+						'label_attr': {'class': 'block text-sm font-medium text-gray-700'},
+						'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm h-32'}
+					}) }}
 
-			<a href="{{ path('app_invoice_index') }}">back to list</a>
+					{{ form_row(form.amount, {
+						'label_attr': {'class': 'block text-sm font-medium text-gray-700'},
+						'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'}
+					}) }}
 
+					{{ form_row(form.status, {
+						'label_attr': {'class': 'block text-sm font-medium text-gray-700'},
+						'attr': {'class': 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'}
+					}) }}
+				</div>
+
+				<div class="mt-6 flex items-center justify-end space-x-4">
+					<a href="{{ path('app_invoice_index') }}" class="text-sm font-medium text-gray-500 hover:text-gray-700">
+						Annuler
+					</a>
+					<button type="submit" class="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+						Enregistrer
+					</button>
+				</div>
+			{{ form_end(form) }}
+		</div>
+
+		<div class="mt-6 border-t border-gray-200 pt-6">
 			{{ include('invoice/_delete_form.html.twig') }}
-
-
 		</div>
 	</div>
 {% endblock %}

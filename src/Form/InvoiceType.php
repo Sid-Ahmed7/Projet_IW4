@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -27,6 +28,17 @@ class InvoiceType extends AbstractType
                 'label' => 'Montant',
                 'scale' => 2,
                 'html5' => true,
+                'disabled' => true,
+            ])
+            ->add('status', ChoiceType::class, [
+                'label' => 'Statut',
+                'choices' => [
+                    'En attente' => 'pending',
+                    'Payée' => 'paid',
+                    'Annulée' => 'cancelled'
+                ],
+                'required' => true,
+                'disabled' => true,
             ])
         ;
     }
