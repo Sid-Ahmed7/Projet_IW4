@@ -81,6 +81,11 @@
                                             <a href="{{ path('app_devis_show', {'id': devi.id}) }}" class="text-blue-600 hover:text-blue-900">Voir</a>
                                             <a href="{{ path('app_devis_edit', {'id': devi.id}) }}" class="text-blue-600 hover:text-blue-900">Modifier</a>
                                             <a href="{{ path('app_devis_pdf', {'id': devi.id}) }}" class="text-blue-600 hover:text-blue-900">PDF</a>
+                                            {% if devi.state != 'Facturé' %}
+                                                <a href="{{ path('stripe_devis_payment', {'id': devi.id}) }}" class="text-green-600 hover:text-green-900">Payer</a>
+                                            {% endif %}
+
+
                                         </div>
                                     </td>
                                 </tr>

@@ -1,5 +1,6 @@
 {% extends 'account/layout.html.twig' %}
 
+
 {% block title %}Détails du devis{% endblock %}
 
 {% block content %}
@@ -123,7 +124,12 @@
             <a href="{{ path('app_devis_pdf', {'id': devi.id}) }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
                 Télécharger PDF
             </a>
-        {% if devi.company %}
+
+            {% if devi.state != 'Facturé' %}
+                <a href="{{ path('stripe_devis_payment', {'id': devi.id}) }}" class="text-green-600 hover:text-green-900">Payer</a>
+            {% endif %}
+
+            {% if devi.company and devi.state != 'Facturé' %}
             {% if context == 'company' and devi.company %}
         <a href="{{ path('app_devis_reminder', {'id': devi.id}) }}"
         class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-yellow-500 hover:bg-yellow-600">

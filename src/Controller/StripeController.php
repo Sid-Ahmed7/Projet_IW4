@@ -23,6 +23,8 @@ use Stripe\Price;
 use Stripe\Product;
 use Stripe\Subscription;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
 
 class StripeController extends AbstractController
 {
@@ -249,4 +251,74 @@ class StripeController extends AbstractController
     //     // Rediriger l'utilisateur vers une page d'annulation ou une autre page de votre choix
     //     return $this->redirectToRoute('homepage');
     // }
+
+    #[Route('/stripe/pay/devis/{id}', name: 'stripe_devis_payment')]
+public function payDevis(
+    Devis $devis, 
+    EntityManagerInterface $em
+): Response {
+    $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+    /** @var \App\Entity\User $user */
+    $user = $this->getUser();
+
+    if ($devis->getHubuser() !== $user) {
+        throw $this->createAccessDeniedException('Ce devis ne vous appartient pas.');
+    }
+
+    Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
+
+    $session = Session::create([
+        'payment_method_types' => ['card'],
+        'line_items' => [[
+            'price_data' => [
+                'currency' => 'eur',
+                'product_data' => [
+                    'name' => 'Paiement devis : ' . $devis->getTitle(),
+                ],
+                'unit_amount' => intval($devis->getPrice() * 100),
+            ],
+            'quantity' => 1,
+        ]],
+        'mode' => 'payment',
+        'success_url' => $this->generateUrl('stripe_devis_success', [
+            'id' => $devis->getId()
+        ], UrlGeneratorInterface::ABSOLUTE_URL),
+        'cancel_url' => $this->generateUrl('app_devis_show', [
+            'id' => $devis->getId()
+        ], UrlGeneratorInterface::ABSOLUTE_URL),
+    ]);
+
+    return $this->redirect($session->url, 303);
+}
+
+#[Route('/stripe/success/devis/{id}', name: 'stripe_devis_success')]
+public function successDevis(
+    Devis $devis,
+    EntityManagerInterface $em
+): Response {
+    $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+    
+    $user = $this->getUser();
+
+    // Marquer le devis comme payé
+    $devis->setState('Facturé');
+
+    // Générer une facture
+    $invoice = new Invoice();
+    $invoice->setHubuser($user);
+    $invoice->setCompany($devis->getCompany());
+    $invoice->setDevis($devis);
+    $invoice->setAmount((float)$devis->getPrice());
+    $invoice->setDescription($devis->getContent());
+    $invoice->setNumber(date('Ym') . '-' . uniqid());
+    $invoice->setCreatedAt(new \DateTimeImmutable());
+
+    $em->persist($invoice);
+    $em->flush();
+
+    $this->addFlash('success', 'Paiement validé et facture générée.');
+    return $this->redirectToRoute('app_invoice_show', ['id' => $invoice->getId()]);
+}
+
 }
