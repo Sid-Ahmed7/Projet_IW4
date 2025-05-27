@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 #[Route('/account')]
 class DevisController extends AbstractController
@@ -96,13 +98,17 @@ class DevisController extends AbstractController
     }
 
     #[Route('/devis/{id}/show', name: 'app_devis_show', methods: ['GET'])]
-    public function show(Devis $devi): Response
+    public function show(Devis $devi, Request $request): Response
     {
-        return $this->render('devis/show.html.twig', [
-            'devi' => $devi,
-            'assets' => $devi->getDevisAssets()
-        ]);
+    $context = $request->query->get('context', 'account'); // par défaut "account"
+
+    return $this->render('devis/show.html.twig', [
+        'devi' => $devi,
+        'assets' => $devi->getDevisAssets(),
+        'context' => $context,
+    ]);
     }
+
 
     #[Route('/devis/{id}/edit', name: 'app_devis_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Devis $devi, EntityManagerInterface $entityManager): Response
@@ -191,4 +197,28 @@ class DevisController extends AbstractController
 
         return $this->redirectToRoute('app_devis_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/devis/{id}/relance', name: 'app_devis_reminder')]
+    public function sendReminderDevis(Devis $devis, MailerInterface $mailer): Response
+{
+    $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+    /** @var \App\Entity\User $user */
+    $user = $this->getUser();
+
+    if ($devis->getHubuser() !== $user) {
+        throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce devis.');
+    }
+
+    $email = (new Email())
+        ->from('ibrahim60200@gmail.com') // ← ton adresse dans le .env
+        ->to($user->getEmail())
+        ->subject('Relance de devis - ' . $devis->getTitle())
+        ->html("<p>Bonjour {$user->getFirstname()},<br> Ceci est une relance pour le devis intitulé : <strong>{$devis->getTitle()}</strong>.<br> Montant estimé : <strong>{$devis->getPrice()} €</strong></p>");
+
+    $mailer->send($email);
+
+    $this->addFlash('success', 'Relance envoyée avec succès.');
+    return $this->redirectToRoute('app_devis_show', ['id' => $devis->getId()]);
+}
 }
