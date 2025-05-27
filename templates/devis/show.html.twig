@@ -1,146 +1,173 @@
 {% extends 'account/layout.html.twig' %}
 
 
-{% block title %}Détails du devis{% endblock %}
+{% block title %}Détails du devis
+{% endblock %}
 
 {% block content %}
-<div class="space-y-6">
-    <div class="text-sm text-gray-500">Devis #{{ devi.id }}</div>
+	<div class="space-y-6">
+		<div class="text-sm text-gray-500">Devis #{{ devi.id }}</div>
 
-    <div class="estimate-page bg-white p-8 shadow rounded-lg">
-        {# En-tête minimaliste #}
-        <div class="flex justify-between items-start mb-6">
-            <div class="text-sm">
-                <div>Émis le : {{ devi.createdAt|date('d/m/Y') }}</div>
-                {# <div>Valide jusqu'au : {{ devi.validUntil|date('d/m/Y') }}</div> #}
-                <div class="mt-2">
-                    <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium
-                        {% if devi.state == 'Facturé' %}
-                            bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/20
-                        {% elseif devi.state == 'En attente' %}
-                            bg-yellow-50 text-yellow-700 ring-1 ring-inset ring-yellow-600/20
-                        {% else %}
-                            bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20
-                        {% endif %}
-                    ">
-                        {{ devi.state }}
-                    </span>
-                </div>
-            </div>
-            {% if devi.state != 'Facturé' %}
-                <div>
-                    <a href="{{ path('app_invoice_new_from_devis', {'id': devi.id}) }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 shadow-sm">
-                        <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                        </svg>
-                        Générer une facture
-                    </a>
-                </div>
-            {% endif %}
-        </div>
+		<div
+			class="estimate-page bg-white p-8 shadow rounded-lg">
+			{# En-tête minimaliste #}
+			<div class="flex justify-between items-start mb-6">
+				<div class="text-sm">
+					<div>Émis le :
+						{{ devi.createdAt|date('d/m/Y') }}</div>
+					{# <div>Valide jusqu'au : {{ devi.validUntil|date('d/m/Y') }}</div> #}
+					<div class="mt-2">
+						<span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium
+																                        {% if devi.state == 'Facturé' %}
+																                            bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/20
+																                        {% elseif devi.state == 'En attente' %}
+																                            bg-yellow-50 text-yellow-700 ring-1 ring-inset ring-yellow-600/20
+																                        {% else %}
+																                            bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20
+																                        {% endif %}
+																                    ">
+							{{ devi.state }}
+						</span>
+					</div>
+				</div>
+				{% if devi.state != 'Facturé' %}
+					<div>
+						<a href="{{ path('app_invoice_new_from_devis', {'id': devi.id}) }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 shadow-sm">
+							<svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+							</svg>
+							Générer une facture
+						</a>
+					</div>
+				{% endif %}
+			</div>
 
-        {# Coordonnées #}
-        <div class="flex justify-between mb-8 text-sm">
-            <div>
-                <div class="font-medium">{{ app.user.company.name }}</div>
-                <div>{{ app.user.company.address }}</div>
-                <div>{{ app.user.email }}</div>
-                {# <div>{{ app.user.company.phone }}</div> #}
-            </div>
-            {% if devi.company %}
-            <div class="text-right">
-                <div class="font-medium">{{ devi.company.name }}</div>
-                <div>{{ devi.company.address }}</div>
-                <div>{{ devi.company.email }}</div>
-                <div>{{ devi.company.phoneNumber }}</div>
-            </div>
-            {% endif %}
-        </div>
+			{# Coordonnées #}
+			<div class="flex justify-between mb-8 text-sm">
+				<div>
+					<div class="font-medium">{{ app.user.company.name }}</div>
+					<div>{{ app.user.company.address }}</div>
+					<div>{{ app.user.email }}</div>
+					{# <div>{{ app.user.company.phone }}</div> #}
+				</div>
+				{% if devi.company %}
+					<div class="text-right">
+						<div class="font-medium">{{ devi.company.name }}</div>
+						<div>{{ devi.company.address }}</div>
+						<div>{{ devi.company.email }}</div>
+						<div>{{ devi.company.phoneNumber }}</div>
+					</div>
+				{% endif %}
+			</div>
 
-        {# Description du devis #}
-        <div class="mb-8">
-            <h3 class="text-lg font-medium text-gray-900 mb-2">{{ devi.title }}</h3>
-            <p class="text-sm text-gray-600">{{ devi.content }}</p>
-        </div>
+			{# Description du devis #}
+			<div class="mb-8">
+				<h3 class="text-lg font-medium text-gray-900 mb-2">{{ devi.title }}</h3>
+				<p class="text-sm text-gray-600">{{ devi.content }}</p>
+			</div>
 
-        {# Tableau des items #}
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Qté</th>
-                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">PU (€)</th>
-                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total (€)</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    {% for asset in assets %}
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">{{ asset.name }}</div>
-                                <div class="text-sm text-gray-500">{{ asset.description }}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
-                                {{ asset.size }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
-                                {{ asset.unitPrice|number_format(2, ',', ' ') }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
-                                {{ asset.price|number_format(2, ',', ' ') }}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-                <tfoot class="bg-gray-50">
-                    <tr>
-                        <td colspan="3" class="px-6 py-4 text-right text-sm font-medium text-gray-900">Total HT</td>
-                        <td class="px-6 py-4 text-right text-sm font-medium text-gray-900">{{ devi.price|number_format(2, ',', ' ') }} €</td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" class="px-6 py-4 text-right text-sm font-medium text-gray-900">TVA (20%)</td>
-                        <td class="px-6 py-4 text-right text-sm font-medium text-gray-900">{{ (devi.price * 0.2)|number_format(2, ',', ' ') }} €</td>
-                    </tr>
-                    <tr class="bg-gray-100">
-                        <td colspan="3" class="px-6 py-4 text-right text-sm font-bold text-gray-900">Total TTC</td>
-                        <td class="px-6 py-4 text-right text-sm font-bold text-gray-900">{{ (devi.price * 1.2)|number_format(2, ',', ' ') }} €</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
+			{# Tableau des items #}
+			<div class="overflow-x-auto">
+				<table class="min-w-full divide-y divide-gray-200">
+					<thead class="bg-gray-50">
+						<tr>
+							<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+							<th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Qté</th>
+							<th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">PU (€)</th>
+							<th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Total (€)</th>
+						</tr>
+					</thead>
+					<tbody class="bg-white divide-y divide-gray-200">
+						{% for asset in assets %}
+							<tr>
+								<td class="px-6 py-4 whitespace-nowrap">
+									<div class="text-sm font-medium text-gray-900">{{ asset.name }}</div>
+									<div class="text-sm text-gray-500">{{ asset.description }}</div>
+								</td>
+								<td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
+									{{ asset.size }}
+								</td>
+								<td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
+									{{ asset.unitPrice|number_format(2, ',', ' ') }}
+								</td>
+								<td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-500">
+									{{ asset.price|number_format(2, ',', ' ') }}
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+					<tfoot class="bg-gray-50">
+						<tr>
+							<td colspan="3" class="px-6 py-4 text-right text-sm font-medium text-gray-900">Total HT</td>
+							<td class="px-6 py-4 text-right text-sm font-medium text-gray-900">{{ devi.price|number_format(2, ',', ' ') }}
+								€</td>
+						</tr>
+						<tr>
+							<td colspan="3" class="px-6 py-4 text-right text-sm font-medium text-gray-900">TVA (20%)</td>
+							<td class="px-6 py-4 text-right text-sm font-medium text-gray-900">{{ (devi.price * 0.2)|number_format(2, ',', ' ') }}
+								€</td>
+						</tr>
+						<tr class="bg-gray-100">
+							<td colspan="3" class="px-6 py-4 text-right text-sm font-bold text-gray-900">Total TTC</td>
+							<td class="px-6 py-4 text-right text-sm font-bold text-gray-900">{{ (devi.price * 1.2)|number_format(2, ',', ' ') }}
+								€</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
 
-        {# Termes et conditions #}
-        <div class="mt-8 text-sm text-gray-600">
-            <h3 class="font-medium mb-2">Termes et conditions</h3>
-            <p>Les paiements doivent être effectués dans les délais spécifiés. Les paiements tardifs peuvent entraîner des frais supplémentaires.</p>
-        </div>
+			{# Termes et conditions #}
+			<div class="mt-8 text-sm text-gray-600">
+				<h3 class="font-medium mb-2">Termes et conditions</h3>
+				<p>Les paiements doivent être effectués dans les délais spécifiés. Les paiements tardifs peuvent entraîner des frais supplémentaires.</p>
+			</div>
 
-        {# Actions #}
-        <div class="mt-8 flex justify-end space-x-3">
-            <a href="{{ path('app_devis_edit', {'id': devi.id}) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                Modifier
-            </a>
-            <a href="{{ path('app_devis_pdf', {'id': devi.id}) }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
-                Télécharger PDF
-            </a>
+			{# Actions #}
+			<div class="mt-8 flex justify-end space-x-3">
+				<a href="{{ path('app_devis_edit', {'id': devi.id}) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+					Modifier
+				</a>
+				<a href="{{ path('app_devis_pdf', {'id': devi.id}) }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+					Télécharger PDF
+				</a>
 
-            {% if devi.state != 'Facturé' %}
-                <a href="{{ path('stripe_devis_payment', {'id': devi.id}) }}" class="text-green-600 hover:text-green-900">Payer</a>
-            {% endif %}
+				{% if devi.state != 'Facturé' %}
+					<a href="{{ path('stripe_devis_payment', {'id': devi.id}) }}" class="text-green-600 hover:text-green-900">Payer</a>
+				{% endif %}
 
-            {% if devi.company and devi.state != 'Facturé' %}
-            {% if context == 'company' and devi.company %}
-        <a href="{{ path('app_devis_reminder', {'id': devi.id}) }}"
-        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-yellow-500 hover:bg-yellow-600">
-        Relancer par e-mail
-        </a>
-    {% endif %}
+				{% if devi.company and devi.state != 'Facturé' %}
+					{% if context == 'company' and devi.company %}
+						<a href="{{ path('app_devis_reminder', {'id': devi.id}) }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-yellow-500 hover:bg-yellow-600">
+							Relancer par e-mail
+						</a>
+					{% endif %}
+					{% if devi.state != 'Facturé' and context == 'company' and devi.paymentToken %}
+						<a href="{{ path('stripe_send_payment_link', { id: devi.id }) }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700">
+							Envoyer le lien de paiement
+						</a>
+						<input type="text" id="paymentLinkInput" value="{{ url('stripe_public_payment', { token: devi.paymentToken }) }}" class="sr-only" readonly>
+					{% endif %}
+				{% endif %}
 
-{% endif %}
 
+			</div>
+		</div>
+	</div>
+	{% block javascripts %}
+		{{ parent() }}
+		 <script>
+				    function copyPaymentLink() {
+				        const input = document.getElementById("paymentLinkInput");
+				        input.type = 'text'; // temporairement visible
+				        input.select();
+				        input.setSelectionRange(0, 99999); // pour mobile
+				
+				        document.execCommand("copy");
+				        input.type = 'hidden';
+				
+				        alert("Lien copié : " + input.value);
+				    }
+				</script>
+	{% endblock %}
 
-        </div>
-    </div>
-</div>
 {% endblock %}

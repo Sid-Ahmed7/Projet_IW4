@@ -1,67 +1,71 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Devis pour {{ company.name }}{% endblock %}
+{% block title %}Devis pour
+	{{ company.name }}
+{% endblock %}
 
 {% block body %}
-    <div class="container mx-auto px-4 py-8">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold">Devis pour {{ company.name }}</h1>
-            <a href="{{ path('app_devis_new') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">
-                Créer un devis
-            </a>
-        </div>
+	<div class="container mx-auto px-4 py-8">
+		<div class="flex justify-between items-center mb-6">
+			<h1 class="text-2xl font-bold">Devis pour
+				{{ company.name }}</h1>
+			<a href="{{ path('app_devis_new') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">
+				Créer un devis
+			</a>
+		</div>
 
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prix</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">État</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date de création</th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    {% for devis in devis %}
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ devis.id }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ devis.price|number_format(2, ',', ' ') }} €</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                    {% if devis.state == 'Facturé' %}
-                                        bg-green-100 text-green-800
-                                    {% elseif devis.state == 'En attente' %}
-                                        bg-yellow-100 text-yellow-800
-                                    {% else %}
-                                        bg-gray-100 text-gray-800
-                                    {% endif %}">
-                                    {{ devis.state }}
-                                </span>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {{ devis.createdAt ? devis.createdAt|date('d/m/Y') : '' }}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                                <a href="{{ path('app_devis_show', {'id': devis.id, 'context': 'company'}) }}">Voir</a>
-                                <a href="{{ path('app_devis_edit', {'id': devis.id}) }}" class="text-indigo-600 hover:text-indigo-900">Modifier</a>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="5" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                                Aucun devis trouvé pour cette organisation.
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+		<div class="bg-white shadow-lg rounded-lg overflow-hidden">
+			<table class="min-w-full divide-y divide-gray-200">
+				<thead class="bg-gray-50">
+					<tr>
+						<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+						<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prix</th>
+						<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">État</th>
+						<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date de création</th>
+						<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+					</tr>
+				</thead>
+				<tbody class="bg-white divide-y divide-gray-200">
+					{% for devis in devis %}
+						<tr>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ devis.id }}</td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ devis.price|number_format(2, ',', ' ') }}
+								€</td>
+							<td class="px-6 py-4 whitespace-nowrap">
+								<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+										                                    {% if devis.state == 'Facturé' %}
+										                                        bg-green-100 text-green-800
+										                                    {% elseif devis.state == 'En attente' %}
+										                                        bg-yellow-100 text-yellow-800
+										                                    {% else %}
+										                                        bg-gray-100 text-gray-800
+										                                    {% endif %}">
+									{{ devis.state }}
+								</span>
+							</td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+								{{ devis.createdAt ? devis.createdAt|date('d/m/Y') : '' }}
+							</td>
+							<td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+								<a href="{{ path('app_devis_show', {'id': devis.id, 'context': 'company'}) }}">Voir</a>
+								<a href="{{ path('app_devis_edit', {'id': devis.id}) }}" class="text-indigo-600 hover:text-indigo-900">Modifier</a>
+							</td>
+						</tr>
+					{% else %}
+						<tr>
+							<td colspan="5" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+								Aucun devis trouvé pour cette organisation.
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
 
-        <div class="mt-4">
-            <a href="{{ path('app_devis_index') }}" class="text-gray-600 hover:text-gray-900">
-                Retour à la liste des devis
-            </a>
-        </div>
-    </div>
-{% endblock %} 
+		<div class="mt-4">
+			<a href="{{ path('app_devis_index') }}" class="text-gray-600 hover:text-gray-900">
+				Retour à la liste des devis
+			</a>
+		</div>
+	</div>
+{% endblock %}

@@ -218,4 +218,19 @@ class Devis
         }
         return $this;
     }
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $paymentToken = null;
+
+    public function getPaymentToken(): ?string
+    {
+        return $this->paymentToken;
+    }
+
+    public function setPaymentToken(?string $paymentToken): static
+    {
+        $this->paymentToken = $paymentToken;
+        return $this;
+    }
+
 }

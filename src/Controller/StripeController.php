@@ -24,12 +24,17 @@ use Stripe\Product;
 use Stripe\Subscription;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mailer\MailerInterface;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 
 
 class StripeController extends AbstractController
 {
 
-    #[Route('/stripe/{id}/{devisID}', name: 'stripe')]
+#[Route('/stripe/invoice/{id}/{devisID}', name: 'stripe_invoice')]
     public function stripe(Invoice $invoice, $id, $devisID, DevisRepository $devisRepository): Response
     {
         $devis = $devisRepository->find($devisID);
@@ -169,7 +174,7 @@ class StripeController extends AbstractController
 
 
 
-    #[Route('/stripe/{planId}/{userId}', name: 'stripe2')]
+#[Route('/stripe/subscription/{planId}/{userId}', name: 'stripe2')]
     public function stripePayment(Plan $plan, EntityManagerInterface $entityManager, UserRepository $userRepository, $userId, $planId, PlanRepository $planRepository): Response
     {
         $YOUR_DOMAIN = 'http://127.0.0.1:8000';
@@ -295,7 +300,8 @@ public function payDevis(
 #[Route('/stripe/success/devis/{id}', name: 'stripe_devis_success')]
 public function successDevis(
     Devis $devis,
-    EntityManagerInterface $em
+    EntityManagerInterface $em,
+    MailerInterface $mailer // ⬅️ Ajout ici
 ): Response {
     $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
     
@@ -317,8 +323,113 @@ public function successDevis(
     $em->persist($invoice);
     $em->flush();
 
+    // 🧾 Générer le PDF de la facture
+    $html = $this->renderView('invoice/pdf.html.twig', [
+        'invoice' => $invoice
+    ]);
+
+    $pdfOptions = new Options();
+    $pdfOptions->set('defaultFont', 'Arial');
+
+    $dompdf = new Dompdf($pdfOptions);
+    $dompdf->loadHtml($html);
+    $dompdf->render();
+    $pdfOutput = $dompdf->output();
+
+    // ✉️ Envoyer la facture par email
+    $email = (new Email())
+        ->from('ibrahim60200@gmail.com')
+        ->to($devis->getCompany()?->getEmail() ?? $user->getEmail()) // fallback
+        ->subject('Facture - Devis #' . $devis->getId())
+        ->text('Merci pour votre paiement. Veuillez trouver la facture en pièce jointe.')
+        ->attach($pdfOutput, 'facture.pdf', 'application/pdf');
+
+    $mailer->send($email);
+
     $this->addFlash('success', 'Paiement validé et facture générée.');
+
     return $this->redirectToRoute('app_invoice_show', ['id' => $invoice->getId()]);
 }
+
+#[Route('/stripe/link/generate/{id}', name: 'stripe_devis_generate_link')]
+public function generatePublicStripeLink(
+    Devis $devis,
+    EntityManagerInterface $em
+): Response {
+    // Génère un token unique s'il n'existe pas encore
+    if (!$devis->getPaymentToken()) {
+        $devis->setPaymentToken(Uuid::v4());
+        $em->flush();
+    }
+
+    $this->addFlash('success', 'Lien de paiement généré.');
+
+    return $this->redirectToRoute('app_devis_show', [
+        'id' => $devis->getId(),
+        'context' => 'company',
+    ]);
+}
+
+#[Route('/pay/devis/public/{token}', name: 'stripe_public_payment')]
+public function publicDevisPayment(
+    string $token,
+    DevisRepository $devisRepository,
+    EntityManagerInterface $em
+): Response {
+    $devis = $devisRepository->findOneBy(['paymentToken' => $token]);
+
+    if (!$devis) {
+        throw $this->createNotFoundException('Lien invalide ou expiré.');
+    }
+
+    Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
+
+    $session = Session::create([
+        'payment_method_types' => ['card'],
+        'line_items' => [[
+            'price_data' => [
+                'currency' => 'eur',
+                'product_data' => [
+                    'name' => 'Paiement devis : ' . $devis->getTitle(),
+                ],
+                'unit_amount' => intval($devis->getPrice() * 100),
+            ],
+            'quantity' => 1,
+        ]],
+        'mode' => 'payment',
+        'success_url' => $this->generateUrl('stripe_devis_success', [
+            'id' => $devis->getId()
+        ], UrlGeneratorInterface::ABSOLUTE_URL),
+        'cancel_url' => $this->generateUrl('app_devis_show', [
+            'id' => $devis->getId()
+        ], UrlGeneratorInterface::ABSOLUTE_URL),
+    ]);
+
+    return $this->redirect($session->url, 303);
+}
+
+#[Route('/stripe/send-link/{id}', name: 'stripe_send_payment_link')]
+public function sendStripeLinkByEmail(Devis $devis, MailerInterface $mailer): Response
+{
+    if (!$devis->getCompany() || !$devis->getPaymentToken()) {
+        throw $this->createNotFoundException('Devis sans entreprise ou lien de paiement introuvable.');
+    }
+
+    $link = $this->generateUrl('stripe_public_payment', [
+        'token' => $devis->getPaymentToken()
+    ], UrlGeneratorInterface::ABSOLUTE_URL);
+
+    $email = (new Email())
+        ->from('ibrahim60200@gmail.com')
+        ->to($devis->getCompany()->getEmail())
+        ->subject('Paiement de votre devis #' . $devis->getId())
+        ->html("<p>Bonjour,<br>Voici votre lien pour procéder au paiement du devis :<br><a href=\"$link\">$link</a></p>");
+
+    $mailer->send($email);
+
+    $this->addFlash('success', 'Lien Stripe envoyé à l\'entreprise.');
+    return $this->redirectToRoute('app_devis_show', ['id' => $devis->getId()]);
+}
+
 
 }

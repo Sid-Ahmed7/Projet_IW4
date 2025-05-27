@@ -18,6 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Uid\Uuid;
+
 
 #[Route('/account')]
 class DevisController extends AbstractController
@@ -73,6 +75,7 @@ class DevisController extends AbstractController
             $devis->setHubuser($user);
             $devis->setPrice('0');
             $devis->setState('En attente');
+            $devis->setPaymentToken(Uuid::v4());
             
             $entityManager->persist($devis);
             
