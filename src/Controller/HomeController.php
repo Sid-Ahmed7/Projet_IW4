@@ -65,7 +65,7 @@ class HomeController extends AbstractController
         $company = $user->getCompany();
         
         if (!$company) {
-            return $this->redirectToRoute('app_company_new', ['id' => $user->getId()]);
+            return $this->redirectToRoute('app_account_company_new', ['id' => $user->getId()]);
         }
 
         $invoices = [];

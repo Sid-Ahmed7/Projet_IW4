@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des Demandes{% endblock %}
+{% block title %}Liste des Demandes de Devis{% endblock %}
 
 {% block body %}
 <div class="container mx-auto px-4 py-8">
     <div class="bg-white rounded-lg shadow-md p-6">
         <div class="mb-6">
-            <h1 class="text-2xl font-bold">Liste des Demandes</h1>
+            <h1 class="text-2xl font-bold">Liste des Demandes de Devis</h1>
         </div>
 
         <div class="overflow-x-auto">
@@ -14,11 +14,11 @@
                 <thead class="bg-gray-100">
                     <tr>
                         <th class="py-3 px-4 text-left">ID</th>
-                        <th class="py-3 px-4 text-left">Prénom</th>
+                        <th class="py-3 px-4 text-left">Client</th>
                         <th class="py-3 px-4 text-left">Email</th>
-                        <th class="py-3 px-4 text-left">Pays</th>
-                        <th class="py-3 px-4 text-left">Date de l'événement</th>
-                        <th class="py-3 px-4 text-left">Budget max</th>
+                        <th class="py-3 px-4 text-left">Type de service</th>
+                        <th class="py-3 px-4 text-left">Date de livraison souhaitée</th>
+                        <th class="py-3 px-4 text-left">Budget estimé</th>
                         <th class="py-3 px-4 text-left">Statut</th>
                         <th class="py-3 px-4 text-left">Date de création</th>
                         <th class="py-3 px-4 text-left">Actions</th>
@@ -58,7 +58,7 @@
                                     </a>
                                     <form action="{{ path('app_reque_delete', {'id': reque.id}) }}" 
                                           method="post" 
-                                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette demande ?');"
+                                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette demande de devis ?');"
                                           class="inline">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reque.id) }}">
@@ -72,7 +72,7 @@
                     {% else %}
                         <tr>
                             <td colspan="9" class="py-4 px-4 text-center text-gray-500">
-                                Aucune demande trouvée
+                                Aucune demande de devis trouvée
                             </td>
                         </tr>
                     {% endfor %}

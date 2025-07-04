@@ -7,14 +7,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/account')]
-class HazeIAController extends AbstractController
+class FactuProIAController extends AbstractController
 {
-    #[Route('/hazeIA', name: 'app_haze_ia')]
+    #[Route('/factuproIA', name: 'app_factupro_ia')]
     public function index(): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
-        return $this->render('account/hazeIA/index.html.twig', [
+        return $this->render('account/factuproIA/index.html.twig', [
             'user' => $this->getUser()
         ]);
     }

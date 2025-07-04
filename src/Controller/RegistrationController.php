@@ -84,7 +84,7 @@ class RegistrationController extends AbstractController
 
                 // --- Envoi de l'email de confirmation
                 $email = (new TemplatedEmail())
-                    ->from(new Address('leonceyopa@gmail.com', 'Haze'))
+                    ->from(new Address('leonceyopa@gmail.com', 'FactuPro'))
                     ->to($user->getEmail())
                     ->subject('Veuillez confirmer votre adresse email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
