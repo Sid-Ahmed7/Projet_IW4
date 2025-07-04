@@ -77,9 +77,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Notification::class, mappedBy: 'users')]
     private Collection $notifications;
 
-    #[ORM\OneToMany(mappedBy: 'company', targetEntity: Company::class)]
-    private Collection $hubusers;
-
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Company::class)]
     private Collection $companies;
 
@@ -93,7 +90,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->reques = new ArrayCollection();
         $this->notifications = new ArrayCollection();
         $this->companies = new ArrayCollection();
-        $this->hubusers = new ArrayCollection();
     }
 
     public function getId(): ?int

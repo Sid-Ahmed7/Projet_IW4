@@ -22,12 +22,17 @@ class AccountController extends AbstractController
         RequeRepository $requeRepository,
         Security $security,
         InvoiceRepository $invoiceRepository,
-        DevisRepository $devisRepository
+        DevisRepository $devisRepository,
+        CompanyRepository $companyRepository
     ): Response {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
         $user = $security->getUser();
         $reques = $requeRepository->findBy(['usr' => $user]);
+        $companies = [];
+        if ($user) {
+            $companies = $companyRepository->findBy(['createdBy' => $user->getId()]);
+        }
         
         // Récupérer les devis et factures
         $devis = $devisRepository->findBy(['hubuser' => $user]);
@@ -93,7 +98,8 @@ class AccountController extends AbstractController
             'conversion_rate' => $conversion_rate,
             'months' => array_keys($monthly_data),
             'monthly_amounts' => array_values($monthly_data),
-            'recent_activities' => $recent_activities
+            'recent_activities' => $recent_activities,
+            'companies' => $companies
         ]);
     }
 

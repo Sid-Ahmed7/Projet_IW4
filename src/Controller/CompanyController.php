@@ -24,13 +24,20 @@ class CompanyController extends AbstractController
     #[Route('/', name: 'app_account_company_index', methods: ['GET'])]
     public function index(CompanyRepository $companyRepository): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        /** @var User $user */
+        $user = $this->getUser();
+        $companies = $companyRepository->findBy(['createdBy' => $user->getId()]);
+        
         return $this->render('account/company/index.html.twig', [
-            'companys' => $companyRepository->findAll(),
+            'companys' => $companies,
+            'companies' => $companies,
         ]);
     }
 
     #[Route('/new', name: 'app_account_company_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, Security $security): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, Security $security, CompanyRepository $companyRepository): Response
     {
         $company = new Company();
         /** @var User $user */
@@ -44,6 +51,16 @@ class CompanyController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Vérification de la duplication (nom ou email)
+            $name = $company->getName();
+            $email = $company->getEmail();
+            if ($companyRepository->existsByNameOrEmail($name, $email)) {
+                $this->addFlash('error', 'Une entreprise avec ce nom ou cet email existe déjà.');
+                return $this->render('account/company/new.html.twig', [
+                    'company' => $company,
+                    'form' => $form,
+                ]);
+            }
             $now = new \DateTimeImmutable();
             $company->setCreatedAt($now);
             $company->setState('Online');

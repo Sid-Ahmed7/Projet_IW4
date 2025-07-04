@@ -1,33 +1,55 @@
-{% extends 'base.html.twig' %}
+{% extends 'account/layout.html.twig' %}
 
 {% block title %}FactuProIA - Assistant virtuel{% endblock %}
 
-{% block body %}
-<div class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold text-gray-900 mb-4">Assistant virtuel FactuProIA</h1>
-    
-    <!-- Zone de chat -->
-    <div class="bg-gray-50 rounded-lg p-4 h-96 overflow-y-auto mb-4" id="chatBox">
-        <!-- Les messages seront ajoutés ici dynamiquement -->
-    </div>
+{% block content %}
+    <div class="bg-white w-full h-screen flex flex-col">
+        <div class="container mx-auto px-4 max-w-4xl w-full h-full py-6 flex flex-col">
+            <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center flex-none">Assistant virtuel FactuProIA</h1>
+            
+            <!-- Zone de chat -->
+            <div class="bg-gray-50 rounded-xl shadow-lg p-6 flex-1 overflow-y-auto mb-6" id="chatBox" style="height: calc(100vh - 220px); min-height: 400px;">
+                <!-- Message de bienvenue initial -->
+                <div class="flex justify-start mb-6">
+                    <div class="rounded-lg p-4 max-w-[85%] shadow-sm bg-white border border-gray-200 text-gray-800">
+                        <p class="font-medium mb-3">👋 Bonjour ! Je suis l'assistant FactuPro, comment puis-je vous aider aujourd'hui ?</p>
+                        <p class="text-sm text-gray-600 mb-4">Voici quelques exemples de ce que vous pouvez me demander :</p>
+                        <div class="space-y-2">
+                            <button class="example-prompt w-full text-left px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-sm text-blue-600 transition-colors duration-200">
+                                💼 Comment créer une nouvelle facture ?
+                            </button>
+                            <button class="example-prompt w-full text-left px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-sm text-blue-600 transition-colors duration-200">
+                                📊 Quel est le statut de mes factures impayées ?
+                            </button>
+                            <button class="example-prompt w-full text-left px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-sm text-blue-600 transition-colors duration-200">
+                                📝 Comment modifier les informations de mon entreprise ?
+                            </button>
+                            <button class="example-prompt w-full text-left px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-sm text-blue-600 transition-colors duration-200">
+                                🔍 Comment rechercher une facture spécifique ?
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <!-- Zone de saisie -->
-    <form id="chatForm" class="mt-4">
-        <div class="flex space-x-4">
-            <input type="text" 
-                   id="userInput" 
-                   class="flex-1 rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                   placeholder="Posez votre question...">
-            <button type="submit"
-                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                </svg>
-                Envoyer
-            </button>
+            <!-- Zone de saisie -->
+            <form id="chatForm" class="flex-none">
+                <div class="flex space-x-4">
+                    <input type="text" 
+                           id="userInput" 
+                           class="flex-1 rounded-lg border border-gray-300 px-4 py-3 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                           placeholder="Posez votre question...">
+                    <button type="submit"
+                            class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                        <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                        </svg>
+                        Envoyer
+                    </button>
+                </div>
+            </form>
         </div>
-    </form>
-</div>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
@@ -37,6 +59,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatForm = document.getElementById('chatForm');
     const userInput = document.getElementById('userInput');
     const chatBox = document.getElementById('chatBox');
+
+    // Gestionnaire pour les exemples de prompts
+    document.querySelectorAll('.example-prompt').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const promptText = this.textContent.trim();
+            userInput.value = promptText;
+            userInput.focus();
+        });
+    });
 
     chatForm.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -58,10 +90,10 @@ document.addEventListener('DOMContentLoaded', function() {
         messageDiv.className = `flex ${type === 'user' ? 'justify-end' : 'justify-start'} mb-4`;
         
         const messageBubble = document.createElement('div');
-        messageBubble.className = `rounded-lg p-3 max-w-3/4 ${
+        messageBubble.className = `rounded-lg p-4 max-w-[70%] shadow-sm ${
             type === 'user' 
-                ? 'bg-indigo-600 text-white' 
-                : 'bg-gray-200 text-gray-900'
+                ? 'bg-blue-600 text-white' 
+                : 'bg-white border border-gray-200 text-gray-800'
         }`;
         messageBubble.textContent = content;
         

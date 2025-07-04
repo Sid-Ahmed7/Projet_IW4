@@ -1,149 +1,94 @@
 {# templates/_sidebar.html.twig #}
-<aside class="fixed inset-y-0 left-0 w-64 lg:w-72 bg-black text-white shadow-2xl z-50 border-r border-neutral-800">
-    <div class="flex grow flex-col gap-y-5 overflow-y-auto px-4 lg:px-6 py-4">
-        {# Header avec logo amélioré #}
-        <div class="flex h-16 shrink-0 items-center border-b border-neutral-800 pb-4">
-            <a href="{{ path('app_account') }}" class="flex items-center space-x-3 group">
-                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-neutral-900 group-hover:bg-neutral-800 transition-all duration-300">
-                    <img src="/build/logo.svg" alt="Logo" class="h-6 w-auto" />
-                </div>
-                <div class="flex flex-col">
-                    <span class="text-lg lg:text-xl font-bold text-white group-hover:text-blue-200 transition-colors">FactuPro</span>
-                    <span class="text-xs text-neutral-400 font-medium hidden lg:block">Gestion de facturation</span>
-                </div>
-            </a>
+<aside class="fixed inset-y-0 left-0 w-60 bg-black text-white shadow-lg z-40 border-r border-neutral-800 flex flex-col justify-between">
+    <div>
+        <!-- Logo ou texte -->
+        <div class="flex items-center h-16 px-6 border-b border-neutral-800">
+            <span class="text-2xl font-bold tracking-tight">FactuPro</span>
         </div>
-
-        {# Navigation principale #}
-        <nav class="flex flex-1 flex-col">
-            <ul role="list" class="flex flex-1 flex-col gap-y-6 lg:gap-y-8">
-                {# Section Entreprises #}
+        <!-- Navigation -->
+        <nav class="mt-6">
+            <div class="px-6 mb-2 text-xs text-neutral-400 tracking-widest font-semibold">MES ORGANISATIONS</div>
+            <div class="px-2">
+                <!-- Liste des organisations -->
+                <a class="flex items-center gap-3 px-3 py-2 mb-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_account_company_index') }}">
+                    <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                    <span>Voir toutes mes organisations</span>
+                </a>
+                
+                {% if companies is defined and companies|length > 0 %}
+                    {% for company in companies %}
+                        <details class="group mb-2">
+                            <summary class="flex items-center justify-between px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium cursor-pointer select-none">
+                                <span class="flex items-center gap-2">
+                                    <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 21V7a2 2 0 0 1 2-2h2V3h2v2h2V3h2v2h2a2 2 0 0 1 2 2v14" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                    {{ company.name }}
+                                </span>
+                                <svg class="w-4 h-4 text-neutral-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                            </summary>
+                            <ul class="mt-1 space-y-1 pl-6">
+                                <li>
+                                    <a class="flex items-center gap-2 px-2 py-1 rounded hover:bg-neutral-800 transition text-sm" href="{{ path('app_company_devis', {'companyId': company.id}) }}">
+                                        <svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                        <span>Devis ({{ company.devis|length }})</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="flex items-center gap-2 px-2 py-1 rounded hover:bg-neutral-800 transition text-sm" href="{{ path('app_company_invoice', {'companyId': company.id}) }}">
+                                        <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                        <span>Factures ({{ company.invoices|length }})</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="flex items-center gap-2 px-2 py-1 rounded hover:bg-neutral-800 transition text-sm" href="{{ path('app_account_company_show', {'id': company.id}) }}">
+                                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                        <span>Voir l'organisation</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </details>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-neutral-400 text-sm px-3 py-2">Aucune organisation</div>
+                {% endif %}
+                
+                <a class="flex items-center gap-3 px-3 py-2 mt-4 rounded-md hover:bg-blue-900 transition text-sm font-medium" href="{{ path('app_account_company_new') }}">
+                    <svg class="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 5a1 1 0 0 1 1 1v3h3a1 1 0 1 1 0 2h-3v3a1 1 0 1 1-2 0v-3H6a1 1 0 1 1 0-2h3V6a1 1 0 0 1 1-1z"/></svg>
+                    <span class="font-semibold text-blue-200">Nouvelle organisation</span>
+                </a>
+            </div>
+            
+            <div class="px-6 mt-6 mb-2 text-xs text-neutral-400 tracking-widest font-semibold">LIENS RAPIDES</div>
+            <ul class="space-y-1 px-2">
                 <li>
-                    <div class="flex items-center gap-x-2 mb-3 lg:mb-4">
-                        <div class="h-1 w-4 lg:w-6 bg-gradient-to-r from-blue-500 to-blue-700 rounded-full"></div>
-                        <div class="text-xs font-bold text-neutral-300 uppercase tracking-wider">Mes entreprises</div>
-                    </div>
-                    <ul role="list" class="space-y-1 lg:space-y-2">
-                        {% for company in app.user.companies %}
-                            <li>
-                                <details class="group">
-                                    <summary class="flex items-center justify-between cursor-pointer rounded-lg lg:rounded-xl p-2 lg:p-3 text-neutral-200 hover:bg-neutral-900 hover:text-white transition-all duration-300 group-open:bg-neutral-900 group-open:text-white">
-                                        <div class="flex items-center gap-x-2 lg:gap-x-3">
-                                            <div class="flex h-6 w-6 lg:h-8 lg:w-8 shrink-0 items-center justify-center rounded-lg bg-blue-700 text-xs lg:text-sm font-bold text-white shadow-lg group-hover:bg-blue-600 group-hover:scale-110 transition-transform">
-                                                {{ company.name|first|upper }}
-                                            </div>
-                                            <span class="text-sm font-semibold truncate">{{ company.name }}</span>
-                                        </div>
-                                        <i class="ri-arrow-down-s-line transition-transform duration-300 group-open:rotate-180 text-neutral-400 text-sm lg:text-base"></i>
-                                    </summary>
-                                    <ul class="mt-1 lg:mt-2 space-y-1 px-2 lg:px-4">
-                                        <li>
-                                            <a href="{{ path('app_company_devis', {'companyId': company.id}) }}"
-                                               class="flex items-center gap-x-2 lg:gap-x-3 rounded-lg p-2 text-sm text-neutral-200 hover:bg-neutral-800 hover:text-white transition-all duration-200 group">
-                                                <div class="flex h-5 w-5 lg:h-6 lg:w-6 items-center justify-center rounded-md bg-blue-700/20 group-hover:bg-blue-600/40 transition-colors">
-                                                    <i class="bx bx-file text-xs lg:text-sm"></i>
-                                                </div>
-                                                <span>Devis</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ path('app_company_invoice', {'companyId': company.id}) }}"
-                                               class="flex items-center gap-x-2 lg:gap-x-3 rounded-lg p-2 text-sm text-neutral-200 hover:bg-neutral-800 hover:text-white transition-all duration-200 group">
-                                                <div class="flex h-5 w-5 lg:h-6 lg:w-6 items-center justify-center rounded-md bg-green-700/20 group-hover:bg-green-600/40 transition-colors">
-                                                    <i class="bx bx-receipt text-xs lg:text-sm"></i>
-                                                </div>
-                                                <span>Factures</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </details>
-                            </li>
-                        {% else %}
-                            <li class="text-sm text-neutral-400 px-2 lg:px-3 py-2 bg-neutral-900 rounded-lg border border-neutral-800">
-                                <div class="flex items-center gap-x-2">
-                                    <i class="bx bx-building text-neutral-400"></i>
-                                    <span>Aucune entreprise</span>
-                                </div>
-                            </li>
-                        {% endfor %}
-                        <li class="mt-2 lg:mt-3">
-                            <a href="{{ path('app_account_company_new') }}"
-                               class="group flex gap-x-2 lg:gap-x-3 rounded-lg lg:rounded-xl p-2 lg:p-3 text-sm text-neutral-200 hover:bg-blue-700 hover:text-white transition-all duration-300 border border-neutral-800 hover:border-blue-600">
-                                <div class="flex h-6 w-6 lg:h-8 lg:w-8 shrink-0 items-center justify-center rounded-lg bg-blue-700 text-white shadow-lg group-hover:bg-blue-600 group-hover:scale-110 transition-transform">
-                                    <i class="bx bx-plus text-sm lg:text-lg"></i>
-                                </div>
-                                <span class="font-semibold truncate">Nouvelle entreprise</span>
-                            </a>
-                        </li>
-                    </ul>
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_devis_index') }}">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                        <span>Tous mes devis</span>
+                    </a>
                 </li>
-
-                {# Section Liens Rapides #}
                 <li>
-                    <div class="flex items-center gap-x-2 mb-3 lg:mb-4">
-                        <div class="h-1 w-4 lg:w-6 bg-gradient-to-r from-indigo-500 to-purple-700 rounded-full"></div>
-                        <div class="text-xs font-bold text-neutral-300 uppercase tracking-wider">Liens rapides</div>
-                    </div>
-                    <ul role="list" class="space-y-1 lg:space-y-2">
-                        <li>
-                            <a href="{{ path('app_devis_index') }}"
-                               class="group flex gap-x-2 lg:gap-x-3 rounded-lg lg:rounded-xl p-2 lg:p-3 text-sm text-neutral-200 hover:bg-neutral-800 hover:text-white transition-all duration-300">
-                                <div class="flex h-6 w-6 lg:h-8 lg:w-8 items-center justify-center rounded-lg bg-indigo-700 text-white shadow-lg group-hover:bg-indigo-600 group-hover:scale-110 transition-transform">
-                                    <i class="bx bx-file text-sm lg:text-lg"></i>
-                                </div>
-                                <span class="font-semibold truncate">Mes devis</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ path('app_invoice_index') }}"
-                               class="group flex gap-x-2 lg:gap-x-3 rounded-lg lg:rounded-xl p-2 lg:p-3 text-sm text-neutral-200 hover:bg-neutral-800 hover:text-white transition-all duration-300">
-                                <div class="flex h-6 w-6 lg:h-8 lg:w-8 items-center justify-center rounded-lg bg-green-700 text-white shadow-lg group-hover:bg-green-600 group-hover:scale-110 transition-transform">
-                                    <i class="bx bx-receipt text-sm lg:text-lg"></i>
-                                </div>
-                                <span class="font-semibold truncate">Mes factures</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{ path('app_factupro_ia') }}"
-                               class="group flex gap-x-2 lg:gap-x-3 rounded-lg lg:rounded-xl p-2 lg:p-3 text-sm text-neutral-200 hover:bg-neutral-800 hover:text-white transition-all duration-300">
-                                <div class="flex h-6 w-6 lg:h-8 lg:w-8 items-center justify-center rounded-lg bg-purple-700 text-white shadow-lg group-hover:bg-purple-600 group-hover:scale-110 transition-transform">
-                                    <svg class="w-3 h-3 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-                                    </svg>
-                                </div>
-                                <span class="font-semibold truncate">FactuPro IA</span>
-                            </a>
-                        </li>
-                    </ul>
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_invoice_index') }}">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 2v4M16 2v4M4 10h16"/></svg>
+                        <span>Toutes mes factures</span>
+                    </a>
+                </li>
+                <li>
+                    <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_factupro_ia') }}">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3v2m6.364 1.636l-.707.707M21 12h-2m-7 7v2m-6.364-1.636l.707-.707M3 12h2m7-7V3m0 18v-2m-6.364-1.636l.707-.707M21 12h-2"/></svg>
+                        <span>FactuPro IA</span>
+                    </a>
                 </li>
             </ul>
         </nav>
-
-        {# Section Profil (en bas) #}
-        <li class="-mx-4 lg:-mx-6 mt-auto">
-            <div class="border-t border-neutral-800 pt-3 lg:pt-4">
-                <a href="{{ path('app_account_profile') }}"
-                   class="flex items-center gap-x-3 lg:gap-x-4 px-4 lg:px-6 py-2 lg:py-3 text-sm font-semibold text-white hover:bg-neutral-900 rounded-lg lg:rounded-xl transition-all duration-300 group">
-                    {% if app.user.picture %}
-                        <img src="{{ app.user.picture }}" alt="" class="h-8 w-8 lg:h-10 lg:w-10 rounded-full bg-neutral-800 ring-2 ring-neutral-700 group-hover:ring-blue-400 transition-all"/>
-                    {% else %}
-                        <div class="flex h-8 w-8 lg:h-10 lg:w-10 items-center justify-center rounded-full bg-blue-700 text-xs lg:text-sm font-bold text-white shadow-lg group-hover:bg-blue-600 group-hover:scale-110 transition-transform">
-                            {{ app.user.firstname|first|upper }}{{ app.user.lastname|first|upper }}
-                        </div>
-                    {% endif %}
-                    <div class="flex flex-col min-w-0">
-                        <span class="font-semibold truncate">{{ app.user.firstname }} {{ app.user.lastname }}</span>
-                        <span class="text-xs text-neutral-400 hidden lg:block">Mon profil</span>
-                    </div>
-                </a>
-                <a href="{{ path('app_logout') }}"
-                   class="flex items-center gap-x-3 lg:gap-x-4 px-4 lg:px-6 py-2 lg:py-3 text-sm font-semibold text-neutral-300 hover:bg-red-700 hover:text-white rounded-lg lg:rounded-xl transition-all duration-300 group mt-1 lg:mt-2">
-                    <div class="flex h-6 w-6 lg:h-8 lg:w-8 items-center justify-center rounded-lg bg-red-700/20 group-hover:bg-red-600/40 transition-colors">
-                        <i class="bx bx-log-out text-sm lg:text-lg"></i>
-                    </div>
-                    <span>Déconnexion</span>
-                </a>
-            </div>
-        </li>
+    </div>
+    <!-- Profil utilisateur -->
+    <div class="border-t border-neutral-800 px-6 py-4 flex flex-col gap-2">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-neutral-700 flex items-center justify-center text-white text-sm font-bold">{{ app.user.firstname|first|upper }}{{ app.user.lastname|first|upper }}</div>
+            <a href="{{ path('app_account_profile') }}" class="text-sm font-medium hover:underline">{{ app.user.firstname }} {{ app.user.lastname }}</a>
+        </div>
+        <a href="{{ path('app_logout') }}" class="flex items-center gap-2 mt-2 text-neutral-400 hover:text-red-400 text-sm font-medium transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12a9 9 0 1 1 18 0 9 9 0 0 1-18 0z"/></svg>
+            Déconnexion
+        </a>
     </div>
 </aside>

@@ -1,0 +1,143 @@
+{% extends 'account/company/base.html.twig' %}
+
+{% block company_content %}
+<div class="mb-6">
+    <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold">{{ company.name }}</h1>
+        <div class="flex space-x-2">
+            <a href="{{ path('app_account_company_edit', {'id': company.id}) }}" 
+               class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                Modifier
+            </a>
+            <a href="{{ path('app_account_company_index') }}" 
+               class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+                Retour
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Informations de l'organisation -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Informations générales -->
+    <div class="bg-gray-50 rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">Informations générales</h2>
+        
+        {% if company.logo %}
+            <div class="mb-4">
+                <img src="{{ asset('uploads/logos/' ~ company.logo) }}" alt="{{ company.name }}" class="h-20 w-20 rounded-full">
+            </div>
+        {% endif %}
+        
+        <div class="space-y-3">
+            <div>
+                <label class="text-sm font-medium text-gray-500">Nom</label>
+                <p class="text-gray-900">{{ company.name }}</p>
+            </div>
+            <div>
+                <label class="text-sm font-medium text-gray-500">Adresse</label>
+                <p class="text-gray-900">{{ company.address }}</p>
+            </div>
+            <div>
+                <label class="text-sm font-medium text-gray-500">Téléphone</label>
+                <p class="text-gray-900">{{ company.phoneNumber }}</p>
+            </div>
+            <div>
+                <label class="text-sm font-medium text-gray-500">Email</label>
+                <p class="text-gray-900">{{ company.email }}</p>
+            </div>
+            <div>
+                <label class="text-sm font-medium text-gray-500">SIRET</label>
+                <p class="text-gray-900">{{ company.siretNumber }}</p>
+            </div>
+            <div>
+                <label class="text-sm font-medium text-gray-500">Catégorie</label>
+                <p class="text-gray-900">{{ company.category }}</p>
+            </div>
+            <div>
+                <label class="text-sm font-medium text-gray-500">Statut</label>
+                <span class="px-2 py-1 rounded-full text-sm
+                    {% if company.state == 'Online' %}
+                        bg-green-100 text-green-800
+                    {% else %}
+                        bg-gray-100 text-gray-800
+                    {% endif %}">
+                    {{ company.state }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="bg-gray-50 rounded-lg p-6">
+        <h2 class="text-lg font-semibold mb-4">Statistiques</h2>
+        
+        <div class="grid grid-cols-2 gap-4">
+            <div class="bg-white rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-blue-600">{{ company.devis|length }}</div>
+                <div class="text-sm text-gray-500">Devis</div>
+            </div>
+            <div class="bg-white rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-green-600">{{ company.invoices|length }}</div>
+                <div class="text-sm text-gray-500">Factures</div>
+            </div>
+            <div class="bg-white rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-black">{{ company.hubusers|length }}</div>
+                <div class="text-sm text-gray-500">Utilisateurs</div>
+            </div>
+            <div class="bg-white rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-orange-600">{{ company.balance ?? '0.00' }}€</div>
+                <div class="text-sm text-gray-500">Solde</div>
+            </div>
+        </div>
+        
+        <div class="mt-4 space-y-2">
+            <div>
+                <label class="text-sm font-medium text-gray-500">Date de création</label>
+                <p class="text-gray-900">{{ company.createdAt|date('d/m/Y H:i') }}</p>
+            </div>
+            {% if company.updatedAt %}
+            <div>
+                <label class="text-sm font-medium text-gray-500">Dernière modification</label>
+                <p class="text-gray-900">{{ company.updatedAt|date('d/m/Y H:i') }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Actions rapides -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <a href="{{ path('app_company_devis', {'companyId': company.id}) }}" 
+       class="bg-blue-500 text-white p-4 rounded-lg hover:bg-blue-600 transition text-center">
+        <div class="text-lg font-semibold">Voir les devis</div>
+        <div class="text-sm opacity-75">{{ company.devis|length }} devis</div>
+    </a>
+    
+    <a href="{{ path('app_company_invoice', {'companyId': company.id}) }}" 
+       class="bg-green-500 text-white p-4 rounded-lg hover:bg-green-600 transition text-center">
+        <div class="text-lg font-semibold">Voir les factures</div>
+        <div class="text-sm opacity-75">{{ company.invoices|length }} factures</div>
+    </a>
+    
+    <a href="{{ path('app_devis_new') }}?company={{ company.id }}" 
+       class="bg-black text-white p-4 rounded-lg hover:bg-gray-800 transition text-center">
+        <div class="text-lg font-semibold">Nouveau devis</div>
+        <div class="text-sm opacity-75">Créer un devis</div>
+    </a>
+    
+    <a href="{{ path('app_account_company_invoice_new', {'companyId': company.id}) }}" 
+       class="bg-orange-500 text-white p-4 rounded-lg hover:bg-orange-600 transition text-center">
+        <div class="text-lg font-semibold">Nouvelle facture</div>
+        <div class="text-sm opacity-75">Créer une facture</div>
+    </a>
+</div>
+
+{% if company.banner %}
+<div class="mt-8">
+    <h2 class="text-lg font-semibold mb-4">Bannière</h2>
+    <img src="{{ asset('uploads/banners/' ~ company.banner) }}" alt="Bannière {{ company.name }}" class="w-full h-48 object-cover rounded-lg">
+</div>
+{% endif %}
+
+{% endblock %} 

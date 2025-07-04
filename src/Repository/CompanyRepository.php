@@ -54,4 +54,20 @@ public function findByCategoryId($categoryId)
         ->getQuery()
         ->getResult();
 }
+
+    /**
+     * Vérifie si une entreprise existe déjà par son nom (optionnellement par email)
+     */
+    public function existsByNameOrEmail(string $name, ?string $email = null): bool
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->select('count(c.id)')
+            ->where('LOWER(c.name) = :name')
+            ->setParameter('name', strtolower($name));
+        if ($email !== null) {
+            $qb->orWhere('LOWER(c.email) = :email')
+               ->setParameter('email', strtolower($email));
+        }
+        return (int)$qb->getQuery()->getSingleScalarResult() > 0;
+    }
 }
