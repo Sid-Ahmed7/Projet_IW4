@@ -2,6 +2,137 @@
 
 {% block title %}FactuProIA - Assistant virtuel{% endblock %}
 
+{% block stylesheets %}
+{{ parent() }}
+<link rel="stylesheet" href="{{ asset('build/589.d2b3e6ca.css') }}">
+<style>
+    .markdown-content h1, .markdown-content h2, .markdown-content h3 {
+        font-weight: bold;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    .markdown-content h1 { font-size: 1.5rem; }
+    .markdown-content h2 { font-size: 1.25rem; }
+    .markdown-content h3 { font-size: 1.125rem; }
+    .markdown-content ul, .markdown-content ol {
+        margin-left: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .markdown-content ul { list-style-type: disc; }
+    .markdown-content ol { list-style-type: decimal; }
+    .markdown-content table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    }
+    .markdown-content thead {
+        background-color: #f8fafc;
+        border-bottom: 2px solid #e2e8f0;
+    }
+    .markdown-content th {
+        background-color: #f8fafc;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #475569;
+        padding: 0.75rem 1rem;
+        text-align: left;
+    }
+    .markdown-content td {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #e2e8f0;
+        color: #1e293b;
+    }
+    .markdown-content tbody tr:nth-child(even) {
+        background-color: #f8fafc;
+    }
+    .markdown-content tbody tr:hover {
+        background-color: #f1f5f9;
+    }
+    .markdown-content code {
+        background-color: #f3f4f6;
+        padding: 0.2rem 0.4rem;
+        border-radius: 0.25rem;
+        font-family: monospace;
+        font-size: 0.875rem;
+    }
+    .markdown-content blockquote {
+        border-left: 4px solid #e5e7eb;
+        padding: 0.5rem 0 0.5rem 1rem;
+        margin: 1rem 0;
+        color: #6b7280;
+        background-color: #f9fafb;
+        border-radius: 0 0.25rem 0.25rem 0;
+    }
+    .markdown-content p {
+        margin-bottom: 1rem;
+        line-height: 1.5;
+    }
+    .markdown-content strong {
+        font-weight: 600;
+        color: #1e293b;
+    }
+    .markdown-content em {
+        font-style: italic;
+    }
+
+    /* Animation de chargement */
+    .typing-indicator {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+    }
+    
+    .typing-indicator span {
+        height: 8px;
+        width: 8px;
+        margin: 0 2px;
+        background-color: #93c5fd;
+        border-radius: 50%;
+        display: inline-block;
+        opacity: 0.4;
+    }
+    
+    .typing-indicator span:nth-child(1) {
+        animation: typing 1s infinite ease-in-out;
+    }
+    
+    .typing-indicator span:nth-child(2) {
+        animation: typing 1s infinite ease-in-out 0.2s;
+    }
+    
+    .typing-indicator span:nth-child(3) {
+        animation: typing 1s infinite ease-in-out 0.4s;
+    }
+    
+    @keyframes typing {
+        0% {
+            transform: translateY(0);
+            opacity: 0.4;
+        }
+        50% {
+            transform: translateY(-8px);
+            opacity: 0.8;
+        }
+        100% {
+            transform: translateY(0);
+            opacity: 0.4;
+        }
+    }
+
+    /* Désactiver le bouton pendant le chargement */
+    .button-disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
     <div class="bg-white w-full h-screen flex flex-col">
         <div class="container mx-auto px-4 max-w-4xl w-full h-full py-6 flex flex-col">
@@ -12,20 +143,26 @@
                 <!-- Message de bienvenue initial -->
                 <div class="flex justify-start mb-6">
                     <div class="rounded-lg p-4 max-w-[85%] shadow-sm bg-white border border-gray-200 text-gray-800">
-                        <p class="font-medium mb-3">👋 Bonjour ! Je suis l'assistant FactuPro, comment puis-je vous aider aujourd'hui ?</p>
+                        <p class="font-medium mb-3">👋 Bonjour ! Je suis l'assistant FactuPro, spécialisé en comptabilité et fiscalité. Comment puis-je vous aider aujourd'hui ?</p>
                         <p class="text-sm text-gray-600 mb-4">Voici quelques exemples de ce que vous pouvez me demander :</p>
                         <div class="space-y-2">
                             <button class="example-prompt w-full text-left px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-sm text-blue-600 transition-colors duration-200">
-                                💼 Comment créer une nouvelle facture ?
+                                💰 Simuler mes charges pour une micro-entreprise
                             </button>
                             <button class="example-prompt w-full text-left px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-sm text-blue-600 transition-colors duration-200">
-                                📊 Quel est le statut de mes factures impayées ?
+                                📊 Comparer les régimes fiscaux pour mon activité
                             </button>
                             <button class="example-prompt w-full text-left px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-sm text-blue-600 transition-colors duration-200">
-                                📝 Comment modifier les informations de mon entreprise ?
+                                🧮 Calculer ma TVA du trimestre
                             </button>
                             <button class="example-prompt w-full text-left px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-sm text-blue-600 transition-colors duration-200">
-                                🔍 Comment rechercher une facture spécifique ?
+                                👥 Estimer le coût d'embauche d'un salarié
+                            </button>
+                            <button class="example-prompt w-full text-left px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-sm text-blue-600 transition-colors duration-200">
+                                💼 Comparer rémunération en salaire vs dividendes
+                            </button>
+                            <button class="example-prompt w-full text-left px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-sm text-blue-600 transition-colors duration-200">
+                                📈 Calculer mon seuil de rentabilité
                             </button>
                         </div>
                     </div>
@@ -54,11 +191,55 @@
 
 {% block javascripts %}
 {{ parent() }}
+<script src="{{ asset('build/runtime.155e4ddd.js') }}"></script>
+<script src="{{ asset('build/app.c6ec21cf.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
+// Configuration globale
+const API_BASE_URL = '/account/factuproIA';
+
+// Configuration de marked pour le Markdown
+marked.setOptions({
+    breaks: true,
+    gfm: true,
+    headerIds: false
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     const chatForm = document.getElementById('chatForm');
     const userInput = document.getElementById('userInput');
     const chatBox = document.getElementById('chatBox');
+    const submitButton = chatForm.querySelector('button[type="submit"]');
+    let isWaitingForResponse = false;
+
+    // Fonction pour ajouter l'indicateur de chargement
+    function addLoadingIndicator() {
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'flex justify-start mb-4';
+        loadingDiv.innerHTML = `
+            <div class="rounded-lg p-4 max-w-[85%] shadow-sm bg-white border border-gray-200">
+                <div class="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        `;
+        chatBox.appendChild(loadingDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        return loadingDiv;
+    }
+
+    // Fonction pour désactiver/activer le formulaire
+    function setFormState(disabled) {
+        userInput.disabled = disabled;
+        submitButton.disabled = disabled;
+        if (disabled) {
+            submitButton.classList.add('button-disabled');
+        } else {
+            submitButton.classList.remove('button-disabled');
+        }
+    }
 
     // Gestionnaire pour les exemples de prompts
     document.querySelectorAll('.example-prompt').forEach(button => {
@@ -70,37 +251,169 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    chatForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const message = userInput.value.trim();
-        if (!message) return;
+    // Gestion du contexte de conversation
+    const conversationContext = {
+        getContext: function() {
+            return JSON.parse(localStorage.getItem('factuproIA_context') || '{}');
+        },
+        setContext: function(context) {
+            localStorage.setItem('factuproIA_context', JSON.stringify(context));
+        },
+        updateContext: function(key, value) {
+            const context = this.getContext();
+            context[key] = value;
+            this.setContext(context);
+        },
+        clearContext: function() {
+            localStorage.removeItem('factuproIA_context');
+        }
+    };
 
-        // Ajouter le message de l'utilisateur
-        addMessage('user', message);
-        userInput.value = '';
-
-        // Simuler une réponse de l'IA (à remplacer par un vrai appel API)
-        setTimeout(() => {
-            addMessage('assistant', 'Je traite votre demande...');
-        }, 500);
-    });
-
-    function addMessage(type, content) {
+    function addMessage(type, content, data = null) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `flex ${type === 'user' ? 'justify-end' : 'justify-start'} mb-4`;
         
         const messageBubble = document.createElement('div');
-        messageBubble.className = `rounded-lg p-4 max-w-[70%] shadow-sm ${
+        messageBubble.className = `rounded-lg p-4 max-w-[85%] shadow-sm ${
             type === 'user' 
                 ? 'bg-blue-600 text-white' 
                 : 'bg-white border border-gray-200 text-gray-800'
         }`;
-        messageBubble.textContent = content;
+
+        if (type === 'user') {
+            messageBubble.textContent = content;
+        } else {
+            // Pour les messages de l'assistant, on utilise Markdown
+            const markdownContent = document.createElement('div');
+            markdownContent.className = 'markdown-content';
+            markdownContent.innerHTML = marked.parse(content);
+            messageBubble.appendChild(markdownContent);
+
+            // Si nous avons des données structurées, les afficher
+            if (data && typeof data === 'object') {
+                if (data.table) {
+                    const table = createTable(data.table);
+                    messageBubble.appendChild(table);
+                } else {
+                    const dataList = document.createElement('dl');
+                    dataList.className = 'grid grid-cols-2 gap-2 mt-2 text-sm';
+                    
+                    for (const [key, value] of Object.entries(data)) {
+                        const dt = document.createElement('dt');
+                        dt.className = 'font-medium text-gray-600';
+                        dt.textContent = key.replace(/_/g, ' ').charAt(0).toUpperCase() + key.slice(1);
+                        
+                        const dd = document.createElement('dd');
+                        dd.className = 'text-gray-800';
+                        dd.textContent = typeof value === 'number' ? value.toLocaleString() : value;
+                        
+                        dataList.appendChild(dt);
+                        dataList.appendChild(dd);
+                    }
+                    messageBubble.appendChild(dataList);
+                }
+            }
+        }
         
         messageDiv.appendChild(messageBubble);
         chatBox.appendChild(messageDiv);
         chatBox.scrollTop = chatBox.scrollHeight;
     }
+
+    function createTable(data) {
+        const table = document.createElement('table');
+        table.className = 'min-w-full divide-y divide-gray-200 mt-3';
+        
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        Object.keys(data[0]).forEach(key => {
+            const th = document.createElement('th');
+            th.className = 'px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider';
+            th.textContent = key.replace(/_/g, ' ');
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+        
+        const tbody = document.createElement('tbody');
+        tbody.className = 'divide-y divide-gray-200';
+        data.forEach(row => {
+            const tr = document.createElement('tr');
+            Object.values(row).forEach(value => {
+                const td = document.createElement('td');
+                td.className = 'px-3 py-2 text-sm text-gray-800';
+                td.textContent = value;
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+        
+        return table;
+    }
+
+    chatForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const message = userInput.value.trim();
+        if (!message || isWaitingForResponse) return;
+
+        isWaitingForResponse = true;
+        setFormState(true);
+
+        // Ajouter le message de l'utilisateur
+        addMessage('user', message);
+        userInput.value = '';
+
+        // Ajouter l'indicateur de chargement
+        const loadingIndicator = addLoadingIndicator();
+
+        try {
+            const context = conversationContext.getContext();
+            const response = await fetch(`${API_BASE_URL}/chat`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ 
+                    message,
+                    context: context
+                }),
+                credentials: 'same-origin'
+            });
+
+            // Supprimer l'indicateur de chargement
+            loadingIndicator.remove();
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            if (data.success) {
+                if (data.context) {
+                    conversationContext.setContext(data.context);
+                }
+                addMessage('assistant', data.response, data.data);
+            } else {
+                addMessage('assistant', data.error || 'Désolé, une erreur est survenue lors du traitement de votre demande.');
+            }
+        } catch (error) {
+            // Supprimer l'indicateur de chargement en cas d'erreur aussi
+            loadingIndicator.remove();
+            console.error('Error:', error);
+            addMessage('assistant', 'Désolé, une erreur est survenue lors de la communication avec le serveur.');
+        } finally {
+            isWaitingForResponse = false;
+            setFormState(false);
+        }
+    });
+
+    // Nettoyer le contexte quand on quitte la page
+    window.addEventListener('beforeunload', function() {
+        conversationContext.clearContext();
+    });
 });
 </script>
 {% endblock %}

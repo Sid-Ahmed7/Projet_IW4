@@ -32,3 +32,33 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Service\AI\GroqService:
+        arguments:
+            $httpClient: '@http_client'
+            $apiKey: '%env(GROQ_API_KEY)%'
+            $tools:
+                ListOrganizationsTool: '@App\Service\AI\Tools\ListOrganizationsTool'
+                GetInvoiceStatsTool: '@App\Service\AI\Tools\GetInvoiceStatsTool'
+                CalculateTaxesTool: '@App\Service\AI\Tools\CalculateTaxesTool'
+                GetQuoteStatsTool: '@App\Service\AI\Tools\GetQuoteStatsTool'
+                ListQuotesTool: '@App\Service\AI\Tools\ListQuotesTool'
+                QuoteFollowUpTool: '@App\Service\AI\Tools\QuoteFollowUpTool'
+
+    App\Service\AI\Tools\ListOrganizationsTool:
+        autowire: true
+        
+    App\Service\AI\Tools\GetInvoiceStatsTool:
+        autowire: true
+        
+    App\Service\AI\Tools\CalculateTaxesTool:
+        autowire: true
+
+    App\Service\AI\Tools\GetQuoteStatsTool:
+        autowire: true
+        
+    App\Service\AI\Tools\ListQuotesTool:
+        autowire: true
+        
+    App\Service\AI\Tools\QuoteFollowUpTool:
+        autowire: true

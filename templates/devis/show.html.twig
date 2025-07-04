@@ -64,21 +64,7 @@
 				</div>
 				<div class="text-right">
 					<div class="font-medium text-gray-500 text-xs uppercase tracking-wide mb-2">Destinataire</div>
-					{% if devi.clientName or devi.clientEmail or devi.clientAddress or devi.clientPhone %}
-						{% if devi.clientName %}
-							<div class="font-medium">{{ devi.clientName }}</div>
-						{% endif %}
-						{% if devi.clientAddress %}
-							<div>{{ devi.clientAddress }}</div>
-						{% endif %}
-						{% if devi.clientEmail %}
-							<div>{{ devi.clientEmail }}</div>
-						{% endif %}
-						{% if devi.clientPhone %}
-							<div>{{ devi.clientPhone }}</div>
-						{% endif %}
-					{% elseif devi.company %}
-						{# Fallback vers l'ancienne logique si pas d'infos client spécifiques #}
+					{% if devi.company %}
 						<div class="font-medium">{{ devi.company.name }}</div>
 						<div>{{ devi.company.address }}</div>
 						<div>{{ devi.company.email }}</div>

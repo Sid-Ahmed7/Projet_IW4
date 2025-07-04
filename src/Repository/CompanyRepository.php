@@ -55,6 +55,16 @@ public function findByCategoryId($categoryId)
         ->getResult();
 }
 
+    public function findByUser($user): array
+    {
+        return $this->createQueryBuilder('c')
+            ->join('c.users', 'u')
+            ->where('u.id = :userId')
+            ->setParameter('userId', $user->getId())
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * Vérifie si une entreprise existe déjà par son nom (optionnellement par email)
      */
