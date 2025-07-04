@@ -1,15 +1,15 @@
 {# templates/_sidebar.html.twig #}
-<aside class="fixed inset-y-0 left-0 w-64 lg:w-72 bg-gradient-to-b from-slate-800 via-slate-900 to-slate-950 text-white shadow-2xl z-50 border-r border-slate-700">
+<aside class="fixed inset-y-0 left-0 w-64 lg:w-72 bg-black text-white shadow-2xl z-50 border-r border-neutral-800">
     <div class="flex grow flex-col gap-y-5 overflow-y-auto px-4 lg:px-6 py-4">
         {# Header avec logo amélioré #}
-        <div class="flex h-16 shrink-0 items-center border-b border-slate-600 pb-4">
+        <div class="flex h-16 shrink-0 items-center border-b border-neutral-800 pb-4">
             <a href="{{ path('app_account') }}" class="flex items-center space-x-3 group">
-                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 group-hover:bg-blue-500 transition-all duration-300">
+                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-neutral-900 group-hover:bg-neutral-800 transition-all duration-300">
                     <img src="/build/logo.svg" alt="Logo" class="h-6 w-auto" />
                 </div>
                 <div class="flex flex-col">
                     <span class="text-lg lg:text-xl font-bold text-white group-hover:text-blue-200 transition-colors">FactuPro</span>
-                    <span class="text-xs text-slate-300 font-medium hidden lg:block">Gestion de facturation</span>
+                    <span class="text-xs text-neutral-400 font-medium hidden lg:block">Gestion de facturation</span>
                 </div>
             </a>
         </div>
@@ -20,27 +20,27 @@
                 {# Section Entreprises #}
                 <li>
                     <div class="flex items-center gap-x-2 mb-3 lg:mb-4">
-                        <div class="h-1 w-4 lg:w-6 bg-gradient-to-r from-blue-400 to-blue-500 rounded-full"></div>
-                        <div class="text-xs font-bold text-slate-300 uppercase tracking-wider">Mes entreprises</div>
+                        <div class="h-1 w-4 lg:w-6 bg-gradient-to-r from-blue-500 to-blue-700 rounded-full"></div>
+                        <div class="text-xs font-bold text-neutral-300 uppercase tracking-wider">Mes entreprises</div>
                     </div>
                     <ul role="list" class="space-y-1 lg:space-y-2">
                         {% for company in app.user.companies %}
                             <li>
                                 <details class="group">
-                                    <summary class="flex items-center justify-between cursor-pointer rounded-lg lg:rounded-xl p-2 lg:p-3 text-slate-200 hover:bg-slate-700 hover:text-white transition-all duration-300 group-open:bg-slate-700 group-open:text-white">
+                                    <summary class="flex items-center justify-between cursor-pointer rounded-lg lg:rounded-xl p-2 lg:p-3 text-neutral-200 hover:bg-neutral-900 hover:text-white transition-all duration-300 group-open:bg-neutral-900 group-open:text-white">
                                         <div class="flex items-center gap-x-2 lg:gap-x-3">
-                                            <div class="flex h-6 w-6 lg:h-8 lg:w-8 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-xs lg:text-sm font-bold text-white shadow-lg group-hover:bg-blue-500 group-hover:scale-110 transition-transform">
+                                            <div class="flex h-6 w-6 lg:h-8 lg:w-8 shrink-0 items-center justify-center rounded-lg bg-blue-700 text-xs lg:text-sm font-bold text-white shadow-lg group-hover:bg-blue-600 group-hover:scale-110 transition-transform">
                                                 {{ company.name|first|upper }}
                                             </div>
                                             <span class="text-sm font-semibold truncate">{{ company.name }}</span>
                                         </div>
-                                        <i class="ri-arrow-down-s-line transition-transform duration-300 group-open:rotate-180 text-slate-400 text-sm lg:text-base"></i>
+                                        <i class="ri-arrow-down-s-line transition-transform duration-300 group-open:rotate-180 text-neutral-400 text-sm lg:text-base"></i>
                                     </summary>
                                     <ul class="mt-1 lg:mt-2 space-y-1 px-2 lg:px-4">
                                         <li>
                                             <a href="{{ path('app_company_devis', {'companyId': company.id}) }}"
-                                               class="flex items-center gap-x-2 lg:gap-x-3 rounded-lg p-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition-all duration-200 group">
-                                                <div class="flex h-5 w-5 lg:h-6 lg:w-6 items-center justify-center rounded-md bg-blue-600/20 group-hover:bg-blue-500/40 transition-colors">
+                                               class="flex items-center gap-x-2 lg:gap-x-3 rounded-lg p-2 text-sm text-neutral-200 hover:bg-neutral-800 hover:text-white transition-all duration-200 group">
+                                                <div class="flex h-5 w-5 lg:h-6 lg:w-6 items-center justify-center rounded-md bg-blue-700/20 group-hover:bg-blue-600/40 transition-colors">
                                                     <i class="bx bx-file text-xs lg:text-sm"></i>
                                                 </div>
                                                 <span>Devis</span>
@@ -48,8 +48,8 @@
                                         </li>
                                         <li>
                                             <a href="{{ path('app_company_invoice', {'companyId': company.id}) }}"
-                                               class="flex items-center gap-x-2 lg:gap-x-3 rounded-lg p-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition-all duration-200 group">
-                                                <div class="flex h-5 w-5 lg:h-6 lg:w-6 items-center justify-center rounded-md bg-green-600/20 group-hover:bg-green-500/40 transition-colors">
+                                               class="flex items-center gap-x-2 lg:gap-x-3 rounded-lg p-2 text-sm text-neutral-200 hover:bg-neutral-800 hover:text-white transition-all duration-200 group">
+                                                <div class="flex h-5 w-5 lg:h-6 lg:w-6 items-center justify-center rounded-md bg-green-700/20 group-hover:bg-green-600/40 transition-colors">
                                                     <i class="bx bx-receipt text-xs lg:text-sm"></i>
                                                 </div>
                                                 <span>Factures</span>
@@ -59,17 +59,17 @@
                                 </details>
                             </li>
                         {% else %}
-                            <li class="text-sm text-slate-400 px-2 lg:px-3 py-2 bg-slate-800/50 rounded-lg border border-slate-600">
+                            <li class="text-sm text-neutral-400 px-2 lg:px-3 py-2 bg-neutral-900 rounded-lg border border-neutral-800">
                                 <div class="flex items-center gap-x-2">
-                                    <i class="bx bx-building text-slate-400"></i>
+                                    <i class="bx bx-building text-neutral-400"></i>
                                     <span>Aucune entreprise</span>
                                 </div>
                             </li>
                         {% endfor %}
                         <li class="mt-2 lg:mt-3">
                             <a href="{{ path('app_account_company_new') }}"
-                               class="group flex gap-x-2 lg:gap-x-3 rounded-lg lg:rounded-xl p-2 lg:p-3 text-sm text-slate-200 hover:bg-blue-600 hover:text-white transition-all duration-300 border border-slate-600 hover:border-blue-500">
-                                <div class="flex h-6 w-6 lg:h-8 lg:w-8 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-white shadow-lg group-hover:bg-blue-500 group-hover:scale-110 transition-transform">
+                               class="group flex gap-x-2 lg:gap-x-3 rounded-lg lg:rounded-xl p-2 lg:p-3 text-sm text-neutral-200 hover:bg-blue-700 hover:text-white transition-all duration-300 border border-neutral-800 hover:border-blue-600">
+                                <div class="flex h-6 w-6 lg:h-8 lg:w-8 shrink-0 items-center justify-center rounded-lg bg-blue-700 text-white shadow-lg group-hover:bg-blue-600 group-hover:scale-110 transition-transform">
                                     <i class="bx bx-plus text-sm lg:text-lg"></i>
                                 </div>
                                 <span class="font-semibold truncate">Nouvelle entreprise</span>
@@ -81,14 +81,14 @@
                 {# Section Liens Rapides #}
                 <li>
                     <div class="flex items-center gap-x-2 mb-3 lg:mb-4">
-                        <div class="h-1 w-4 lg:w-6 bg-gradient-to-r from-indigo-400 to-purple-500 rounded-full"></div>
-                        <div class="text-xs font-bold text-slate-300 uppercase tracking-wider">Liens rapides</div>
+                        <div class="h-1 w-4 lg:w-6 bg-gradient-to-r from-indigo-500 to-purple-700 rounded-full"></div>
+                        <div class="text-xs font-bold text-neutral-300 uppercase tracking-wider">Liens rapides</div>
                     </div>
                     <ul role="list" class="space-y-1 lg:space-y-2">
                         <li>
                             <a href="{{ path('app_devis_index') }}"
-                               class="group flex gap-x-2 lg:gap-x-3 rounded-lg lg:rounded-xl p-2 lg:p-3 text-sm text-slate-200 hover:bg-slate-700 hover:text-white transition-all duration-300">
-                                <div class="flex h-6 w-6 lg:h-8 lg:w-8 items-center justify-center rounded-lg bg-indigo-600 text-white shadow-lg group-hover:bg-indigo-500 group-hover:scale-110 transition-transform">
+                               class="group flex gap-x-2 lg:gap-x-3 rounded-lg lg:rounded-xl p-2 lg:p-3 text-sm text-neutral-200 hover:bg-neutral-800 hover:text-white transition-all duration-300">
+                                <div class="flex h-6 w-6 lg:h-8 lg:w-8 items-center justify-center rounded-lg bg-indigo-700 text-white shadow-lg group-hover:bg-indigo-600 group-hover:scale-110 transition-transform">
                                     <i class="bx bx-file text-sm lg:text-lg"></i>
                                 </div>
                                 <span class="font-semibold truncate">Mes devis</span>
@@ -96,8 +96,8 @@
                         </li>
                         <li>
                             <a href="{{ path('app_invoice_index') }}"
-                               class="group flex gap-x-2 lg:gap-x-3 rounded-lg lg:rounded-xl p-2 lg:p-3 text-sm text-slate-200 hover:bg-slate-700 hover:text-white transition-all duration-300">
-                                <div class="flex h-6 w-6 lg:h-8 lg:w-8 items-center justify-center rounded-lg bg-green-600 text-white shadow-lg group-hover:bg-green-500 group-hover:scale-110 transition-transform">
+                               class="group flex gap-x-2 lg:gap-x-3 rounded-lg lg:rounded-xl p-2 lg:p-3 text-sm text-neutral-200 hover:bg-neutral-800 hover:text-white transition-all duration-300">
+                                <div class="flex h-6 w-6 lg:h-8 lg:w-8 items-center justify-center rounded-lg bg-green-700 text-white shadow-lg group-hover:bg-green-600 group-hover:scale-110 transition-transform">
                                     <i class="bx bx-receipt text-sm lg:text-lg"></i>
                                 </div>
                                 <span class="font-semibold truncate">Mes factures</span>
@@ -105,8 +105,8 @@
                         </li>
                         <li>
                             <a href="{{ path('app_factupro_ia') }}"
-                               class="group flex gap-x-2 lg:gap-x-3 rounded-lg lg:rounded-xl p-2 lg:p-3 text-sm text-slate-200 hover:bg-slate-700 hover:text-white transition-all duration-300">
-                                <div class="flex h-6 w-6 lg:h-8 lg:w-8 items-center justify-center rounded-lg bg-purple-600 text-white shadow-lg group-hover:bg-purple-500 group-hover:scale-110 transition-transform">
+                               class="group flex gap-x-2 lg:gap-x-3 rounded-lg lg:rounded-xl p-2 lg:p-3 text-sm text-neutral-200 hover:bg-neutral-800 hover:text-white transition-all duration-300">
+                                <div class="flex h-6 w-6 lg:h-8 lg:w-8 items-center justify-center rounded-lg bg-purple-700 text-white shadow-lg group-hover:bg-purple-600 group-hover:scale-110 transition-transform">
                                     <svg class="w-3 h-3 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                                     </svg>
@@ -121,24 +121,24 @@
 
         {# Section Profil (en bas) #}
         <li class="-mx-4 lg:-mx-6 mt-auto">
-            <div class="border-t border-slate-600 pt-3 lg:pt-4">
+            <div class="border-t border-neutral-800 pt-3 lg:pt-4">
                 <a href="{{ path('app_account_profile') }}"
-                   class="flex items-center gap-x-3 lg:gap-x-4 px-4 lg:px-6 py-2 lg:py-3 text-sm font-semibold text-white hover:bg-slate-700 rounded-lg lg:rounded-xl transition-all duration-300 group">
+                   class="flex items-center gap-x-3 lg:gap-x-4 px-4 lg:px-6 py-2 lg:py-3 text-sm font-semibold text-white hover:bg-neutral-900 rounded-lg lg:rounded-xl transition-all duration-300 group">
                     {% if app.user.picture %}
-                        <img src="{{ app.user.picture }}" alt="" class="h-8 w-8 lg:h-10 lg:w-10 rounded-full bg-slate-600 ring-2 ring-slate-500 group-hover:ring-blue-400 transition-all"/>
+                        <img src="{{ app.user.picture }}" alt="" class="h-8 w-8 lg:h-10 lg:w-10 rounded-full bg-neutral-800 ring-2 ring-neutral-700 group-hover:ring-blue-400 transition-all"/>
                     {% else %}
-                        <div class="flex h-8 w-8 lg:h-10 lg:w-10 items-center justify-center rounded-full bg-blue-600 text-xs lg:text-sm font-bold text-white shadow-lg group-hover:bg-blue-500 group-hover:scale-110 transition-transform">
+                        <div class="flex h-8 w-8 lg:h-10 lg:w-10 items-center justify-center rounded-full bg-blue-700 text-xs lg:text-sm font-bold text-white shadow-lg group-hover:bg-blue-600 group-hover:scale-110 transition-transform">
                             {{ app.user.firstname|first|upper }}{{ app.user.lastname|first|upper }}
                         </div>
                     {% endif %}
                     <div class="flex flex-col min-w-0">
                         <span class="font-semibold truncate">{{ app.user.firstname }} {{ app.user.lastname }}</span>
-                        <span class="text-xs text-slate-300 hidden lg:block">Mon profil</span>
+                        <span class="text-xs text-neutral-400 hidden lg:block">Mon profil</span>
                     </div>
                 </a>
                 <a href="{{ path('app_logout') }}"
-                   class="flex items-center gap-x-3 lg:gap-x-4 px-4 lg:px-6 py-2 lg:py-3 text-sm font-semibold text-slate-300 hover:bg-red-600 hover:text-white rounded-lg lg:rounded-xl transition-all duration-300 group mt-1 lg:mt-2">
-                    <div class="flex h-6 w-6 lg:h-8 lg:w-8 items-center justify-center rounded-lg bg-red-600/20 group-hover:bg-red-500/40 transition-colors">
+                   class="flex items-center gap-x-3 lg:gap-x-4 px-4 lg:px-6 py-2 lg:py-3 text-sm font-semibold text-neutral-300 hover:bg-red-700 hover:text-white rounded-lg lg:rounded-xl transition-all duration-300 group mt-1 lg:mt-2">
+                    <div class="flex h-6 w-6 lg:h-8 lg:w-8 items-center justify-center rounded-lg bg-red-700/20 group-hover:bg-red-600/40 transition-colors">
                         <i class="bx bx-log-out text-sm lg:text-lg"></i>
                     </div>
                     <span>Déconnexion</span>
