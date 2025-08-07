@@ -46,12 +46,13 @@ class DevisType extends AbstractType
             ->add('company', EntityType::class, [
                 'class' => Company::class,
                 'choice_label' => 'name',
-                'label' => 'Organisation émettrice',
+                'label' => 'Organisation destinataire (Client)',
                 'required' => true,
+                'placeholder' => 'Sélectionnez l\'entreprise cliente',
                 'query_builder' => function (EntityRepository $er) use ($user) {
+                    // Afficher TOUTES les entreprises, pas seulement celles créées par l'utilisateur
                     return $er->createQueryBuilder('c')
-                        ->where('c.createdBy = :userId')
-                        ->setParameter('userId', $user->getId());
+                        ->orderBy('c.name', 'ASC');
                 },
             ])
         ;

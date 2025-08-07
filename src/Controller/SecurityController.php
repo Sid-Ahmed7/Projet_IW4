@@ -9,6 +9,7 @@ use Symfony\Component\Config\Util\Exception\XmlParsingException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Address;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface; // Ajoutez cette ligne
@@ -71,7 +72,7 @@ public function reset(Request $request, MailerInterface $mailer, UserRepository 
 
             // Créer l'email
             $email = (new Email())
-                ->from('leonceyopa@gmail.com')
+                ->from(new Address('leonceyopa@gmail.com', 'FactuPro'))
                 ->to($user->getEmail())
                 ->subject('Your password reset request')
                 ->html('<p>To reset your password, please click the link below</p><a href="http://localhost:8000/reset-password?token=' . $resetToken . '">Reset Password</a>');
@@ -123,7 +124,7 @@ public function resetPassword(Request $request, UserRepository $userRepository, 
 
         // Envoyer un e-mail de confirmation
         $email = (new Email())
-        ->from('leonceyopa@gmail.com')
+        ->from(new Address('leonceyopa@gmail.com', 'FactuPro'))
         ->to($user->getEmail())
         ->subject('Confirmation de changement de mot de passe')
         ->text('Votre mot de passe a été changé avec succès.')

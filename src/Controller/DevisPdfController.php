@@ -13,6 +13,7 @@ use App\Entity\Devis;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Attachment;
 use Symfony\Component\Security\Core\Security;
 
@@ -22,11 +23,37 @@ class DevisPdfController extends AbstractController
     #[Route('/devis/pdf/{id}', name: 'app_devis_pdf', methods: ['GET'])]
     public function generateDevisPdf(EntityManagerInterface $em, $id): Response
     {
-
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         $devis = $em->getRepository(Devis::class)->find($id);
 
         if (!$devis) {
             throw $this->createNotFoundException('Le devis demandé n\'existe pas.');
+        }
+        
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        
+        // Vérifier l'accès au devis
+        $hasAccess = false;
+        
+        // 1. L'utilisateur est le créateur du devis
+        if ($devis->getHubuser() === $user) {
+            $hasAccess = true;
+        }
+        
+        // 2. L'utilisateur fait partie de l'entreprise destinataire
+        if ($devis->getCompany() && $user->getCompany() === $devis->getCompany()) {
+            $hasAccess = true;
+        }
+        
+        // 3. L'utilisateur est le créateur de l'entreprise destinataire
+        if ($devis->getCompany() && $devis->getCompany()->getCreatedBy() === $user->getId()) {
+            $hasAccess = true;
+        }
+        
+        if (!$hasAccess) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce devis.');
         }
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'Arial');
@@ -52,6 +79,8 @@ class DevisPdfController extends AbstractController
     #[Route('/devis/send/pdf/{id}', name: 'app_devis_send_pdf')]
     public function sendDevisPdf(EntityManagerInterface $em, MailerInterface $mailer, Security $security, $id): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
         $devis = $em->getRepository(Devis::class)->find($id);
 
         if (!$devis) {
@@ -65,11 +94,16 @@ class DevisPdfController extends AbstractController
         if (!$user) {
             throw $this->createNotFoundException('Utilisateur non trouvé.');
         }
+        
+        // Seul le créateur du devis peut l'envoyer par email
+        if ($devis->getHubuser() !== $user) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce devis.');
+        }
 
-        // Assurez-vous que l'utilisateur a une adresse e-mail valide
-        $userEmail = $user->getEmail();
-        if (!$userEmail) {
-            throw new \Exception('L\'utilisateur n\'a pas d\'adresse e-mail valide.');
+        // L'email doit être envoyé au CLIENT (l'entreprise), pas à l'utilisateur connecté
+        $clientEmail = $devis->getCompany()?->getEmail();
+        if (!$clientEmail) {
+            throw new \Exception('L\'entreprise n\'a pas d\'adresse e-mail valide.');
         }
 
 
@@ -85,8 +119,8 @@ class DevisPdfController extends AbstractController
 
         // Créer l'e-mail
         $email = (new Email())
-            ->from('leonceyopa@gmail.com')
-            ->to($userEmail)
+            ->from(new Address('leonceyopa@gmail.com', 'FactuPro'))
+            ->to($clientEmail)
             ->subject('Votre devis')
             ->html($this->renderView('devis/devis_pdf.html.twig', ['devi' => $devis]))
             ->attach($output, "devis_{$devis->getId()}.pdf", 'application/pdf');

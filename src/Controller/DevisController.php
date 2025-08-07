@@ -18,6 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Uid\Uuid;
 
 
@@ -73,9 +74,35 @@ class DevisController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $devis->setHubuser($user);
-            $devis->setPrice('0');
             $devis->setState('En attente');
             $devis->setPaymentToken(Uuid::v4());
+            
+            // Traitement des lignes du devis
+            $devisAssets = $request->request->all('devis_assets') ?? [];
+            $totalPrice = 0;
+            
+            foreach ($devisAssets as $assetData) {
+                if (!empty($assetData['name']) && !empty($assetData['description'])) {
+                    $devisAsset = new DevisAsset();
+                    $devisAsset->setName($assetData['name']);
+                    $devisAsset->setDescription($assetData['description']);
+                    $devisAsset->setUnitPrice((int)($assetData['unitPrice'] * 100)); // Prix unitaire en centimes
+                    $devisAsset->setPrice((int)($assetData['unitPrice'] * $assetData['size'] * 100)); // Prix total en centimes
+                    $devisAsset->setSize((int)$assetData['size']);
+                    $devisAsset->setState('En attente');
+                    $devisAsset->setCreatedAt(new \DateTimeImmutable());
+                    $devisAsset->setDevis($devis);
+                    
+                    // Calculer le total pour cette ligne
+                    $lineTotal = $assetData['unitPrice'] * $assetData['size'];
+                    $totalPrice += $lineTotal;
+                    
+                    $entityManager->persist($devisAsset);
+                }
+            }
+            
+            // Définir le prix total du devis
+            $devis->setPrice((string)$totalPrice);
             
             $entityManager->persist($devis);
             
@@ -103,19 +130,56 @@ class DevisController extends AbstractController
     #[Route('/devis/{id}/show', name: 'app_devis_show', methods: ['GET'])]
     public function show(Devis $devi, Request $request): Response
     {
-    $context = $request->query->get('context', 'account'); // par défaut "account"
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        
+        // Vérifier l'accès au devis
+        $hasAccess = false;
+        
+        // 1. L'utilisateur est le créateur du devis
+        if ($devi->getHubuser() === $user) {
+            $hasAccess = true;
+        }
+        
+        // 2. L'utilisateur fait partie de l'entreprise destinataire
+        if ($devi->getCompany() && $user->getCompany() === $devi->getCompany()) {
+            $hasAccess = true;
+        }
+        
+        // 3. L'utilisateur est le créateur de l'entreprise destinataire
+        if ($devi->getCompany() && $devi->getCompany()->getCreatedBy() === $user->getId()) {
+            $hasAccess = true;
+        }
+        
+        if (!$hasAccess) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce devis.');
+        }
+        
+        $context = $request->query->get('context', 'account'); // par défaut "account"
 
-    return $this->render('devis/show.html.twig', [
-        'devi' => $devi,
-        'assets' => $devi->getDevisAssets(),
-        'context' => $context,
-    ]);
+        return $this->render('devis/show.html.twig', [
+            'devi' => $devi,
+            'assets' => $devi->getDevisAssets(),
+            'context' => $context,
+        ]);
     }
 
 
     #[Route('/devis/{id}/edit', name: 'app_devis_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Devis $devi, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        
+        // Seul le créateur du devis peut le modifier
+        if ($devi->getHubuser() !== $user) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce devis.');
+        }
+        
         $form = $this->createForm(DevisType::class, $devi);
         $form->handleRequest($request);
 
@@ -177,6 +241,16 @@ class DevisController extends AbstractController
     #[Route('/devis/{id}/edit/price', name: 'app_devis_edit_price', methods: ['GET', 'POST'])]
     public function updatePrice(Request $request, Devis $devi, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        
+        // Seul le créateur du devis peut modifier le prix
+        if ($devi->getHubuser() !== $user) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce devis.');
+        }
+        
         $devisAssets = $devi->getDevisAssets();
 
         $totalPrice = 0;
@@ -193,6 +267,16 @@ class DevisController extends AbstractController
     #[Route('/devis/{id}', name: 'app_devis_delete', methods: ['POST'])]
     public function delete(Request $request, Devis $devi, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        
+        // Seul le créateur du devis peut le supprimer
+        if ($devi->getHubuser() !== $user) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce devis.');
+        }
+        
         if ($this->isCsrfTokenValid('delete' . $devi->getId(), $request->request->get('_token'))) {
             $entityManager->remove($devi);
             $entityManager->flush();
@@ -203,25 +287,43 @@ class DevisController extends AbstractController
 
     #[Route('/devis/{id}/relance', name: 'app_devis_reminder')]
     public function sendReminderDevis(Devis $devis, MailerInterface $mailer): Response
-{
-    $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-    /** @var \App\Entity\User $user */
-    $user = $this->getUser();
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
 
-    if ($devis->getHubuser() !== $user) {
-        throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce devis.');
+        // Vérifier l'accès au devis (même logique que la méthode show)
+        $hasAccess = false;
+        
+        // 1. L'utilisateur est le créateur du devis
+        if ($devis->getHubuser() === $user) {
+            $hasAccess = true;
+        }
+        
+        // 2. L'utilisateur fait partie de l'entreprise destinataire
+        if ($devis->getCompany() && $user->getCompany() === $devis->getCompany()) {
+            $hasAccess = true;
+        }
+        
+        // 3. L'utilisateur est le créateur de l'entreprise destinataire
+        if ($devis->getCompany() && $devis->getCompany()->getCreatedBy() === $user->getId()) {
+            $hasAccess = true;
+        }
+        
+        if (!$hasAccess) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce devis.');
+        }
+
+        $email = (new Email())
+            ->from(new Address('ibrahim60200@gmail.com', 'FactuPro'))
+            ->to($devis->getHubuser()->getEmail()) // Envoyer au CRÉATEUR du devis
+            ->subject('Relance de devis - ' . $devis->getTitle())
+            ->html("<p>Bonjour {$devis->getHubuser()->getFirstname()},<br> Ceci est une relance pour le devis intitulé : <strong>{$devis->getTitle()}</strong>.<br> Montant estimé : <strong>{$devis->getPrice()} €</strong><br> Destinataire : <strong>{$devis->getCompany()->getName()}</strong></p>");
+
+        $mailer->send($email);
+
+        $this->addFlash('success', 'Relance envoyée avec succès.');
+        return $this->redirectToRoute('app_devis_show', ['id' => $devis->getId()]);
     }
-
-    $email = (new Email())
-        ->from('ibrahim60200@gmail.com') // ← ton adresse dans le .env
-        ->to($user->getEmail())
-        ->subject('Relance de devis - ' . $devis->getTitle())
-        ->html("<p>Bonjour {$user->getFirstname()},<br> Ceci est une relance pour le devis intitulé : <strong>{$devis->getTitle()}</strong>.<br> Montant estimé : <strong>{$devis->getPrice()} €</strong></p>");
-
-    $mailer->send($email);
-
-    $this->addFlash('success', 'Relance envoyée avec succès.');
-    return $this->redirectToRoute('app_devis_show', ['id' => $devis->getId()]);
-}
 }

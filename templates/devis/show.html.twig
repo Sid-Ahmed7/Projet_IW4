@@ -52,12 +52,8 @@
 						<div>{{ emitterCompany.address }}</div>
 						<div>{{ emitterCompany.email }}</div>
 						<div>{{ emitterCompany.phoneNumber }}</div>
-					{% elseif devi.company %}
-						<div class="font-medium">{{ devi.company.name }}</div>
-						<div>{{ devi.company.address }}</div>
-						<div>{{ devi.company.email }}</div>
-						<div>{{ devi.company.phoneNumber }}</div>
 					{% else %}
+						{# Fallback vers l'utilisateur si pas d'entreprise #}
 						<div class="font-medium">{{ devi.hubuser.firstname }} {{ devi.hubuser.lastname }}</div>
 						<div>{{ devi.hubuser.email }}</div>
 					{% endif %}

@@ -25,6 +25,7 @@ use Stripe\Subscription;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Mailer\MailerInterface;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -338,7 +339,7 @@ public function successDevis(
 
     // ✉️ Envoyer la facture par email
     $email = (new Email())
-        ->from('ibrahim60200@gmail.com')
+        ->from(new Address('ibrahim60200@gmail.com', 'FactuPro'))
         ->to($devis->getCompany()?->getEmail() ?? $user->getEmail()) // fallback
         ->subject('Facture - Devis #' . $devis->getId())
         ->text('Merci pour votre paiement. Veuillez trouver la facture en pièce jointe.')
@@ -420,7 +421,7 @@ public function sendStripeLinkByEmail(Devis $devis, MailerInterface $mailer): Re
     ], UrlGeneratorInterface::ABSOLUTE_URL);
 
     $email = (new Email())
-        ->from('ibrahim60200@gmail.com')
+        ->from(new Address('ibrahim60200@gmail.com', 'FactuPro'))
         ->to($devis->getCompany()->getEmail())
         ->subject('Paiement de votre devis #' . $devis->getId())
         ->html("<p>Bonjour,<br>Voici votre lien pour procéder au paiement du devis :<br><a href=\"$link\">$link</a></p>");
