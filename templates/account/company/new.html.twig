@@ -44,14 +44,14 @@
 
             <div>
                 {{ form_label(form.logo, 'Logo', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
-                {{ form_widget(form.logo, {'attr': {'class': 'mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100'}}) }}
+                {{ form_widget(form.logo, {'attr': {'class': 'mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100', 'onchange': 'validateFileSize(this)'}}) }}
                 <p class="mt-1 text-sm text-gray-500">Formats acceptés: JPG, PNG, GIF. Taille maximum: 5MB.</p>
                 {{ form_errors(form.logo) }}
             </div>
 
             <div>
                 {{ form_label(form.banner, 'Bannière', {'label_attr': {'class': 'block text-sm font-medium text-gray-700'}}) }}
-                {{ form_widget(form.banner, {'attr': {'class': 'mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100'}}) }}
+                {{ form_widget(form.banner, {'attr': {'class': 'mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100', 'onchange': 'validateFileSize(this)'}}) }}
                 <p class="mt-1 text-sm text-gray-500">Formats acceptés: JPG, PNG, GIF. Taille maximum: 5MB.</p>
                 {{ form_errors(form.banner) }}
             </div>
@@ -67,4 +67,25 @@
         </div>
     {{ form_end(form) }}
 </div>
+
+<script>
+function validateFileSize(input) {
+    const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
+    const file = input.files[0];
+    
+    if (file && file.size > maxSizeInBytes) {
+        alert('Le fichier sélectionné est trop volumineux. Taille maximum autorisée : 5MB');
+        input.value = ''; // Réinitialiser le champ
+        return false;
+    }
+    
+    // Affichage de la taille du fichier pour information
+    if (file) {
+        const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+        console.log(`Fichier sélectionné: ${file.name} (${sizeInMB} MB)`);
+    }
+    
+    return true;
+}
+</script>
 {% endblock %} 

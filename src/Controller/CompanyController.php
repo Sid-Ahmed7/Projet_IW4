@@ -47,6 +47,23 @@ class CompanyController extends AbstractController
             throw $this->createAccessDeniedException('Vous devez vous connecter pour créer une entreprise.');
         }
 
+        // Vérifier que l'utilisateur a un compte de type "company"
+        if ($user->getAccountType() !== 'company') {
+            $this->addFlash('error', 'Seuls les comptes entreprise peuvent créer une organisation.');
+            return $this->redirectToRoute('app_account');
+        }
+
+        // Vérification si la taille du POST dépasse la limite PHP
+        if ($request->isMethod('POST') && empty($_POST) && empty($_FILES) && $_SERVER['CONTENT_LENGTH'] > 0) {
+            $postMaxSize = ini_get('post_max_size');
+            $this->addFlash('error', "Le fichier uploadé est trop volumineux. Taille maximum autorisée : {$postMaxSize}");
+            
+            return $this->render('account/company/new.html.twig', [
+                'company' => $company,
+                'form' => $this->createForm(CompanyType::class, $company)->createView(),
+            ]);
+        }
+
         $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
 
