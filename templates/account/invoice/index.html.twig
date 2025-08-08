@@ -71,7 +71,10 @@
                                     <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                         <div class="flex items-center justify-end space-x-3">
                                             <a href="{{ path('app_invoice_show', {'id': invoice.id}) }}" class="text-blue-600 hover:text-blue-900">Voir</a>
-                                            <a href="{{ path('app_invoice_edit', {'id': invoice.id}) }}" class="text-blue-600 hover:text-blue-900">Modifier</a>
+                                            {# Bouton Modifier - seulement si la facture n'est pas payée #}
+                                            {% if invoice.state != 'paid' %}
+                                                <a href="{{ path('app_invoice_edit', {'id': invoice.id}) }}" class="text-blue-600 hover:text-blue-900">Modifier</a>
+                                            {% endif %}
                                             <a href="{{ path('app_invoice_pdf', {'id': invoice.id}) }}" class="text-blue-600 hover:text-blue-900">PDF</a>
                                         </div>
                                     </td>
