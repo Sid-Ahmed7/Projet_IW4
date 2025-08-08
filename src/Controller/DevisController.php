@@ -86,15 +86,18 @@ class DevisController extends AbstractController
                     $devisAsset = new DevisAsset();
                     $devisAsset->setName($assetData['name']);
                     $devisAsset->setDescription($assetData['description']);
-                    $devisAsset->setUnitPrice((int)($assetData['unitPrice'] * 100)); // Prix unitaire en centimes
-                    $devisAsset->setPrice((int)($assetData['unitPrice'] * $assetData['size'] * 100)); // Prix total en centimes
-                    $devisAsset->setSize((int)$assetData['size']);
+                    
+                    $unitPrice = floatval($assetData['unitPrice']);
+                    $size = floatval($assetData['size']);
+                    $lineTotal = $unitPrice * $size;
+                    
+                    $devisAsset->setUnitPrice($unitPrice); // Prix unitaire en euros
+                    $devisAsset->setPrice($lineTotal); // Prix total en euros
+                    $devisAsset->setSize($size);
                     $devisAsset->setState('En attente');
                     $devisAsset->setCreatedAt(new \DateTimeImmutable());
                     $devisAsset->setDevis($devis);
                     
-                    // Calculer le total pour cette ligne
-                    $lineTotal = $assetData['unitPrice'] * $assetData['size'];
                     $totalPrice += $lineTotal;
                     
                     $entityManager->persist($devisAsset);
@@ -175,8 +178,25 @@ class DevisController extends AbstractController
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
         
-        // Seul le créateur du devis peut le modifier
-        if ($devi->getHubuser() !== $user) {
+        // Seul le créateur du devis ou l'entreprise destinataire peut le modifier
+        $canEdit = false;
+        
+        // Le créateur peut toujours éditer
+        if ($devi->getHubuser() === $user) {
+            $canEdit = true;
+        }
+        
+        // Si l'utilisateur a des entreprises et que le devis est destiné à l'une d'elles
+        if (!$canEdit && $user->getAccountType() === 'company') {
+            foreach ($user->getCompanies() as $userCompany) {
+                if ($devi->getCompany() === $userCompany) {
+                    $canEdit = true;
+                    break;
+                }
+            }
+        }
+        
+        if (!$canEdit) {
             throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce devis.');
         }
         
@@ -246,8 +266,25 @@ class DevisController extends AbstractController
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
         
-        // Seul le créateur du devis peut modifier le prix
-        if ($devi->getHubuser() !== $user) {
+        // Seul le créateur du devis ou l'entreprise destinataire peut modifier le prix
+        $canEdit = false;
+        
+        // Le créateur peut toujours éditer
+        if ($devi->getHubuser() === $user) {
+            $canEdit = true;
+        }
+        
+        // Si l'utilisateur a des entreprises et que le devis est destiné à l'une d'elles
+        if (!$canEdit && $user->getAccountType() === 'company') {
+            foreach ($user->getCompanies() as $userCompany) {
+                if ($devi->getCompany() === $userCompany) {
+                    $canEdit = true;
+                    break;
+                }
+            }
+        }
+        
+        if (!$canEdit) {
             throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce devis.');
         }
         
@@ -255,13 +292,82 @@ class DevisController extends AbstractController
 
         $totalPrice = 0;
         foreach ($devisAssets as $devisAsset) {
-            $totalPrice += $devisAsset->getPrice();
+            // Recalculer le prix à partir du prix unitaire et de la taille
+            $unitPrice = $devisAsset->getUnitPrice();
+            $size = $devisAsset->getSize();
+            $lineTotal = $unitPrice * $size;
+            
+            // Mettre à jour le prix de la ligne
+            $devisAsset->setPrice($lineTotal);
+            $totalPrice += $lineTotal;
         }
+        
         $devi->setUpdatedAt(new \DateTimeImmutable());
         $devi->setPrice((string)$totalPrice);
         $entityManager->flush();
 
         return $this->redirectToRoute('app_devis_show', ['id' => $devi->getId()]);
+    }
+
+    #[Route('/devis/{id}/recalculate', name: 'app_devis_recalculate', methods: ['GET'])]
+    public function recalculatePrice(Devis $devi, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        
+        // Seul le créateur du devis ou l'entreprise destinataire peut recalculer
+        $canEdit = false;
+        
+        // Le créateur peut toujours recalculer
+        if ($devi->getHubuser() === $user) {
+            $canEdit = true;
+        }
+        
+        // Si l'utilisateur a des entreprises et que le devis est destiné à l'une d'elles
+        if (!$canEdit && $user->getAccountType() === 'company') {
+            foreach ($user->getCompanies() as $userCompany) {
+                if ($devi->getCompany() === $userCompany) {
+                    $canEdit = true;
+                    break;
+                }
+            }
+        }
+        
+        if (!$canEdit) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce devis.');
+        }
+        
+        $devisAssets = $devi->getDevisAssets();
+        $totalPrice = 0;
+        
+        foreach ($devisAssets as $devisAsset) {
+            // Recalculer le prix de chaque ligne à partir du prix unitaire et de la quantité
+            $unitPrice = $devisAsset->getUnitPrice(); // En centimes ou euros selon le contexte
+            $size = $devisAsset->getSize();
+            
+            // Si le prix unitaire est très grand (probablement en centimes), on le divise par 100
+            if ($unitPrice > 10000) {
+                $unitPriceInEuros = $unitPrice / 100;
+            } else {
+                $unitPriceInEuros = $unitPrice;
+            }
+            
+            $lineTotal = $unitPriceInEuros * $size;
+            $totalPrice += $lineTotal;
+            
+            // Mettre à jour le prix de la ligne (en euros)
+            $devisAsset->setPrice($lineTotal);
+            $devisAsset->setUnitPrice($unitPriceInEuros);
+        }
+        
+        $devi->setUpdatedAt(new \DateTimeImmutable());
+        $devi->setPrice((string)$totalPrice);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Prix du devis recalculé avec succès.');
+        return $this->redirectToRoute('app_devis_index');
     }
 
     #[Route('/devis/{id}', name: 'app_devis_delete', methods: ['POST'])]

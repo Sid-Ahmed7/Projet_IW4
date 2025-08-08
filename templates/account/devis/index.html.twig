@@ -1,138 +1,140 @@
 {% extends 'account/layout.html.twig' %}
 
-{% block title %}Mes devis{% endblock %}
+{% block title %}Mes devis
+{% endblock %}
 
 {% block content %}
-    <div class="bg-white shadow rounded-lg p-6">
-        <div class="sm:flex sm:items-center">
-            <div class="sm:flex-auto">
-                <h1 class="text-2xl font-bold mb-6">Mes devis</h1>
-            </div>
-            <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                <a href="{{ path('app_devis_new') }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
-                    <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    Nouveau devis
-                </a>
-            </div>
-        </div>
+	<div class="bg-white shadow rounded-lg p-6">
+		<div class="sm:flex sm:items-center">
+			<div class="sm:flex-auto">
+				<h1 class="text-2xl font-bold mb-6">Mes devis</h1>
+			</div>
+			<div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+				<a href="{{ path('app_devis_new') }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+					<svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+					</svg>
+					Nouveau devis
+				</a>
+			</div>
+		</div>
 
-        {# Filtres #}
-        <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div>
-                <label for="search" class="block text-sm font-medium text-gray-700">Rechercher</label>
-                <div class="mt-1">
-                    <input type="text" id="search" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Rechercher...">
-                </div>
-            </div>
-            <div>
-                <label for="dateStart" class="block text-sm font-medium text-gray-700">Date début</label>
-                <div class="mt-1">
-                    <input type="date" id="dateStart" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                </div>
-            </div>
-            <div>
-                <label for="dateEnd" class="block text-sm font-medium text-gray-700">Date fin</label>
-                <div class="mt-1">
-                    <input type="date" id="dateEnd" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                </div>
-            </div>
-        </div>
+		{# Filtres #}
+		<div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+			<div>
+				<label for="search" class="block text-sm font-medium text-gray-700">Rechercher</label>
+				<div class="mt-1">
+					<input type="text" id="search" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="Rechercher...">
+				</div>
+			</div>
+			<div>
+				<label for="dateStart" class="block text-sm font-medium text-gray-700">Date début</label>
+				<div class="mt-1">
+					<input type="date" id="dateStart" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+				</div>
+			</div>
+			<div>
+				<label for="dateEnd" class="block text-sm font-medium text-gray-700">Date fin</label>
+				<div class="mt-1">
+					<input type="date" id="dateEnd" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+				</div>
+			</div>
+		</div>
 
-        <div class="mt-8 flow-root">
-            <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                    <table class="min-w-full divide-y divide-gray-300">
-                        <thead>
-                            <tr>
-                                <th class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Numéro</th>
-                                <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date</th>
-                                <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Assignation</th>
-                                <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Montant</th>
-                                <th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Statut</th>
-                                <th class="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                                    <span class="sr-only">Actions</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody id="devisTableBody" class="divide-y divide-gray-200">
-                            {% for devi in devis %}
-                                <tr data-date="{{ devi.createdAt|date('Y-m-d') }}" data-client="{{ devi.company ? devi.company.name : '' }}" data-number="{{ devi.id }}">
-                                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900">{{ devi.id }}</td>
-                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ devi.createdAt|date('d/m/Y') }}</td>
-                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ devi.company ? devi.company.name : 'Non Assigné' }}</td>
-                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ devi.price }} €</td>
-                                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                        <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium
-                                            {% if devi.state == 'accepted' %}
-                                                bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20
-                                            {% elseif devi.state == 'pending' %}
-                                                bg-yellow-50 text-yellow-700 ring-1 ring-inset ring-yellow-600/20
-                                            {% else %}
-                                                bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20
-                                            {% endif %}
-                                        ">
-                                            {{ devi.state }}
-                                        </span>
-                                    </td>
-                                    <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                        <div class="flex items-center justify-end space-x-3">
-                                            <a href="{{ path('app_devis_show', {'id': devi.id}) }}" class="text-blue-600 hover:text-blue-900">Voir</a>
-                                            <a href="{{ path('app_devis_edit', {'id': devi.id}) }}" class="text-blue-600 hover:text-blue-900">Modifier</a>
-                                            <a href="{{ path('app_devis_pdf', {'id': devi.id}) }}" class="text-blue-600 hover:text-blue-900">PDF</a>
-                                            {% if devi.state != 'Facturé' %}
-                                                <a href="{{ path('stripe_devis_payment', {'id': devi.id}) }}" class="text-green-600 hover:text-green-900">Payer</a>
-                                            {% endif %}
+		<div class="mt-8 flow-root">
+			<div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+				<div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+					<table class="min-w-full divide-y divide-gray-300">
+						<thead>
+							<tr>
+								<th class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900">Numéro</th>
+								<th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date</th>
+								<th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Assignation</th>
+								<th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Montant</th>
+								<th class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Statut</th>
+								<th class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+									<span class="sr-only">Actions</span>
+								</th>
+							</tr>
+						</thead>
+						<tbody id="devisTableBody" class="divide-y divide-gray-200">
+							{% for devi in devis %}
+								<tr data-date="{{ devi.createdAt|date('Y-m-d') }}" data-client="{{ devi.company ? devi.company.name : '' }}" data-number="{{ devi.id }}">
+									<td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900">{{ devi.id }}</td>
+									<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ devi.createdAt|date('d/m/Y') }}</td>
+									<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ devi.company ? devi.company.name : 'Non Assigné' }}</td>
+									<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ devi.price|number_format(2, ',', ' ') }} €</td>
+									<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+										<span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium
+												                                            {% if devi.state == 'accepted' %}
+												                                                bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20
+												                                            {% elseif devi.state == 'pending' %}
+												                                                bg-yellow-50 text-yellow-700 ring-1 ring-inset ring-yellow-600/20
+												                                            {% else %}
+												                                                bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20
+												                                            {% endif %}
+												                                        ">
+											{{ devi.state }}
+										</span>
+									</td>
+									<td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+										<div class="flex items-center justify-end space-x-3">
+											<a href="{{ path('app_devis_show', {'id': devi.id}) }}" class="text-blue-600 hover:text-blue-900">Voir</a>
+											<a href="{{ path('app_devis_edit', {'id': devi.id}) }}" class="text-blue-600 hover:text-blue-900">Modifier</a>
+											<a href="{{ path('app_devis_recalculate', {'id': devi.id}) }}" class="text-orange-600 hover:text-orange-900" title="Recalculer le prix">Recalc.</a>
+											<a href="{{ path('app_devis_pdf', {'id': devi.id}) }}" class="text-blue-600 hover:text-blue-900">PDF</a>
+											{% if devi.state != 'Facturé' %}
+												<a href="{{ path('stripe_devis_payment', {'id': devi.id}) }}" class="text-green-600 hover:text-green-900">Payer</a>
+											{% endif %}
 
 
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% else %}
-                                <tr>
-                                    <td colspan="6" class="text-center py-4 text-sm text-gray-500">Aucun devis trouvé</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+										</div>
+									</td>
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="6" class="text-center py-4 text-sm text-gray-500">Aucun devis trouvé</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}
 
 {% block javascripts %}
-{{ parent() }}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('search');
-    const dateStartInput = document.getElementById('dateStart');
-    const dateEndInput = document.getElementById('dateEnd');
-    const rows = document.querySelectorAll('#devisTableBody tr[data-date]');
-
-    function filterTable() {
-        const searchTerm = searchInput.value.toLowerCase();
-        const startDate = dateStartInput.value ? new Date(dateStartInput.value) : null;
-        const endDate = dateEndInput.value ? new Date(dateEndInput.value) : null;
-
-        rows.forEach(row => {
-            const date = new Date(row.dataset.date);
-            const client = row.dataset.client.toLowerCase();
-            const number = row.dataset.number.toLowerCase();
-            const matchesSearch = !searchTerm || 
-                client.includes(searchTerm) || 
-                number.includes(searchTerm);
-            const matchesDate = (!startDate || date >= startDate) && 
-                              (!endDate || date <= endDate);
-
-            row.style.display = matchesSearch && matchesDate ? '' : 'none';
-        });
-    }
-
-    searchInput.addEventListener('input', filterTable);
-    dateStartInput.addEventListener('change', filterTable);
-    dateEndInput.addEventListener('change', filterTable);
-});
-</script>
-{% endblock %} 
+	{{ parent() }}
+	 <script>
+	document.addEventListener('DOMContentLoaded', function() {
+	    const searchInput = document.getElementById('search');
+	    const dateStartInput = document.getElementById('dateStart');
+	    const dateEndInput = document.getElementById('dateEnd');
+	    const rows = document.querySelectorAll('#devisTableBody tr[data-date]');
+	
+	    function filterTable() {
+	        const searchTerm = searchInput.value.toLowerCase();
+	        const startDate = dateStartInput.value ? new Date(dateStartInput.value) : null;
+	        const endDate = dateEndInput.value ? new Date(dateEndInput.value) : null;
+	
+	        rows.forEach(row => {
+	            const date = new Date(row.dataset.date);
+	            const client = row.dataset.client.toLowerCase();
+	            const number = row.dataset.number.toLowerCase();
+	            const matchesSearch = !searchTerm || 
+	                client.includes(searchTerm) || 
+	                number.includes(searchTerm);
+	            const matchesDate = (!startDate || date >= startDate) && 
+	                              (!endDate || date <= endDate);
+	
+	            row.style.display = matchesSearch && matchesDate ? '' : 'none';
+	        });
+	    }
+	
+	    searchInput.addEventListener('input', filterTable);
+	    dateStartInput.addEventListener('change', filterTable);
+	    dateEndInput.addEventListener('change', filterTable);
+	});
+	</script>
+{% endblock %}
