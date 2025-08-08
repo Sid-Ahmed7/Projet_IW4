@@ -42,6 +42,38 @@ class AccountController extends AbstractController
         $finalized_devis = array_filter($devis, fn($d) => $d->getState() === 'Finalisé');
         $conversion_rate = count($devis) > 0 ? round((count($finalized_devis) / count($devis)) * 100, 1) : 0;
 
+        // Nouvelles statistiques détaillées
+        $pending_devis = array_filter($devis, fn($d) => $d->getState() === 'En attente');
+        $accepted_devis = array_filter($devis, fn($d) => $d->getState() === 'Accepté');
+        $rejected_devis = array_filter($devis, fn($d) => $d->getState() === 'Refusé');
+        
+        // Devis par entreprise
+        $devis_by_company = [];
+        foreach ($devis as $d) {
+            if ($d->getCompany()) {
+                $companyName = $d->getCompany()->getName();
+                if (!isset($devis_by_company[$companyName])) {
+                    $devis_by_company[$companyName] = ['count' => 0, 'total' => 0];
+                }
+                $devis_by_company[$companyName]['count']++;
+                $devis_by_company[$companyName]['total'] += floatval($d->getPrice());
+            }
+        }
+        
+        // Trier par nombre de devis (décroissant)
+        uasort($devis_by_company, fn($a, $b) => $b['count'] <=> $a['count']);
+        
+        // Revenus potentiels (total des devis en attente et acceptés)
+        $potential_revenue = 0;
+        foreach ($devis as $d) {
+            if (in_array($d->getState(), ['En attente', 'Accepté'])) {
+                $potential_revenue += floatval($d->getPrice());
+            }
+        }
+        
+        // Entreprises les plus actives (celles avec le plus de devis)
+        $top_companies = array_slice($devis_by_company, 0, 5, true);
+
         // Préparer les données pour le graphique
         $monthly_data = [];
         $current_year = (new \DateTime())->format('Y');
@@ -99,7 +131,14 @@ class AccountController extends AbstractController
             'months' => array_keys($monthly_data),
             'monthly_amounts' => array_values($monthly_data),
             'recent_activities' => $recent_activities,
-            'companies' => $companies
+            'companies' => $companies,
+            // Nouvelles statistiques
+            'pending_devis' => $pending_devis,
+            'accepted_devis' => $accepted_devis,
+            'rejected_devis' => $rejected_devis,
+            'devis_by_company' => $devis_by_company,
+            'top_companies' => $top_companies,
+            'potential_revenue' => $potential_revenue,
         ]);
     }
 

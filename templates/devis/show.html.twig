@@ -142,8 +142,8 @@
 					Télécharger PDF
 				</a>
 
-				{% if devi.state != 'Facturé' %}
-					<a href="{{ path('stripe_devis_payment', {'id': devi.id}) }}" class="text-green-600 hover:text-green-900">Payer</a>
+				{% if devi.state != 'Facturé' and context != 'company' %}
+					<a href="{{ path('stripe_devis_payment', {'id': devi.id}) }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700">Payer</a>
 				{% endif %}
 
 				{% if devi.company and devi.state != 'Facturé' %}

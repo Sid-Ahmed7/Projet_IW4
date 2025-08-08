@@ -268,8 +268,26 @@ public function payDevis(
     /** @var \App\Entity\User $user */
     $user = $this->getUser();
 
-    if ($devis->getHubuser() !== $user) {
-        throw $this->createAccessDeniedException('Ce devis ne vous appartient pas.');
+    // Vérifier l'accès au devis (même logique que DevisController)
+    $hasAccess = false;
+    
+    // 1. L'utilisateur est le créateur du devis
+    if ($devis->getHubuser() === $user) {
+        $hasAccess = true;
+    }
+    
+    // 2. L'utilisateur fait partie de l'entreprise destinataire
+    if ($devis->getCompany() && $user->getCompany() === $devis->getCompany()) {
+        $hasAccess = true;
+    }
+    
+    // 3. L'utilisateur est le créateur de l'entreprise destinataire
+    if ($devis->getCompany() && $devis->getCompany()->getCreatedBy() === $user->getId()) {
+        $hasAccess = true;
+    }
+    
+    if (!$hasAccess) {
+        throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce devis.');
     }
 
     Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
