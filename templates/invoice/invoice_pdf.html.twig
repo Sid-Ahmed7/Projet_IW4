@@ -43,9 +43,13 @@
 
     <div class="company-info">
         <h2>Informations client</h2>
-        <p>{{ invo.company.name }}</p>
-        <p>{{ invo.company.address }}</p>
-        <p>SIRET : {{ invo.company.siretNumber }}</p>
+        {% if invo.company %}
+            <p>{{ invo.company.name }}</p>
+            <p>{{ invo.company.address }}</p>
+            <p>SIRET : {{ invo.company.siretNumber }}</p>
+        {% else %}
+            <p>Client non renseigné</p>
+        {% endif %}
     </div>
 
     <table>

@@ -6,6 +6,8 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Repository\CompanyRepository;
+use App\Repository\DevisRepository;
+use App\Repository\InvoiceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,11 +50,46 @@ class HomeController extends AbstractController
 
     #[Route('/admin', name: 'app_admin_dashboard', methods: ['GET'])]
     #[IsGranted('ROLE_SUPER_ADMIN')]
-    public function adminDashboard(UserRepository $userRepository, CompanyRepository $companyRepository): Response
+    public function adminDashboard(
+        UserRepository $userRepository, 
+        CompanyRepository $companyRepository, 
+        DevisRepository $devisRepository, 
+        InvoiceRepository $invoiceRepository
+    ): Response
     {
+        // Statistiques de base
+        $usersCount = $userRepository->count([]);
+        $companiesCount = $companyRepository->count([]);
+        $devisCount = $devisRepository->count([]);
+        $invoicesCount = $invoiceRepository->count([]);
+
+        // Devis par statut
+        $devisEnAttente = $devisRepository->count(['state' => 'en_attente']);
+        $devisAcceptes = $devisRepository->count(['state' => 'accepte']);
+        $devisRefuses = $devisRepository->count(['state' => 'refuse']);
+        $devisFinalises = $devisRepository->count(['state' => 'finalise']);
+
+        // Factures par statut
+        $facturesEnAttente = $invoiceRepository->count(['status' => 'pending']);
+        $facturesPayees = $invoiceRepository->count(['status' => 'paid']);
+        $facturesEchues = $invoiceRepository->count(['status' => 'overdue']);
+
+        // Top entreprises par nombre de devis
+        $topCompanies = $companyRepository->findTopCompaniesByDevisCount(10);
+
         return $this->render('admin/dashboard.html.twig', [
-            'users_count' => $userRepository->count([]),
-            'companies_count' => $companyRepository->count([]),
+            'users_count' => $usersCount,
+            'companies_count' => $companiesCount,
+            'devis_count' => $devisCount,
+            'invoices_count' => $invoicesCount,
+            'devis_en_attente' => $devisEnAttente,
+            'devis_acceptes' => $devisAcceptes,
+            'devis_refuses' => $devisRefuses,
+            'devis_finalises' => $devisFinalises,
+            'factures_en_attente' => $facturesEnAttente,
+            'factures_payees' => $facturesPayees,
+            'factures_echues' => $facturesEchues,
+            'top_companies' => $topCompanies,
         ]);
     }
 
@@ -67,7 +104,7 @@ class HomeController extends AbstractController
 
     #[Route('/company/dashboard', name: 'app_company_dashboard', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
-    public function companyDashboard(CompanyRepository $companyRepository): Response
+    public function companyDashboard(CompanyRepository $companyRepository, DevisRepository $devisRepository): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -77,15 +114,84 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('app_account_company_new', ['id' => $user->getId()]);
         }
 
+        // Récupérer tous les devis de l'entreprise
+        $devis = $devisRepository->findBy(['company' => $company]);
+        
+        // Organiser les devis par statut
+        $pendingDevis = array_filter($devis, fn($d) => $d->getState() === 'en_attente');
+        $acceptedDevis = array_filter($devis, fn($d) => $d->getState() === 'accepte');
+        $rejectedDevis = array_filter($devis, fn($d) => $d->getState() === 'refuse');
+        $finalizedDevis = array_filter($devis, fn($d) => $d->getState() === 'finalise');
+
+        // Récupérer toutes les factures liées aux devis de l'entreprise
         $invoices = [];
-        foreach ($company->getDevis() as $devi) {
+        foreach ($devis as $devi) {
             $invoices = array_merge($invoices, $devi->getInvoices()->toArray());
+        }
+
+        // Calculer les revenus potentiels (devis acceptés et finalisés)
+        $potentialRevenue = 0;
+        foreach (array_merge($acceptedDevis, $finalizedDevis) as $devi) {
+            $potentialRevenue += $devi->getAmount();
+        }
+
+        // Calculer le taux de conversion
+        $totalDevis = count($devis);
+        $convertedDevis = count($finalizedDevis);
+        $conversionRate = $totalDevis > 0 ? round(($convertedDevis / $totalDevis) * 100, 1) : 0;
+
+        // Grouper par entreprise pour les stats
+        $devisByCompany = [$company->getName() => [
+            'count' => count($devis),
+            'total' => array_sum(array_map(fn($d) => $d->getAmount(), $devis))
+        ]];
+
+        $topCompanies = [$company->getName() => [
+            'count' => count($devis),
+            'total' => array_sum(array_map(fn($d) => $d->getAmount(), $devis))
+        ]];
+
+        // Activités récentes (derniers devis et factures)
+        $recentActivities = [];
+        foreach (array_slice(array_reverse($devis), 0, 5) as $devi) {
+            $recentActivities[] = [
+                'type' => 'devis',
+                'title' => "Devis #{$devi->getId()}",
+                'description' => "Statut: {$devi->getState()} - {$devi->getAmount()}€",
+                'date' => $devi->getCreatedAt()
+            ];
+        }
+
+        // Données pour le graphique (mois et montants)
+        $months = [];
+        $monthlyAmounts = [];
+        for ($i = 11; $i >= 0; $i--) {
+            $date = new \DateTime();
+            $date->modify("-$i month");
+            $months[] = $date->format('M Y');
+            
+            $monthInvoices = array_filter($invoices, function($invoice) use ($date) {
+                return $invoice->getCreatedAt()->format('Y-m') === $date->format('Y-m');
+            });
+            
+            $monthlyAmounts[] = array_sum(array_map(fn($inv) => $inv->getAmount(), $monthInvoices));
         }
 
         return $this->render('company/dashboard.html.twig', [
             'company' => $company,
-            'devis' => $company->getDevis(),
+            'devis' => $devis,
             'invoices' => $invoices,
+            'pending_devis' => $pendingDevis,
+            'accepted_devis' => $acceptedDevis,
+            'rejected_devis' => $rejectedDevis,
+            'finalized_devis' => $finalizedDevis,
+            'potential_revenue' => $potentialRevenue,
+            'conversion_rate' => $conversionRate,
+            'devis_by_company' => $devisByCompany,
+            'top_companies' => $topCompanies,
+            'recent_activities' => $recentActivities,
+            'months' => $months,
+            'monthly_amounts' => $monthlyAmounts,
         ]);
     }
 

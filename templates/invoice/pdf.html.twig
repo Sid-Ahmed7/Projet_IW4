@@ -67,9 +67,17 @@
   <div class="mb-6">
     <div class="mb-2">
       <span class="font-bold">Émetteur :</span><br>
-      {{ invoice.hubuser.company.name }}<br>
-      {{ invoice.hubuser.company.address }}<br>
-      {{ invoice.hubuser.email }}
+      {% if invoice.hubuser and invoice.hubuser.companies|length > 0 %}
+        {% set emitterCompany = invoice.hubuser.companies.first %}
+        {{ emitterCompany.name }}<br>
+        {{ emitterCompany.address }}<br>
+        {{ emitterCompany.email }}<br>
+        {{ emitterCompany.phoneNumber }}
+      {% else %}
+        {# Fallback vers l'utilisateur si pas d'entreprise #}
+        {{ invoice.hubuser.firstname }} {{ invoice.hubuser.lastname }}<br>
+        {{ invoice.hubuser.email }}
+      {% endif %}
     </div>
 
     {% if invoice.company %}

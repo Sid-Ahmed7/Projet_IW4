@@ -39,13 +39,13 @@ class AccountController extends AbstractController
         $invoices = $invoiceRepository->findBy(['hubuser' => $user]);
         $paid_invoices = array_filter($invoices, fn($i) => $i->getStatus() === 'paid');
         $total_paid = array_sum(array_map(fn($i) => $i->getAmount(), $paid_invoices));
-        $finalized_devis = array_filter($devis, fn($d) => $d->getState() === 'Finalisé');
+        $finalized_devis = array_filter($devis, fn($d) => $d->getState() === 'finalise');
         $conversion_rate = count($devis) > 0 ? round((count($finalized_devis) / count($devis)) * 100, 1) : 0;
 
         // Nouvelles statistiques détaillées
-        $pending_devis = array_filter($devis, fn($d) => $d->getState() === 'En attente');
-        $accepted_devis = array_filter($devis, fn($d) => $d->getState() === 'Accepté');
-        $rejected_devis = array_filter($devis, fn($d) => $d->getState() === 'Refusé');
+        $pending_devis = array_filter($devis, fn($d) => $d->getState() === 'en_attente');
+        $accepted_devis = array_filter($devis, fn($d) => $d->getState() === 'accepte');
+        $rejected_devis = array_filter($devis, fn($d) => $d->getState() === 'refuse');
         
         // Devis par entreprise
         $devis_by_company = [];
@@ -66,7 +66,7 @@ class AccountController extends AbstractController
         // Revenus potentiels (total des devis en attente et acceptés)
         $potential_revenue = 0;
         foreach ($devis as $d) {
-            if (in_array($d->getState(), ['En attente', 'Accepté'])) {
+            if (in_array($d->getState(), ['en_attente', 'accepte'])) {
                 $potential_revenue += floatval($d->getPrice());
             }
         }

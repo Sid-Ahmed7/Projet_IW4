@@ -80,4 +80,28 @@ public function findByCategoryId($categoryId)
         }
         return (int)$qb->getQuery()->getSingleScalarResult() > 0;
     }
+
+    /**
+     * Trouve les entreprises les plus actives par nombre de devis
+     */
+    public function findTopCompaniesByDevisCount(int $limit = 10): array
+    {
+        $result = $this->createQueryBuilder('c')
+            ->select('c.name, COUNT(d.id) as devis_count, SUM(d.amount) as total_amount')
+            ->leftJoin('c.devis', 'd')
+            ->groupBy('c.id, c.name')
+            ->orderBy('devis_count', 'DESC')
+            ->addOrderBy('total_amount', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+
+        return array_map(function($row) {
+            return [
+                'name' => $row['name'],
+                'devis_count' => (int)$row['devis_count'],
+                'total_amount' => (float)$row['total_amount'] ?: 0
+            ];
+        }, $result);
+    }
 }
