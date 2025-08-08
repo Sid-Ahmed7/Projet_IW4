@@ -83,6 +83,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Company::class)]
     private Collection $companies;
 
+    #[ORM\Column(length: 20)]
+    private string $accountType = 'personal';
+
+    public const ACCOUNT_TYPE_PERSONAL = 'personal';
+    public const ACCOUNT_TYPE_COMPANY = 'company';
+
     public function __construct()
     {
         $this->devis = new ArrayCollection();
@@ -93,6 +99,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->reques = new ArrayCollection();
         $this->notifications = new ArrayCollection();
         $this->companies = new ArrayCollection();
+        $this->accountType = self::ACCOUNT_TYPE_PERSONAL;
     }
 
     public function getId(): ?int
@@ -434,5 +441,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $notification->removeUser($this);
         }
         return $this;
+    }
+
+    public function getAccountType(): string
+    {
+        return $this->accountType;
+    }
+
+    public function setAccountType(string $accountType): static
+    {
+        $this->accountType = $accountType;
+        return $this;
+    }
+
+    public function isPersonalAccount(): bool
+    {
+        return $this->accountType === self::ACCOUNT_TYPE_PERSONAL;
+    }
+
+    public function isCompanyAccount(): bool
+    {
+        return $this->accountType === self::ACCOUNT_TYPE_COMPANY;
+    }
+
+    public static function getAccountTypeChoices(): array
+    {
+        return [
+            'Compte Personnel (Freelance, Indépendant)' => self::ACCOUNT_TYPE_PERSONAL,
+            'Compte Entreprise (Société, Organisation)' => self::ACCOUNT_TYPE_COMPANY,
+        ];
     }
 }

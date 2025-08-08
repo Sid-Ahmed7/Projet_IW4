@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\User;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,6 +20,15 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('accountType', ChoiceType::class, [
+                'label' => 'Type de compte',
+                'choices' => User::getAccountTypeChoices(),
+                'expanded' => true,
+                'multiple' => false,
+                'data' => User::ACCOUNT_TYPE_PERSONAL,
+                'attr' => ['class' => 'mb-4'],
+                'label_attr' => ['class' => 'block text-sm font-medium text-gray-700 mb-2'],
+            ])
             ->add('email', EmailType::class, [
                 'constraints' => [
                     new NotBlank(),

@@ -7,127 +7,168 @@
         </div>
         <!-- Navigation -->
         <nav class="mt-6">
-            <div class="px-6 mb-2 text-xs text-neutral-400 tracking-widest font-semibold">MES ORGANISATIONS</div>
-            <div class="px-2">
-                <!-- Liste des organisations -->
-                <a class="flex items-center gap-3 px-3 py-2 mb-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_account_company_index') }}">
-                    <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                    <span>Voir toutes mes organisations</span>
-                </a>
-                
-                {% if companies is defined and companies|length > 0 %}
-                    {% for company in companies %}
-                        <details class="group mb-2">
-                            <summary class="flex items-center justify-between px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium cursor-pointer select-none">
-                                <span class="flex items-center gap-2">
-                                    {% if company.logo %}
-                                        <img src="{{ asset('uploads/logos/' ~ company.logo) }}" alt="{{ company.name }}" class="w-5 h-5 object-cover rounded">
-                                    {% else %}
-                                        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 21V7a2 2 0 0 1 2-2h2V3h2v2h2V3h2v2h2a2 2 0 0 1 2 2v14" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                                    {% endif %}
-                                    {{ company.name }}
-                                </span>
-                                <svg class="w-4 h-4 text-neutral-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
-                            </summary>
-                            <ul class="mt-1 space-y-1 pl-6">
-                                <li>
-                                    <a class="flex items-center gap-2 px-2 py-1 rounded hover:bg-neutral-800 transition text-sm" href="{{ path('app_company_devis', {'companyId': company.id}) }}">
-                                        <svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                                        <span>Devis ({{ company.devis|length }})</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="flex items-center gap-2 px-2 py-1 rounded hover:bg-neutral-800 transition text-sm" href="{{ path('app_company_invoice', {'companyId': company.id}) }}">
-                                        <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                                        <span>Factures ({{ company.invoices|length }})</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="flex items-center gap-2 px-2 py-1 rounded hover:bg-neutral-800 transition text-sm" href="{{ path('app_account_company_show', {'id': company.id}) }}">
-                                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                        <span>Voir l'organisation</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </details>
-                    {% endfor %}
-                {% else %}
-                    <div class="text-neutral-400 text-sm px-3 py-2">Aucune organisation</div>
-                {% endif %}
-                
-                <a class="flex items-center gap-3 px-3 py-2 mt-4 rounded-md hover:bg-blue-900 transition text-sm font-medium" href="{{ path('app_account_company_new') }}">
-                    <svg class="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 5a1 1 0 0 1 1 1v3h3a1 1 0 1 1 0 2h-3v3a1 1 0 1 1-2 0v-3H6a1 1 0 1 1 0-2h3V6a1 1 0 0 1 1-1z"/></svg>
-                    <span class="font-semibold text-blue-200">Nouvelle organisation</span>
-                </a>
-            </div>
+            {% if app.user.accountType == 'company' %}
+                {# Interface ENTREPRISE - Gestion centralisée #}
+                <div class="px-6 mb-2 text-xs text-neutral-400 tracking-widest font-semibold">GESTION ENTREPRISE</div>
+                <div class="px-2">
+                    {% if companies is defined and companies|length > 0 %}
+                        {% set mainCompany = companies|first %}
+                        <a class="flex items-center gap-3 px-3 py-2 mb-4 rounded-md bg-blue-900 text-white text-sm font-medium" href="{{ path('app_company_dashboard', {'companyId': mainCompany.id}) }}">
+                            {% if mainCompany.logo %}
+                                <img src="{{ asset('uploads/logos/' ~ mainCompany.logo) }}" alt="{{ mainCompany.name }}" class="w-5 h-5 object-cover rounded">
+                            {% else %}
+                                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                            {% endif %}
+                            <span>{{ mainCompany.name }}</span>
+                        </a>
+                    {% endif %}
+                </div>
+            {% else %}
+                {# Interface PERSONNELLE - Multi-organisations #}
+                <div class="px-6 mb-2 text-xs text-neutral-400 tracking-widest font-semibold">MES ORGANISATIONS</div>
+                <div class="px-2">
+                    <!-- Liste des organisations -->
+                    <a class="flex items-center gap-3 px-3 py-2 mb-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_account_company_index') }}">
+                        <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                        <span>Voir toutes mes organisations</span>
+                    </a>
+                    
+                    {% if companies is defined and companies|length > 0 %}
+                        {% for company in companies %}
+                            <details class="group mb-2">
+                                <summary class="flex items-center justify-between px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium cursor-pointer select-none">
+                                    <span class="flex items-center gap-2">
+                                        {% if company.logo %}
+                                            <img src="{{ asset('uploads/logos/' ~ company.logo) }}" alt="{{ company.name }}" class="w-5 h-5 object-cover rounded">
+                                        {% else %}
+                                            <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 21V7a2 2 0 0 1 2-2h2V3h2v2h2V3h2v2h2a2 2 0 0 1 2 2v14" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                        {% endif %}
+                                        {{ company.name }}
+                                    </span>
+                                    <svg class="w-4 h-4 text-neutral-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                                </summary>
+                                <ul class="mt-1 space-y-1 pl-6">
+                                    <li>
+                                        <a class="flex items-center gap-2 px-2 py-1 rounded hover:bg-neutral-800 transition text-sm" href="{{ path('app_company_devis', {'companyId': company.id}) }}">
+                                            <svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                            <span>Devis ({{ company.devis|length }})</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="flex items-center gap-2 px-2 py-1 rounded hover:bg-neutral-800 transition text-sm" href="{{ path('app_company_invoice', {'companyId': company.id}) }}">
+                                            <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                            <span>Factures ({{ company.invoices|length }})</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="flex items-center gap-2 px-2 py-1 rounded hover:bg-neutral-800 transition text-sm" href="{{ path('app_account_company_show', {'id': company.id}) }}">
+                                            <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                            <span>Voir l'organisation</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </details>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-neutral-400 text-sm px-3 py-2">Aucune organisation</div>
+                    {% endif %}
+                    
+                    <a class="flex items-center gap-3 px-3 py-2 mt-4 rounded-md hover:bg-blue-900 transition text-sm font-medium" href="{{ path('app_account_company_new') }}">
+                        <svg class="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 5a1 1 0 0 1 1 1v3h3a1 1 0 1 1 0 2h-3v3a1 1 0 1 1-2 0v-3H6a1 1 0 1 1 0-2h3V6a1 1 0 0 1 1-1z"/></svg>
+                        <span class="font-semibold text-blue-200">Nouvelle organisation</span>
+                    </a>
+                </div>
+            {% endif %}
             
             <div class="px-6 mt-6 mb-2 text-xs text-neutral-400 tracking-widest font-semibold">LIENS RAPIDES</div>
             <ul class="space-y-1 px-2">
-                {% if company is defined %}
-                    {# Contexte entreprise - Dashboard et liens spécifiques à l'entreprise #}
-                    <li>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_company_dashboard', {'companyId': company.id}) }}">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                            <span>Dashboard {{ company.name }}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_company_devis', {'companyId': company.id}) }}">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-                            <span>Devis de {{ company.name }}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_company_invoice', {'companyId': company.id}) }}">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 2v4M16 2v4M4 10h16"/></svg>
-                            <span>Factures de {{ company.name }}</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_account') }}">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                            <span>Retour au dashboard personnel</span>
-                        </a>
-                    </li>
+                {% if app.user.accountType == 'company' %}
+                    {# Interface ENTREPRISE - Navigation simplifiée #}
+                    {% if companies is defined and companies|length > 0 %}
+                        {% set mainCompany = companies|first %}
+                        <li>
+                            <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_company_dashboard', {'companyId': mainCompany.id}) }}">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_company_devis', {'companyId': mainCompany.id}) }}">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                                <span>Mes Devis</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_company_invoice', {'companyId': mainCompany.id}) }}">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 2v4M16 2v4M4 10h16"/></svg>
+                                <span>Mes Factures</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_devis_new') }}">
+                                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+                                <span>Nouveau Devis</span>
+                            </a>
+                        </li>
+                    {% endif %}
                 {% else %}
-                    {# Contexte personnel - Dashboard et liens globaux #}
-                    <li>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_home_index') }}">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                            <span>Accueil</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_account') }}">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                            <span>Dashboard personnel</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_devis_index') }}">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-                            <span>Tous mes devis</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_invoice_index') }}">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 2v4M16 2v4M4 10h16"/></svg>
-                            <span>Toutes mes factures</span>
-                        </a>
-                    </li>
+                    {# Interface PERSONNELLE - Navigation complète #}
+                    {% if company is defined %}
+                        {# Contexte d'une entreprise spécifique #}
+                        <li>
+                            <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_company_dashboard', {'companyId': company.id}) }}">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                                <span>Dashboard {{ company.name }}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_company_devis', {'companyId': company.id}) }}">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                                <span>Devis de {{ company.name }}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_company_invoice', {'companyId': company.id}) }}">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 2v4M16 2v4M4 10h16"/></svg>
+                                <span>Factures de {{ company.name }}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_account') }}">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                                <span>Retour au dashboard personnel</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        {# Contexte personnel global #}
+                        <li>
+                            <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_home_index') }}">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                                <span>Accueil</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_account') }}">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                                <span>Dashboard personnel</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_devis_index') }}">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                                <span>Tous mes devis</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_invoice_index') }}">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 2v4M16 2v4M4 10h16"/></svg>
+                                <span>Toutes mes factures</span>
+                            </a>
+                        </li>
+                    {% endif %}
                 {% endif %}
-                <li>
-                    <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_devis_index') }}">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-                        <span>Tous mes devis</span>
-                    </a>
-                </li>
-                <li>
-                    <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_invoice_index') }}">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 2v4M16 2v4M4 10h16"/></svg>
-                        <span>Toutes mes factures</span>
-                    </a>
-                </li>
+                
+                {# FactuPro IA pour tous les types de comptes #}
                 <li>
                     <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_factupro_ia') }}">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3v2m6.364 1.636l-.707.707M21 12h-2m-7 7v2m-6.364-1.636l.707-.707M3 12h2m7-7V3m0 18v-2m-6.364-1.636l.707-.707M21 12h-2"/></svg>
@@ -141,7 +182,10 @@
     <div class="border-t border-neutral-800 px-6 py-4 flex flex-col gap-2">
         <div class="flex items-center gap-3">
             <div class="w-8 h-8 rounded-full bg-neutral-700 flex items-center justify-center text-white text-sm font-bold">{{ app.user.firstname|first|upper }}{{ app.user.lastname|first|upper }}</div>
-            <a href="{{ path('app_account_profile') }}" class="text-sm font-medium hover:underline">{{ app.user.firstname }} {{ app.user.lastname }}</a>
+            <div class="flex-1">
+                <a href="{{ path('app_account_profile') }}" class="text-sm font-medium hover:underline block">{{ app.user.firstname }} {{ app.user.lastname }}</a>
+                <div class="text-xs text-neutral-400">{{ app.user.accountType|account_type_label }}</div>
+            </div>
         </div>
         <a href="{{ path('app_logout') }}" class="flex items-center gap-2 mt-2 text-neutral-400 hover:text-red-400 text-sm font-medium transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12a9 9 0 1 1 18 0 9 9 0 0 1-18 0z"/></svg>
