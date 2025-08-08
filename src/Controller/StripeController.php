@@ -289,6 +289,12 @@ public function payDevis(
     if (!$hasAccess) {
         throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce devis.');
     }
+    
+    // Vérifier que le devis est validé avant de permettre le paiement
+    if ($devis->getState() !== 'Validé') {
+        $this->addFlash('error', 'Ce devis doit être validé par l\'entreprise avant de pouvoir être payé.');
+        return $this->redirectToRoute('app_devis_show', ['id' => $devis->getId()]);
+    }
 
     Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
 

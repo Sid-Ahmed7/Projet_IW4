@@ -20,14 +20,33 @@
 						<span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium
 																                        {% if devi.state == 'Facturé' %}
 																                            bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/20
-																                        {% elseif devi.state == 'En attente' %}
+																                        {% elseif devi.state == 'Validé' %}
+																                            bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20
+																                        {% elseif devi.state == 'En attente de validation' or devi.state == 'En attente' %}
 																                            bg-yellow-50 text-yellow-700 ring-1 ring-inset ring-yellow-600/20
-																                        {% else %}
+																                        {% elseif devi.state == 'Rejeté' %}
 																                            bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20
+																                        {% else %}
+																                            bg-gray-50 text-gray-700 ring-1 ring-inset ring-gray-600/20
 																                        {% endif %}
 																                    ">
 							{{ devi.state }}
 						</span>
+						
+						{# Message d'information selon le statut #}
+						{% if devi.state == 'En attente de validation' %}
+							<div class="mt-2 text-xs text-yellow-600">
+								<i class="ri-information-line"></i> Ce devis attend la validation de l'entreprise destinataire avant de pouvoir être payé.
+							</div>
+						{% elseif devi.state == 'Validé' %}
+							<div class="mt-2 text-xs text-green-600">
+								<i class="ri-check-line"></i> Ce devis a été validé et peut maintenant être payé.
+							</div>
+						{% elseif devi.state == 'Rejeté' %}
+							<div class="mt-2 text-xs text-red-600">
+								<i class="ri-close-line"></i> Ce devis a été rejeté. Vous pouvez le modifier et le soumettre à nouveau.
+							</div>
+						{% endif %}
 					</div>
 				</div>
 				{% if devi.state != 'Facturé' %}
@@ -144,12 +163,49 @@
 					</svg>
 					Recalculer
 				</a>
+
+				{# Boutons de validation pour l'entreprise destinataire #}
+				{% if devi.company and app.user.accountType == 'company' and devi.state == 'En attente de validation' %}
+					{% set userCanValidate = false %}
+					{% for userCompany in app.user.companies %}
+						{% if userCompany.id == devi.company.id %}
+							{% set userCanValidate = true %}
+						{% endif %}
+					{% endfor %}
+					
+					{% if userCanValidate %}
+						<form method="post" action="{{ path('app_devis_validate', {'id': devi.id}) }}" style="display: inline;">
+							<input type="hidden" name="_token" value="{{ csrf_token('validate' ~ devi.id) }}">
+							<button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700" onclick="return confirm('Êtes-vous sûr de vouloir valider ce devis ?')">
+								<svg class="-ml-1 mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+								</svg>
+								Valider
+							</button>
+						</form>
+						<form method="post" action="{{ path('app_devis_reject', {'id': devi.id}) }}" style="display: inline;">
+							<input type="hidden" name="_token" value="{{ csrf_token('reject' ~ devi.id) }}">
+							<button type="submit" class="inline-flex items-center px-4 py-2 border border-red-300 shadow-sm text-sm font-medium rounded-md text-red-700 bg-red-50 hover:bg-red-100" onclick="return confirm('Êtes-vous sûr de vouloir rejeter ce devis ?')">
+								<svg class="-ml-1 mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+								</svg>
+								Rejeter
+							</button>
+						</form>
+					{% endif %}
+				{% endif %}
+
 				<a href="{{ path('app_devis_pdf', {'id': devi.id}) }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
 					Télécharger PDF
 				</a>
 
-				{% if devi.state != 'Facturé' and context != 'company' %}
-					<a href="{{ path('stripe_devis_payment', {'id': devi.id}) }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700">Payer</a>
+				{% if devi.state == 'Validé' and context != 'company' %}
+					<a href="{{ path('stripe_devis_payment', {'id': devi.id}) }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700">
+						<svg class="-ml-1 mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+						</svg>
+						Payer
+					</a>
 				{% endif %}
 
 				{% if devi.company and devi.state != 'Facturé' %}

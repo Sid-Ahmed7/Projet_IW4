@@ -63,7 +63,7 @@ class DevisController extends AbstractController
     }
 
     #[Route('/devis/new', name: 'app_devis_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->getUser();
@@ -74,7 +74,7 @@ class DevisController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $devis->setHubuser($user);
-            $devis->setState('En attente');
+            $devis->setState('En attente de validation');
             $devis->setPaymentToken(Uuid::v4());
             
             // Traitement des lignes du devis
@@ -109,16 +109,43 @@ class DevisController extends AbstractController
             
             $entityManager->persist($devis);
             
-            // Notification
+            // Notification pour le créateur
             $notification = new Notification();
             $notification->addUser($user);
             $notification->setType('Systeme');
-            $notification->setTitle('Votre devis est disponible');
-            $notification->setMessage("Salut {$user->getFirstname()}, votre devis est disponible.");
+            $notification->setTitle('Votre devis est créé');
+            $notification->setMessage("Salut {$user->getFirstname()}, votre devis est créé et en attente de validation par l'entreprise destinataire.");
             $notification->setIsRead(false);
             $notification->setCreatedAt(new \DateTimeImmutable());
 
             $entityManager->persist($notification);
+            
+            // Si le devis est destiné à une entreprise, envoyer un email de notification à l'entreprise
+            if ($devis->getCompany()) {
+                $companyEmail = $devis->getCompany()->getEmail();
+                if ($companyEmail) {
+                    $email = (new Email())
+                        ->from(new Address('ibrahim60200@gmail.com', 'FactuPro'))
+                        ->to($companyEmail)
+                        ->subject('Nouveau devis à valider - ' . $devis->getTitle())
+                        ->html("
+                            <h2>Nouveau devis à valider</h2>
+                            <p>Bonjour,</p>
+                            <p>Un nouveau devis a été créé et nécessite votre validation :</p>
+                            <ul>
+                                <li><strong>De :</strong> {$user->getFirstname()} {$user->getLastname()}</li>
+                                <li><strong>Titre :</strong> {$devis->getTitle()}</li>
+                                <li><strong>Montant :</strong> {$devis->getPrice()} €</li>
+                                <li><strong>Date de création :</strong> " . (new \DateTime())->format('d/m/Y à H:i') . "</li>
+                            </ul>
+                            <p>Connectez-vous à votre espace FactuPro pour valider ou rejeter ce devis.</p>
+                            <p>Cordialement,<br>L'équipe FactuPro</p>
+                        ");
+
+                    $mailer->send($email);
+                }
+            }
+            
             $entityManager->flush();
 
             return $this->redirectToRoute('app_devis_index', [], Response::HTTP_SEE_OTHER);
@@ -368,6 +395,128 @@ class DevisController extends AbstractController
 
         $this->addFlash('success', 'Prix du devis recalculé avec succès.');
         return $this->redirectToRoute('app_devis_index');
+    }
+
+    #[Route('/devis/{id}/validate', name: 'app_devis_validate', methods: ['POST'])]
+    public function validateDevis(Request $request, Devis $devi, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        
+        // Vérifier le token CSRF
+        if (!$this->isCsrfTokenValid('validate' . $devi->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+        
+        // Seule l'entreprise destinataire peut valider le devis
+        $canValidate = false;
+        
+        if ($devi->getCompany() && $user->getAccountType() === 'company') {
+            foreach ($user->getCompanies() as $userCompany) {
+                if ($devi->getCompany() === $userCompany) {
+                    $canValidate = true;
+                    break;
+                }
+            }
+        }
+        
+        if (!$canValidate) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas le droit de valider ce devis.');
+        }
+        
+        // Valider le devis
+        $devi->setState('Validé');
+        $devi->setUpdatedAt(new \DateTimeImmutable());
+        $entityManager->flush();
+        
+        // Envoyer un email au créateur du devis
+        $creatorEmail = $devi->getHubuser()->getEmail();
+        $companyName = $devi->getCompany()->getName();
+        
+        $email = (new Email())
+            ->from(new Address('ibrahim60200@gmail.com', 'FactuPro'))
+            ->to($creatorEmail)
+            ->subject('Devis validé - ' . $devi->getTitle())
+            ->html("
+                <h2>Votre devis a été validé !</h2>
+                <p>Bonjour {$devi->getHubuser()->getFirstname()},</p>
+                <p>Bonne nouvelle ! L'entreprise <strong>{$companyName}</strong> a validé votre devis :</p>
+                <ul>
+                    <li><strong>Titre :</strong> {$devi->getTitle()}</li>
+                    <li><strong>Montant :</strong> {$devi->getPrice()} €</li>
+                    <li><strong>Date de validation :</strong> " . (new \DateTime())->format('d/m/Y à H:i') . "</li>
+                </ul>
+                <p>Vous pouvez maintenant procéder au paiement de ce devis.</p>
+                <p>Cordialement,<br>L'équipe FactuPro</p>
+            ");
+
+        $mailer->send($email);
+        
+        $this->addFlash('success', 'Devis validé avec succès. Un email de notification a été envoyé au créateur.');
+        return $this->redirectToRoute('app_devis_show', ['id' => $devi->getId()]);
+    }
+
+    #[Route('/devis/{id}/reject', name: 'app_devis_reject', methods: ['POST'])]
+    public function rejectDevis(Request $request, Devis $devi, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        
+        // Vérifier le token CSRF
+        if (!$this->isCsrfTokenValid('reject' . $devi->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide.');
+        }
+        
+        // Seule l'entreprise destinataire peut rejeter le devis
+        $canReject = false;
+        
+        if ($devi->getCompany() && $user->getAccountType() === 'company') {
+            foreach ($user->getCompanies() as $userCompany) {
+                if ($devi->getCompany() === $userCompany) {
+                    $canReject = true;
+                    break;
+                }
+            }
+        }
+        
+        if (!$canReject) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas le droit de rejeter ce devis.');
+        }
+        
+        // Rejeter le devis
+        $devi->setState('Rejeté');
+        $devi->setUpdatedAt(new \DateTimeImmutable());
+        $entityManager->flush();
+        
+        // Envoyer un email au créateur du devis
+        $creatorEmail = $devi->getHubuser()->getEmail();
+        $companyName = $devi->getCompany()->getName();
+        
+        $email = (new Email())
+            ->from(new Address('ibrahim60200@gmail.com', 'FactuPro'))
+            ->to($creatorEmail)
+            ->subject('Devis rejeté - ' . $devi->getTitle())
+            ->html("
+                <h2>Votre devis a été rejeté</h2>
+                <p>Bonjour {$devi->getHubuser()->getFirstname()},</p>
+                <p>L'entreprise <strong>{$companyName}</strong> a rejeté votre devis :</p>
+                <ul>
+                    <li><strong>Titre :</strong> {$devi->getTitle()}</li>
+                    <li><strong>Montant :</strong> {$devi->getPrice()} €</li>
+                    <li><strong>Date de rejet :</strong> " . (new \DateTime())->format('d/m/Y à H:i') . "</li>
+                </ul>
+                <p>Vous pouvez modifier ce devis et le soumettre à nouveau pour validation.</p>
+                <p>Cordialement,<br>L'équipe FactuPro</p>
+            ");
+
+        $mailer->send($email);
+        
+        $this->addFlash('error', 'Devis rejeté. Un email de notification a été envoyé au créateur.');
+        return $this->redirectToRoute('app_devis_show', ['id' => $devi->getId()]);
     }
 
     #[Route('/devis/{id}', name: 'app_devis_delete', methods: ['POST'])]
