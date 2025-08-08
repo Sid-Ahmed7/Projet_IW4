@@ -4,6 +4,9 @@ FROM php:8.1-cli
 RUN apt-get update && apt-get install -y libpq-dev \
     && docker-php-ext-install pdo_pgsql
 
+# Copier la configuration PHP personnalisée
+COPY php.ini /usr/local/etc/php/php.ini
+
 # Copier l'application dans le conteneur
 COPY . /var/www/symfony
 
