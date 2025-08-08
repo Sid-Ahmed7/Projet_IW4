@@ -34,9 +34,16 @@ class AccountController extends AbstractController
             $companies = $companyRepository->findBy(['createdBy' => $user->getId()]);
         }
         
-        // Récupérer les devis et factures
-        $devis = $devisRepository->findBy(['hubuser' => $user]);
-        $invoices = $invoiceRepository->findBy(['hubuser' => $user]);
+        // Récupérer les devis et factures selon le type de compte
+        if ($user->getAccountType() === 'company' && $user->getCompany()) {
+            // Pour un compte entreprise, récupérer tous les devis de l'entreprise
+            $devis = $devisRepository->findBy(['company' => $user->getCompany()]);
+            $invoices = $invoiceRepository->findBy(['company' => $user->getCompany()]);
+        } else {
+            // Pour un compte personnel, récupérer les devis de l'utilisateur
+            $devis = $devisRepository->findBy(['hubuser' => $user]);
+            $invoices = $invoiceRepository->findBy(['hubuser' => $user]);
+        }
         $paid_invoices = array_filter($invoices, fn($i) => $i->getStatus() === 'paid');
         $total_paid = array_sum(array_map(fn($i) => $i->getAmount(), $paid_invoices));
         $finalized_devis = array_filter($devis, fn($d) => $d->getState() === 'finalise');
@@ -149,7 +156,14 @@ class AccountController extends AbstractController
         
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
-        $devis = $devisRepository->findBy(['hubuser' => $user]);
+        
+        if ($user->getAccountType() === 'company' && $user->getCompany()) {
+            // Pour un compte entreprise, récupérer tous les devis de l'entreprise
+            $devis = $devisRepository->findBy(['company' => $user->getCompany()]);
+        } else {
+            // Pour un compte personnel, récupérer les devis de l'utilisateur
+            $devis = $devisRepository->findBy(['hubuser' => $user]);
+        }
 
         return $this->render('account/devis/index.html.twig', [
             'devis' => $devis,
@@ -163,9 +177,16 @@ class AccountController extends AbstractController
         
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
-        $invoices = $invoiceRepository->findBy(['hubuser' => $user]);
+        
+        if ($user->getAccountType() === 'company' && $user->getCompany()) {
+            // Pour un compte entreprise, récupérer toutes les factures de l'entreprise
+            $invoices = $invoiceRepository->findBy(['company' => $user->getCompany()]);
+        } else {
+            // Pour un compte personnel, récupérer les factures de l'utilisateur
+            $invoices = $invoiceRepository->findBy(['hubuser' => $user]);
+        }
 
-        return $this->render('account/invoices/index.html.twig', [
+        return $this->render('account/invoice/index.html.twig', [
             'invoices' => $invoices,
         ]);
     }
