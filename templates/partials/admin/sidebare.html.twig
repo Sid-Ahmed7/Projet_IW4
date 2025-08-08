@@ -113,7 +113,7 @@
                     {% endif %}
                 {% else %}
                     {# Interface PERSONNELLE - Navigation complète #}
-                    {% if company is defined %}
+                    {% if company is defined and company is not null and company.id is defined and company.id is not null %}
                         {# Contexte d'une entreprise spécifique #}
                         <li>
                             <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_company_dashboard', {'companyId': company.id}) }}">

@@ -99,7 +99,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->reques = new ArrayCollection();
         $this->notifications = new ArrayCollection();
         $this->companies = new ArrayCollection();
-        $this->accountType = self::ACCOUNT_TYPE_PERSONAL;
+        // Ne définir accountType que si il n'est pas déjà défini
+        if ($this->accountType === null) {
+            $this->accountType = self::ACCOUNT_TYPE_PERSONAL;
+        }
     }
 
     public function getId(): ?int
