@@ -6,6 +6,32 @@ module.exports = {
     "./assets/**/*.js",
     "./templates/**/*.html.twig",
   ],
+  safelist: [
+    // Force inclusion of all color classes used in devis
+    'bg-green',
+    'hover:bg-green',
+    'bg-red',
+    'hover:bg-red',
+    'bg-blue-600',
+    'hover:bg-blue-700',
+    'bg-purple-600',
+    'hover:bg-purple-700',
+    'bg-orange-600',
+    'hover:bg-orange-700',
+    'bg-gray-600',
+    'hover:bg-gray-700',
+    'bg-yellow-500',
+    'hover:bg-yellow-600',
+    'bg-indigo-600',
+    'hover:bg-indigo-700',
+    'transition-colors',
+    'transition-all',
+    'duration-200',
+    'transform',
+    'hover:scale-105',
+    'shadow-lg',
+    'shadow-sm'
+  ],
   theme: {
     extend: {
 
