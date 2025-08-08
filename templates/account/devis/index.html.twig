@@ -68,6 +68,8 @@
 										<span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium
 												                                            {% if devi.state == 'Facturé' %}
 												                                                bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/20
+												                                            {% elseif devi.state == 'Payé' %}
+												                                                bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20
 												                                            {% elseif devi.state == 'Validé' %}
 												                                                bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20
 												                                            {% elseif devi.state == 'En attente de validation' or devi.state == 'En attente' %}
@@ -78,20 +80,44 @@
 												                                                bg-gray-50 text-gray-700 ring-1 ring-inset ring-gray-600/20
 												                                            {% endif %}
 												                                        ">
-											{{ devi.state }}
+											{% if devi.state == 'Payé' %}
+												💰 {{ devi.state }}
+											{% elseif devi.state == 'Validé' %}
+												✅ {{ devi.state }}
+											{% elseif devi.state == 'Facturé' %}
+												📄 {{ devi.state }}
+											{% elseif devi.state == 'Rejeté' %}
+												❌ {{ devi.state }}
+											{% elseif devi.state == 'En attente de validation' or devi.state == 'En attente' %}
+												⏳ {{ devi.state }}
+											{% else %}
+												{{ devi.state }}
+											{% endif %}
 										</span>
 									</td>
 									<td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
 										<div class="flex items-center justify-end space-x-3">
+											{# Bouton Voir - toujours disponible #}
 											<a href="{{ path('app_devis_show', {'id': devi.id}) }}" class="text-blue-600 hover:text-blue-900">Voir</a>
-											<a href="{{ path('app_devis_edit', {'id': devi.id}) }}" class="text-blue-600 hover:text-blue-900">Modifier</a>
-											<a href="{{ path('app_devis_recalculate', {'id': devi.id}) }}" class="text-orange-600 hover:text-orange-900" title="Recalculer le prix">Recalc.</a>
-											<a href="{{ path('app_devis_pdf', {'id': devi.id}) }}" class="text-blue-600 hover:text-blue-900">PDF</a>
-											{% if devi.state != 'Facturé' %}
-												<a href="{{ path('stripe_devis_payment', {'id': devi.id}) }}" class="text-green-600 hover:text-green-900">Payer</a>
+											
+											{# Boutons Modifier et Recalculer - seulement si le devis n'est pas dans un état final #}
+											{% if devi.state not in ['Validé', 'Payé', 'Facturé'] %}
+												<a href="{{ path('app_devis_edit', {'id': devi.id}) }}" class="text-gray-600 hover:text-gray-900">Modifier</a>
+												<a href="{{ path('app_devis_recalculate', {'id': devi.id}) }}" class="text-orange-600 hover:text-orange-900" title="Recalculer le prix">Recalc.</a>
 											{% endif %}
-
-
+											
+											{# Bouton PDF - toujours disponible #}
+											<a href="{{ path('app_devis_pdf', {'id': devi.id}) }}" class="text-blue-600 hover:text-blue-900">PDF</a>
+											
+											{# Bouton Payer - seulement pour les utilisateurs non-company ET si validé #}
+											{% if devi.state == 'Validé' and app.user.accountType != 'company' %}
+												<a href="{{ path('stripe_devis_payment', {'id': devi.id}) }}" class="text-purple-600 hover:text-purple-900 font-medium">💳 Payer</a>
+											{% endif %}
+											
+											{# Bouton Générer facture - seulement si payé #}
+											{% if devi.state == 'Payé' %}
+												<a href="{{ path('app_invoice_new_from_devis', {'id': devi.id}) }}" class="text-green-600 hover:text-green-900 font-medium">✅ Facture</a>
+											{% endif %}
 										</div>
 									</td>
 								</tr>
