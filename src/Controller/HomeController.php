@@ -20,7 +20,16 @@ class HomeController extends AbstractController
     public function index(): Response
     {
         if ($this->getUser()) {
-            return $this->redirectToRoute('app_company_dashboard');
+            /** @var User $user */
+            $user = $this->getUser();
+            
+            // Redirection selon le type de compte
+            if ($user->getAccountType() === 'company') {
+                return $this->redirectToRoute('app_company_dashboard');
+            } else {
+                // Compte personnel - redirection vers le dashboard personnel
+                return $this->redirectToRoute('app_account');
+            }
         }
         return $this->render('home/home.html.twig');
     }
