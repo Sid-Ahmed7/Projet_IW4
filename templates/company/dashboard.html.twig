@@ -9,39 +9,131 @@
         
 
         <div class="p-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-                <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
-                    <div class="flex justify-between mb-6">
-                        <div>
-                            <div class="flex items-center mb-1">
-                                <div class="text-2xl font-semibold">{{ company.hubusers|length }}</div>
-                            </div>
-                            <div class="text-sm font-medium text-gray-400">Membres de l'équipe</div>
+            <h1 class="text-3xl font-bold mb-8">Tableau de bord - {{ company.name }}</h1>
+            
+            <!-- Statistiques principales -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Devis En Attente -->
+                <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-medium text-gray-600">Devis En Attente</h3>
+                        <div class="p-2 bg-yellow-100 rounded-lg">
+                            <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
                         </div>
                     </div>
-                    <a href="{{ path('app_company_team') }}" class="text-blue-500 font-medium text-sm hover:text-blue-600">Voir l'équipe</a>
+                    <div class="text-3xl font-bold text-gray-900 mb-2">{{ pending_devis|length }}</div>
+                    <div class="text-sm text-orange-600 mb-3">Action requise</div>
+                    <a href="{{ path('app_account_devis_index') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Traiter les devis</a>
                 </div>
 
-                <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
-                    <div class="flex justify-between mb-4">
-                        <div>
-                            <div class="flex items-center mb-1">
-                                <div class="text-2xl font-semibold">{{ devis|length }}</div>
-                            </div>
-                            <div class="text-sm font-medium text-gray-400">Demandes</div>
+                <!-- Total Devis -->
+                <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-medium text-gray-600">Total Devis</h3>
+                        <div class="p-2 bg-blue-100 rounded-lg">
+                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
                         </div>
                     </div>
-                    <a href="{{ path('app_company_requests') }}" class="text-blue-500 font-medium text-sm hover:text-blue-600">Voir les demandes</a>
+                    <div class="text-3xl font-bold text-gray-900 mb-2">{{ devis|length }}</div>
+                    <div class="text-sm text-gray-500 mb-3">{{ accepted_devis|length }} acceptés</div>
+                    <a href="{{ path('app_account_devis_index') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Voir tous les devis</a>
                 </div>
 
-                <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
-                    <div class="flex justify-between mb-6">
-                        <div>
-                            <div class="text-2xl font-semibold mb-1">{{ pending_devis|length }}</div>
-                            <div class="text-sm font-medium text-gray-400">Devis en attente</div>
+                <!-- Revenus Potentiels -->
+                <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-medium text-gray-600">Revenus Potentiels</h3>
+                        <div class="p-2 bg-green-100 rounded-lg">
+                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                            </svg>
                         </div>
                     </div>
-                    <a href="{{ path('app_company_settings') }}" class="text-blue-500 font-medium text-sm hover:text-blue-600">Gérer les devis</a>
+                    <div class="text-3xl font-bold text-gray-900 mb-2">{{ potential_revenue|number_format(0, ',', ' ') }}€</div>
+                    <div class="text-sm text-gray-500 mb-3">Devis en cours + acceptés</div>
+                    <span class="text-green-600 text-sm font-medium">{{ accepted_devis|length + finalized_devis|length }} devis</span>
+                </div>
+
+                <!-- Taux de Conversion -->
+                <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-sm font-medium text-gray-600">Taux de Conversion</h3>
+                        <div class="p-2 bg-purple-100 rounded-lg">
+                            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-bold text-gray-900 mb-2">{{ conversion_rate }}%</div>
+                    <div class="text-sm text-gray-500 mb-3">{{ finalized_devis|length }}/{{ devis|length }} finalisés</div>
+                    <span class="text-purple-600 text-sm font-medium">Performance</span>
+                </div>
+            </div>
+
+            <!-- Répartition des devis -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Répartition des devis</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-yellow-500 rounded-full mr-3"></div>
+                                <span class="text-sm font-medium text-gray-700">En attente</span>
+                            </div>
+                            <span class="text-lg font-bold text-gray-900">{{ pending_devis|length }}</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                                <span class="text-sm font-medium text-gray-700">Acceptés</span>
+                            </div>
+                            <span class="text-lg font-bold text-gray-900">{{ accepted_devis|length }}</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-red-500 rounded-full mr-3"></div>
+                                <span class="text-sm font-medium text-gray-700">Refusés</span>
+                            </div>
+                            <span class="text-lg font-bold text-gray-900">{{ rejected_devis|length }}</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
+                                <span class="text-sm font-medium text-gray-700">Finalisés</span>
+                            </div>
+                            <span class="text-lg font-bold text-gray-900">{{ finalized_devis|length }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Entreprises les plus actives -->
+                <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-6">Entreprises les plus actives</h3>
+                    <div class="space-y-4">
+                        {% for name, data in top_companies %}
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                <div>
+                                    <div class="font-semibold text-gray-900">{{ name }}</div>
+                                    <div class="text-sm text-gray-500">{{ data.count }} devis</div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-bold text-lg text-gray-900">{{ data.total|number_format(0, ',', ' ') }}€</div>
+                                    <div class="text-sm text-gray-500">total</div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="text-center py-8 text-gray-500">
+                                <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                </svg>
+                                <p>Aucune activité pour le moment</p>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
 

@@ -132,7 +132,7 @@ class HomeController extends AbstractController
         // Calculer les revenus potentiels (devis acceptés et finalisés)
         $potentialRevenue = 0;
         foreach (array_merge($acceptedDevis, $finalizedDevis) as $devi) {
-            $potentialRevenue += $devi->getAmount();
+            $potentialRevenue += (float)$devi->getPrice();
         }
 
         // Calculer le taux de conversion
@@ -143,12 +143,12 @@ class HomeController extends AbstractController
         // Grouper par entreprise pour les stats
         $devisByCompany = [$company->getName() => [
             'count' => count($devis),
-            'total' => array_sum(array_map(fn($d) => $d->getAmount(), $devis))
+            'total' => array_sum(array_map(fn($d) => (float)$d->getPrice(), $devis))
         ]];
 
         $topCompanies = [$company->getName() => [
             'count' => count($devis),
-            'total' => array_sum(array_map(fn($d) => $d->getAmount(), $devis))
+            'total' => array_sum(array_map(fn($d) => (float)$d->getPrice(), $devis))
         ]];
 
         // Activités récentes (derniers devis et factures)
@@ -157,7 +157,7 @@ class HomeController extends AbstractController
             $recentActivities[] = [
                 'type' => 'devis',
                 'title' => "Devis #{$devi->getId()}",
-                'description' => "Statut: {$devi->getState()} - {$devi->getAmount()}€",
+                'description' => "Statut: {$devi->getState()} - {$devi->getPrice()}€",
                 'date' => $devi->getCreatedAt()
             ];
         }
