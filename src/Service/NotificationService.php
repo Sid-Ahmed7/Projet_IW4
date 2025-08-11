@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Devis;
 use App\Entity\Invoice;
 use App\Entity\Company;
+use App\Repository\UserRepository;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -16,6 +17,7 @@ class NotificationService
     public function __construct(
         private MailerInterface $mailer,
         private LoggerInterface $logger,
+        private UserRepository $userRepository,
         private string $fromEmail = 'noreply@factupro.com'
     ) {}
 
@@ -290,6 +292,61 @@ class NotificationService
         } catch (\Exception $e) {
             $this->logger->error('Failed to send team notification', [
                 'company_id' => $company->getId(),
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function sendInvoicePaidNotification(Invoice $invoice): void
+    {
+        try {
+            $company = $invoice->getCompany();
+            $user = $invoice->getHubuser();
+            
+            if (!$company || !$user) {
+                return;
+            }
+
+            // Email au client
+            $email = (new TemplatedEmail())
+                ->from($this->fromEmail)
+                ->to($user->getEmail())
+                ->subject('Facture payée - ' . $invoice->getNumber())
+                ->htmlTemplate('emails/invoice/invoice_paid.html.twig')
+                ->context([
+                    'invoice' => $invoice,
+                    'company' => $company,
+                    'user' => $user
+                ]);
+
+            $this->mailer->send($email);
+
+            // Email à l'entreprise
+            $companyUsers = $this->userRepository->findBy(['company' => $company, 'accountType' => 'company']);
+            foreach ($companyUsers as $companyUser) {
+                $companyEmail = (new TemplatedEmail())
+                    ->from($this->fromEmail)
+                    ->to($companyUser->getEmail())
+                    ->subject('Facture payée par le client - ' . $invoice->getNumber())
+                    ->htmlTemplate('emails/invoice/invoice_paid_company.html.twig')
+                    ->context([
+                        'invoice' => $invoice,
+                        'company' => $company,
+                        'user' => $user,
+                        'companyUser' => $companyUser
+                    ]);
+
+                $this->mailer->send($companyEmail);
+            }
+            
+            $this->logger->info('Invoice paid notification sent', [
+                'invoice_id' => $invoice->getId(),
+                'user_email' => $user->getEmail()
+            ]);
+
+        } catch (\Exception $e) {
+            $this->logger->error('Failed to send invoice paid notification', [
+                'invoice_id' => $invoice->getId(),
                 'error' => $e->getMessage()
             ]);
         }

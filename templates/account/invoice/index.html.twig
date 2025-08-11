@@ -69,24 +69,37 @@
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ invoice.amount }} €</td>
                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                         <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium
-                                            {% if invoice.status == 'paid' %}
+                                            {% if invoice.status == 'paid' or invoice.status == 'finalized' %}
                                                 bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20
-                                            {% elseif invoice.status == 'pending' %}
-                                                bg-yellow-50 text-yellow-700 ring-1 ring-inset ring-yellow-600/20
-                                            {% else %}
+                                            {% elseif invoice.status == 'pending' or invoice.status == 'generated' %}
+                                                bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/20
+                                            {% elseif invoice.status == 'overdue' %}
                                                 bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20
+                                            {% else %}
+                                                bg-gray-50 text-gray-700 ring-1 ring-inset ring-gray-600/20
                                             {% endif %}
                                         ">
-                                            {{ invoice.status }}
+                                            {% if invoice.status == 'paid' %}
+                                                ✅ Payée et finalisée
+                                            {% elseif invoice.status == 'finalized' %}
+                                                ✅ Finalisée
+                                            {% elseif invoice.status == 'pending' %}
+                                                📄 Générée
+                                            {% elseif invoice.status == 'generated' %}
+                                                📄 Générée
+                                            {% elseif invoice.status == 'overdue' %}
+                                                ⚠️ En retard
+                                            {% else %}
+                                                {{ invoice.status }}
+                                            {% endif %}
                                         </span>
                                     </td>
                                     <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                         <div class="flex items-center justify-end space-x-3">
+                                            {# Bouton Voir - toujours disponible #}
                                             <a href="{{ path('app_invoice_show', {'id': invoice.id}) }}" class="text-blue-600 hover:text-blue-900">Voir</a>
-                                            {# Bouton Modifier - seulement si la facture n'est pas payée #}
-                                            {% if invoice.status != 'paid' %}
-                                                <a href="{{ path('app_invoice_edit', {'id': invoice.id}) }}" class="text-blue-600 hover:text-blue-900">Modifier</a>
-                                            {% endif %}
+                                            
+                                            {# Bouton PDF - toujours disponible #}
                                             <a href="{{ path('app_invoice_pdf', {'id': invoice.id}) }}" class="text-blue-600 hover:text-blue-900">PDF</a>
                                         </div>
                                     </td>

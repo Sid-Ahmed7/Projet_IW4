@@ -1,0 +1,109 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block content %}
+    <div class="space-y-6">
+        <!-- Titre principal -->
+        <div class="text-center">
+            <h2 class="text-3xl font-bold text-green-600 mb-2">💰 Paiement reçu</h2>
+            <div class="w-24 h-1 bg-gradient-to-r from-green-500 to-emerald-500 mx-auto rounded-full"></div>
+        </div>
+        
+        <!-- Message d'accueil -->
+        <div class="text-gray-700">
+            <p class="text-lg">Bonjour <span class="font-semibold text-green-600">{{ companyUser.firstname }} {{ companyUser.lastname }}</span>,</p>
+            <p class="mt-2">🎉 <span class="font-semibold text-green-600">Excellente nouvelle !</span> Vous avez reçu un paiement pour la facture {{ invoice.number }}.</p>
+        </div>
+        
+        <!-- Message de célébration -->
+        <div class="bg-gradient-to-r from-green-100 to-emerald-100 border-2 border-green-300 rounded-xl p-6 text-center">
+            <div class="text-4xl mb-2">💸</div>
+            <h3 class="text-xl font-bold text-green-800">Paiement confirmé !</h3>
+            <p class="text-green-700 mt-1">Votre client a réglé sa facture</p>
+        </div>
+        
+        <!-- Détails du paiement -->
+        <div class="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-r-lg p-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                🧾 <span class="ml-2">Détails du paiement reçu</span>
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-3">
+                    <div class="flex items-center">
+                        <span class="font-medium text-gray-600 w-20">Facture:</span>
+                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">{{ invoice.number }}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="font-medium text-gray-600 w-20">Client:</span>
+                        <span class="text-gray-900 font-medium">{{ user.firstname }} {{ user.lastname }}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="font-medium text-gray-600 w-20">Email:</span>
+                        <span class="text-blue-600">{{ user.email }}</span>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex items-center">
+                        <span class="font-medium text-gray-600 w-16">Montant:</span>
+                        <span class="text-green-600 font-bold text-xl">{{ invoice.amount|number_format(2, ',', ' ') }}€</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="font-medium text-gray-600 w-16">Payé le:</span>
+                        <span class="text-gray-700">{{ "now"|date('d/m/Y à H:i') }}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="font-medium text-gray-600 w-16">Statut:</span>
+                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold uppercase">Payée</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Actions recommandées -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-blue-900 mb-3 flex items-center">
+                📋 <span class="ml-2">Actions recommandées</span>
+            </h3>
+            <ul class="space-y-3">
+                <li class="flex items-start">
+                    <div class="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">1</div>
+                    <span class="text-blue-700">Confirmer la réception du paiement au client</span>
+                </li>
+                <li class="flex items-start">
+                    <div class="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">2</div>
+                    <span class="text-blue-700">Procéder à la livraison ou exécution du service</span>
+                </li>
+                <li class="flex items-start">
+                    <div class="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-semibold mr-3 mt-0.5">3</div>
+                    <span class="text-blue-700">Mettre à jour le statut dans votre système</span>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Boutons d'action -->
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+            <a href="{{ url('app_invoice_show', {id: invoice.id}) }}" 
+               class="inline-flex items-center justify-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105">
+                🧾 <span class="ml-2">Voir la facture</span>
+            </a>
+            <a href="{{ url('app_account_invoices') }}" 
+               class="inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105">
+                📊 <span class="ml-2">Gérer les factures</span>
+            </a>
+        </div>
+        
+        <!-- Message de félicitations -->
+        <div class="bg-gradient-to-r from-yellow-100 to-orange-100 p-4 rounded-lg border border-yellow-200">
+            <p class="text-yellow-800 font-medium text-center">
+                🎯 Bravo ! Votre entreprise continue de prospérer avec des paiements réguliers.
+            </p>
+        </div>
+        
+        <!-- Signature -->
+        <div class="text-right">
+            <p class="text-gray-600">
+                Cordialement,<br>
+                <span class="font-semibold text-green-600">L'équipe FactuPro</span>
+            </p>
+        </div>
+    </div>
+{% endblock %}

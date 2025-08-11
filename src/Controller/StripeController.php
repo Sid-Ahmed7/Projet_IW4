@@ -25,11 +25,6 @@ use Stripe\Product;
 use Stripe\Subscription;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Mime\Email;
-use Symfony\Component\Mime\Address;
-use Symfony\Component\Mailer\MailerInterface;
-use Dompdf\Dompdf;
-use Dompdf\Options;
 
 
 
@@ -334,7 +329,7 @@ public function successDevis(
     $user = $this->getUser();
 
     // Marquer le devis comme payé
-    $devis->setState('Facturé');
+    $devis->setState('Payé');
 
     // Générer une facture
     $invoice = new Invoice();
@@ -344,7 +339,7 @@ public function successDevis(
     $invoice->setAmount((float)$devis->getPrice());
     $invoice->setDescription($devis->getContent());
     $invoice->setNumber(date('Ym') . '-' . uniqid());
-    $invoice->setStatus('paid'); // Marquer comme payée
+    $invoice->setStatus('generated'); // Facture générée automatiquement après paiement du devis
     $invoice->setCreatedAt(new \DateTimeImmutable());
 
     $em->persist($invoice);
@@ -352,30 +347,7 @@ public function successDevis(
 
     // Envoi des notifications par email
     $notificationService->notifyInvoiceCreated($invoice);
-    $notificationService->notifyInvoicePaid($invoice);
-
-    // 🧾 Générer le PDF de la facture
-    $html = $this->renderView('invoice/pdf.html.twig', [
-        'invoice' => $invoice
-    ]);
-
-    $pdfOptions = new Options();
-    $pdfOptions->set('defaultFont', 'Arial');
-
-    $dompdf = new Dompdf($pdfOptions);
-    $dompdf->loadHtml($html);
-    $dompdf->render();
-    $pdfOutput = $dompdf->output();
-
-    // ✉️ Envoyer la facture par email
-    $email = (new Email())
-        ->from(new Address('ibrahim60200@gmail.com', 'FactuPro'))
-        ->to($devis->getCompany()?->getEmail() ?? $user->getEmail()) // fallback
-        ->subject('Facture - Devis #' . $devis->getId())
-        ->text('Merci pour votre paiement. Veuillez trouver la facture en pièce jointe.')
-        ->attach($pdfOutput, 'facture.pdf', 'application/pdf');
-
-    $mailer->send($email);
+    $notificationService->sendInvoicePaidNotification($invoice);
 
     $this->addFlash('success', 'Paiement validé et facture générée.');
 
@@ -461,6 +433,52 @@ public function sendStripeLinkByEmail(Devis $devis, MailerInterface $mailer): Re
     $this->addFlash('success', 'Lien Stripe envoyé à l\'entreprise.');
     return $this->redirectToRoute('app_devis_show', ['id' => $devis->getId()]);
 }
+
+    #[Route('/stripe/invoice-payment/{id}', name: 'stripe_invoice_payment')]
+    public function invoicePayment(Invoice $invoice): Response
+    {
+        $YOUR_DOMAIN = 'http://127.0.0.1:8000';
+
+        // Créer la session de paiement Stripe
+        Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
+        $checkout_session = Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'eur',
+                    'product_data' => [
+                        'name' => 'Facture ' . $invoice->getNumber(),
+                        'description' => $invoice->getDescription() ?: 'Paiement de facture',
+                    ],
+                    'unit_amount' => $invoice->getAmount() * 100, // Montant en centimes
+                ],
+                'quantity' => 1,
+            ]],
+            'mode' => 'payment',
+            'success_url' => $YOUR_DOMAIN . '/stripe/invoice-success/' . $invoice->getId(),
+            'cancel_url' => $YOUR_DOMAIN . '/account/invoices',
+            'metadata' => [
+                'invoice_id' => $invoice->getId(),
+            ]
+        ]);
+
+        return $this->redirect($checkout_session->url, 303);
+    }
+
+    #[Route('/stripe/invoice-success/{id}', name: 'stripe_invoice_success')]
+    public function invoiceSuccess(Invoice $invoice, EntityManagerInterface $entityManager, NotificationService $notificationService): Response
+    {
+        // Marquer la facture comme payée
+        $invoice->setStatus('paid');
+        $entityManager->flush();
+
+        // Envoyer une notification de paiement
+        $notificationService->sendInvoicePaidNotification($invoice);
+
+        $this->addFlash('success', 'Facture payée avec succès !');
+        
+        return $this->redirectToRoute('app_account_invoices');
+    }
 
 
 }
