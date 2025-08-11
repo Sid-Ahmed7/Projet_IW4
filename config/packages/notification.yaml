@@ -1,0 +1,7 @@
+# Configuration pour le service de notifications
+services:
+    App\Service\NotificationService:
+        arguments:
+            $fromEmail: '%env(FROM_EMAIL)%'
+        tags:
+            - { name: monolog.logger, channel: notification }

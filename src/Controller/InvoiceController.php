@@ -7,6 +7,7 @@ use App\Entity\Invoice;
 use App\Form\InvoiceType;
 use App\Repository\DevisRepository;
 use App\Repository\InvoiceRepository;
+use App\Service\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Price;
 use Stripe\Stripe;
@@ -48,7 +49,7 @@ class InvoiceController extends AbstractController
     }
 
     #[Route('/devis/{id}/invoice/new', name: 'app_invoice_new_from_devis', methods: ['GET', 'POST'])]
-    public function newFromDevis(Devis $devis, Request $request, EntityManagerInterface $entityManager): Response
+    public function newFromDevis(Devis $devis, Request $request, EntityManagerInterface $entityManager, NotificationService $notificationService): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
@@ -85,6 +86,9 @@ class InvoiceController extends AbstractController
             
             $entityManager->persist($invoice);
             $entityManager->flush();
+
+            // Envoi de la notification par email
+            $notificationService->notifyInvoiceCreated($invoice);
 
             $this->addFlash('success', 'La facture a été créée avec succès.');
             return $this->redirectToRoute('app_invoice_show', ['id' => $invoice->getId()]);

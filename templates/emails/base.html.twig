@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ subject }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Configuration Tailwind pour les emails */
+        .email-container {
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 p-5">
+    <div class="email-container max-w-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 text-center">
+            <h1 class="text-2xl font-bold mb-2">FactuPro</h1>
+            <p class="text-blue-100">Gestion de devis et factures professionnelle</p>
+        </div>
+        
+        <!-- Content -->
+        <div class="p-8">
+            {% block content %}{% endblock %}
+        </div>
+        
+        <!-- Footer -->
+        <div class="bg-gray-50 p-6 border-t border-gray-200">
+            <div class="text-center">
+                <div class="mb-4">
+                    <h3 class="font-semibold text-gray-900 mb-2">{{ company.name }}</h3>
+                    {% if company.address %}
+                    <p class="text-gray-600 text-sm">{{ company.address }}</p>
+                    {% endif %}
+                    <div class="flex justify-center space-x-4 text-sm text-gray-600 mt-2">
+                        {% if company.email %}
+                        <span>📧 {{ company.email }}</span>
+                        {% endif %}
+                        {% if company.phone %}
+                        <span>📞 {{ company.phone }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="text-xs text-gray-500 border-t pt-4">
+                    <p class="mb-1">Cet email a été envoyé automatiquement par FactuPro.</p>
+                    <p>Pour toute question, contactez-nous directement.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

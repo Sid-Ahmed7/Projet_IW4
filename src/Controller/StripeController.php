@@ -16,6 +16,7 @@ use App\Repository\DevisRepository;
 use App\Repository\PlanRepository;
 use App\Repository\UserPlanRepository;
 use App\Repository\UserRepository;
+use App\Service\NotificationService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Plan as StripePlan;
@@ -326,7 +327,7 @@ public function payDevis(
 public function successDevis(
     Devis $devis,
     EntityManagerInterface $em,
-    MailerInterface $mailer // ⬅️ Ajout ici
+    NotificationService $notificationService
 ): Response {
     $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
     
@@ -343,10 +344,15 @@ public function successDevis(
     $invoice->setAmount((float)$devis->getPrice());
     $invoice->setDescription($devis->getContent());
     $invoice->setNumber(date('Ym') . '-' . uniqid());
+    $invoice->setStatus('paid'); // Marquer comme payée
     $invoice->setCreatedAt(new \DateTimeImmutable());
 
     $em->persist($invoice);
     $em->flush();
+
+    // Envoi des notifications par email
+    $notificationService->notifyInvoiceCreated($invoice);
+    $notificationService->notifyInvoicePaid($invoice);
 
     // 🧾 Générer le PDF de la facture
     $html = $this->renderView('invoice/pdf.html.twig', [

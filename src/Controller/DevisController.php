@@ -10,6 +10,7 @@ use App\Repository\DevisAssetRepository;
 use App\Repository\DevisRepository;
 use App\Repository\CompanyRepository;
 use App\Repository\UserRepository;
+use App\Service\NotificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,7 +64,7 @@ class DevisController extends AbstractController
     }
 
     #[Route('/devis/new', name: 'app_devis_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, NotificationService $notificationService): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $user = $this->getUser();
@@ -147,6 +148,9 @@ class DevisController extends AbstractController
             }
             
             $entityManager->flush();
+
+            // Envoi de la notification par email
+            $notificationService->notifyNewQuote($devis);
 
             return $this->redirectToRoute('app_devis_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -398,7 +402,7 @@ class DevisController extends AbstractController
     }
 
     #[Route('/devis/{id}/validate', name: 'app_devis_validate', methods: ['POST'])]
-    public function validateDevis(Request $request, Devis $devi, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
+    public function validateDevis(Request $request, Devis $devi, EntityManagerInterface $entityManager, NotificationService $notificationService): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
@@ -431,13 +435,8 @@ class DevisController extends AbstractController
         $devi->setUpdatedAt(new \DateTimeImmutable());
         $entityManager->flush();
         
-        // Envoyer un email au créateur du devis
-        $creatorEmail = $devi->getHubuser()->getEmail();
-        $companyName = $devi->getCompany()->getName();
-        
-        $email = (new Email())
-            ->from(new Address('ibrahim60200@gmail.com', 'FactuPro'))
-            ->to($creatorEmail)
+        // Envoi de la notification par email
+        $notificationService->notifyQuoteAccepted($devi);
             ->subject('Devis validé - ' . $devi->getTitle())
             ->html("
                 <h2>Votre devis a été validé !</h2>
@@ -459,7 +458,7 @@ class DevisController extends AbstractController
     }
 
     #[Route('/devis/{id}/reject', name: 'app_devis_reject', methods: ['POST'])]
-    public function rejectDevis(Request $request, Devis $devi, EntityManagerInterface $entityManager, MailerInterface $mailer): Response
+    public function rejectDevis(Request $request, Devis $devi, EntityManagerInterface $entityManager, NotificationService $notificationService): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
@@ -492,13 +491,11 @@ class DevisController extends AbstractController
         $devi->setUpdatedAt(new \DateTimeImmutable());
         $entityManager->flush();
         
-        // Envoyer un email au créateur du devis
-        $creatorEmail = $devi->getHubuser()->getEmail();
-        $companyName = $devi->getCompany()->getName();
+        // Récupérer le motif de refus s'il existe
+        $reason = $request->request->get('reason', '');
         
-        $email = (new Email())
-            ->from(new Address('ibrahim60200@gmail.com', 'FactuPro'))
-            ->to($creatorEmail)
+        // Envoi de la notification par email
+        $notificationService->notifyQuoteRejected($devi, $reason);
             ->subject('Devis rejeté - ' . $devi->getTitle())
             ->html("
                 <h2>Votre devis a été rejeté</h2>

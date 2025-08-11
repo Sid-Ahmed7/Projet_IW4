@@ -1,0 +1,94 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block content %}
+    <div class="space-y-6">
+        <!-- Titre principal -->
+        <div class="text-center">
+            <h2 class="text-3xl font-bold text-green-600 mb-2">✅ Devis accepté</h2>
+            <div class="w-24 h-1 bg-gradient-to-r from-green-500 to-emerald-500 mx-auto rounded-full"></div>
+        </div>
+        
+        <!-- Message d'accueil -->
+        <div class="text-gray-700">
+            <p class="text-lg">Bonjour <span class="font-semibold text-green-600">{{ user.firstname }} {{ user.lastname }}</span>,</p>
+            <p class="mt-2">🎉 <span class="font-semibold text-green-600">Excellente nouvelle !</span> Le devis pour votre entreprise <span class="font-semibold text-gray-900">{{ company.name }}</span> a été accepté.</p>
+        </div>
+        
+        <!-- Détails du devis accepté -->
+        <div class="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-r-lg p-6">
+            <h3 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                📋 <span class="ml-2">Détails du devis accepté</span>
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-3">
+                    <div class="flex items-center">
+                        <span class="font-medium text-gray-600 w-20">Numéro:</span>
+                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">#{{ devis.id }}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="font-medium text-gray-600 w-20">Titre:</span>
+                        <span class="text-gray-900 font-medium">{{ devis.title }}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="font-medium text-gray-600 w-20">Montant:</span>
+                        <span class="text-green-600 font-bold text-lg">{{ devis.price|number_format(2, ',', ' ') }}€</span>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex items-center">
+                        <span class="font-medium text-gray-600 w-16">Statut:</span>
+                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold uppercase">{{ devis.state }}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="font-medium text-gray-600 w-16">Accepté le:</span>
+                        <span class="text-gray-700">{{ devis.updatedAt|date('d/m/Y à H:i') }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bouton d'action -->
+        <div class="text-center">
+            <a href="{{ url('app_account_devis_show', {id: devis.id}) }}" 
+               class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105">
+                📄 <span class="ml-2">Voir le devis accepté</span>
+            </a>
+        </div>
+        
+        <!-- Prochaines étapes -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-blue-900 mb-3 flex items-center">
+                📝 <span class="ml-2">Prochaines étapes</span>
+            </h3>
+            <ul class="space-y-2">
+                <li class="flex items-start">
+                    <span class="text-blue-500 mr-2">•</span>
+                    <span class="text-blue-700">Une facture sera générée automatiquement</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-blue-500 mr-2">•</span>
+                    <span class="text-blue-700">Vous recevrez les informations de paiement sous peu</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-blue-500 mr-2">•</span>
+                    <span class="text-blue-700">La prestation peut maintenant être planifiée</span>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Message de remerciement -->
+        <div class="bg-gradient-to-r from-green-100 to-emerald-100 p-4 rounded-lg border border-green-200">
+            <p class="text-green-800 font-medium text-center">
+                🙏 Merci de votre confiance !
+            </p>
+        </div>
+        
+        <!-- Signature -->
+        <div class="text-right">
+            <p class="text-gray-600">
+                Cordialement,<br>
+                <span class="font-semibold text-green-600">L'équipe FactuPro</span>
+            </p>
+        </div>
+    </div>
+{% endblock %}
