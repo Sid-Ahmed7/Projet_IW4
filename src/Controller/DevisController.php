@@ -17,9 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\Uid\Uuid;
 
 
@@ -120,32 +117,6 @@ class DevisController extends AbstractController
             $notification->setCreatedAt(new \DateTimeImmutable());
 
             $entityManager->persist($notification);
-            
-            // Si le devis est destiné à une entreprise, envoyer un email de notification à l'entreprise
-            if ($devis->getCompany()) {
-                $companyEmail = $devis->getCompany()->getEmail();
-                if ($companyEmail) {
-                    $email = (new Email())
-                        ->from(new Address('ibrahim60200@gmail.com', 'FactuPro'))
-                        ->to($companyEmail)
-                        ->subject('Nouveau devis à valider - ' . $devis->getTitle())
-                        ->html("
-                            <h2>Nouveau devis à valider</h2>
-                            <p>Bonjour,</p>
-                            <p>Un nouveau devis a été créé et nécessite votre validation :</p>
-                            <ul>
-                                <li><strong>De :</strong> {$user->getFirstname()} {$user->getLastname()}</li>
-                                <li><strong>Titre :</strong> {$devis->getTitle()}</li>
-                                <li><strong>Montant :</strong> {$devis->getPrice()} €</li>
-                                <li><strong>Date de création :</strong> " . (new \DateTime())->format('d/m/Y à H:i') . "</li>
-                            </ul>
-                            <p>Connectez-vous à votre espace FactuPro pour valider ou rejeter ce devis.</p>
-                            <p>Cordialement,<br>L'équipe FactuPro</p>
-                        ");
-
-                    $mailer->send($email);
-                }
-            }
             
             $entityManager->flush();
 
@@ -437,21 +408,6 @@ class DevisController extends AbstractController
         
         // Envoi de la notification par email
         $notificationService->notifyQuoteAccepted($devi);
-            ->subject('Devis validé - ' . $devi->getTitle())
-            ->html("
-                <h2>Votre devis a été validé !</h2>
-                <p>Bonjour {$devi->getHubuser()->getFirstname()},</p>
-                <p>Bonne nouvelle ! L'entreprise <strong>{$companyName}</strong> a validé votre devis :</p>
-                <ul>
-                    <li><strong>Titre :</strong> {$devi->getTitle()}</li>
-                    <li><strong>Montant :</strong> {$devi->getPrice()} €</li>
-                    <li><strong>Date de validation :</strong> " . (new \DateTime())->format('d/m/Y à H:i') . "</li>
-                </ul>
-                <p>Vous pouvez maintenant procéder au paiement de ce devis.</p>
-                <p>Cordialement,<br>L'équipe FactuPro</p>
-            ");
-
-        $mailer->send($email);
         
         $this->addFlash('success', 'Devis validé avec succès. Un email de notification a été envoyé au créateur.');
         return $this->redirectToRoute('app_devis_show', ['id' => $devi->getId()]);
@@ -496,21 +452,6 @@ class DevisController extends AbstractController
         
         // Envoi de la notification par email
         $notificationService->notifyQuoteRejected($devi, $reason);
-            ->subject('Devis rejeté - ' . $devi->getTitle())
-            ->html("
-                <h2>Votre devis a été rejeté</h2>
-                <p>Bonjour {$devi->getHubuser()->getFirstname()},</p>
-                <p>L'entreprise <strong>{$companyName}</strong> a rejeté votre devis :</p>
-                <ul>
-                    <li><strong>Titre :</strong> {$devi->getTitle()}</li>
-                    <li><strong>Montant :</strong> {$devi->getPrice()} €</li>
-                    <li><strong>Date de rejet :</strong> " . (new \DateTime())->format('d/m/Y à H:i') . "</li>
-                </ul>
-                <p>Vous pouvez modifier ce devis et le soumettre à nouveau pour validation.</p>
-                <p>Cordialement,<br>L'équipe FactuPro</p>
-            ");
-
-        $mailer->send($email);
         
         $this->addFlash('error', 'Devis rejeté. Un email de notification a été envoyé au créateur.');
         return $this->redirectToRoute('app_devis_show', ['id' => $devi->getId()]);
