@@ -4,8 +4,8 @@ echo "🚀 Configuration de FactuPro sur VPS"
 echo "===================================="
 
 # Vérifier qu'on est dans le bon répertoire
-if [ ! -f "docker-compose.yml" ]; then
-    echo "❌ Erreur: docker-compose.yml non trouvé"
+if [ ! -f "Docker-compose.yml" ]; then
+    echo "❌ Erreur: Docker-compose.yml non trouvé"
     echo "Assurez-vous d'être dans le répertoire du projet cloné"
     exit 1
 fi
