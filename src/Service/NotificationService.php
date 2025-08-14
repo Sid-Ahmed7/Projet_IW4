@@ -37,6 +37,14 @@ class NotificationService
                 return;
             }
 
+            if (!$user->getEmail()) {
+                $this->logger->warning('Cannot send notification: user has no email', [
+                    'devis_id' => $devis->getId(),
+                    'user_id' => $user->getId()
+                ]);
+                return;
+            }
+
             $email = (new TemplatedEmail())
                 ->from($this->fromEmail)
                 ->to($user->getEmail())
@@ -45,7 +53,8 @@ class NotificationService
                 ->context([
                     'devis' => $devis,
                     'company' => $company,
-                    'user' => $user
+                    'user' => $user,
+                    'subject' => 'Nouveau devis créé - ' . $devis->getTitle()
                 ]);
 
             $this->mailer->send($email);
@@ -60,6 +69,7 @@ class NotificationService
                 'devis_id' => $devis->getId(),
                 'error' => $e->getMessage()
             ]);
+            throw $e; // Re-throw to see the actual error
         }
     }
 

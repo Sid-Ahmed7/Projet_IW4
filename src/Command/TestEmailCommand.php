@@ -31,10 +31,7 @@ class TestEmailCommand extends Command
                 ->from('noreply@factupro.com')
                 ->to('test@example.com')
                 ->subject('Test email from FactuPro')
-                ->htmlTemplate('emails/base.html.twig')
-                ->context([
-                    'message' => 'This is a test email to verify email functionality.'
-                ]);
+                ->html('<h1>Test Email</h1><p>This is a test email to verify email functionality.</p>');
 
             $this->mailer->send($email);
             

@@ -1,4 +1,4 @@
-{% extends 'emails/base.html.twig' %}
+{% extends 'emails/email_base.html.twig' %}
 
 {% block content %}
     <div class="space-y-6">
@@ -49,7 +49,7 @@
         
         <!-- Bouton d'action -->
         <div class="text-center">
-            <a href="{{ url('app_account_devis_show', {id: devis.id}) }}" 
+            <a href="{{ url('app_devis_show', {id: devis.id}) }}" 
                class="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105">
                 📄 <span class="ml-2">Voir le devis accepté</span>
             </a>
