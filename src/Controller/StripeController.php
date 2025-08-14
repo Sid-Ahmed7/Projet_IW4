@@ -47,8 +47,8 @@ class StripeController extends AbstractController
                 'quantity' => 1,
             ]],
             'mode' => 'payment',
-            'success_url' => $YOUR_DOMAIN . '/newsubsciber.html',
-            'cancel_url' => $YOUR_DOMAIN . '/cancel.html',
+            'success_url' => $YOUR_DOMAIN . '/stripe/invoice-success/' . $invoice->getId(),
+            'cancel_url' => $YOUR_DOMAIN . '/account/invoices',
             'metadata' => [
                 'invoice_id' => $invoice->getId(),
             ],
