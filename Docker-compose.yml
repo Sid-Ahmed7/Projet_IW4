@@ -11,7 +11,7 @@ services:
       - database
     environment:
       DATABASE_URL: "pgsql://root:root@database:5432/stackT1"
-      MAILER_DSN: "smtp://mailer:1025"
+      MAILER_DSN: "${MAILER_DSN}"
     ports:
       - "8000:8000"
 

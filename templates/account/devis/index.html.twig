@@ -77,35 +77,7 @@
 									</td>
 									<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ devi.price|number_format(2, ',', ' ') }} €</td>
 									<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-										<span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium
-												                                            {% if devi.state == 'Facturé' %}
-												                                                bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/20
-												                                            {% elseif devi.state == 'Payé' %}
-												                                                bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20
-												                                            {% elseif devi.state == 'Validé' %}
-												                                                bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20
-												                                            {% elseif devi.state == 'En attente de validation' or devi.state == 'En attente' %}
-												                                                bg-yellow-50 text-yellow-700 ring-1 ring-inset ring-yellow-600/20
-												                                            {% elseif devi.state == 'Rejeté' %}
-												                                                bg-red-50 text-red-700 ring-1 ring-inset ring-red-600/20
-												                                            {% else %}
-												                                                bg-gray-50 text-gray-700 ring-1 ring-inset ring-gray-600/20
-												                                            {% endif %}
-												                                        ">
-											{% if devi.state == 'Payé' %}
-												💰 {{ devi.state }}
-											{% elseif devi.state == 'Validé' %}
-												✅ {{ devi.state }}
-											{% elseif devi.state == 'Facturé' %}
-												📄 {{ devi.state }}
-											{% elseif devi.state == 'Rejeté' %}
-												❌ {{ devi.state }}
-											{% elseif devi.state == 'En attente de validation' or devi.state == 'En attente' %}
-												⏳ {{ devi.state }}
-											{% else %}
-												{{ devi.state }}
-											{% endif %}
-										</span>
+										{{ devis_status_badge(devi.state) }}
 									</td>
 									<td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
 										<div class="flex items-center justify-end space-x-3">
