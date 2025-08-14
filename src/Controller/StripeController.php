@@ -36,8 +36,7 @@ class StripeController extends AbstractController
     {
         $devis = $devisRepository->find($devisID);
 
-
-        $YOUR_DOMAIN = 'http://127.0.0.1:8000';
+        $YOUR_DOMAIN = $_ENV['APP_URL'];
 
         // Créer la session de paiement Stripe
         Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']); // Remplacer par votre clé privée Stripe
@@ -174,7 +173,7 @@ class StripeController extends AbstractController
 #[Route('/stripe/subscription/{planId}/{userId}', name: 'stripe2')]
     public function stripePayment(Plan $plan, EntityManagerInterface $entityManager, UserRepository $userRepository, $userId, $planId, PlanRepository $planRepository): Response
     {
-        $YOUR_DOMAIN = 'http://127.0.0.1:8000';
+        $YOUR_DOMAIN = $_ENV['APP_URL'];
 
         // clé d'API Stripe
         Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
@@ -437,7 +436,7 @@ public function sendStripeLinkByEmail(Devis $devis, MailerInterface $mailer): Re
     #[Route('/stripe/invoice-payment/{id}', name: 'stripe_invoice_payment')]
     public function invoicePayment(Invoice $invoice): Response
     {
-        $YOUR_DOMAIN = 'http://127.0.0.1:8000';
+        $YOUR_DOMAIN = $_ENV['APP_URL'];
 
         // Créer la session de paiement Stripe
         Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);

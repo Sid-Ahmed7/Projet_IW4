@@ -101,7 +101,13 @@ class TestNotificationCommand extends Command
             }
 
             $io->success('Notification sent successfully!');
-            $io->note('Check MailHog at http://localhost:8025 to see the email');
+            
+            // Afficher l'URL appropriée selon l'environnement
+            if ($_ENV['APP_ENV'] === 'dev') {
+                $io->note('Check MailHog at http://localhost:8025 to see the email');
+            } else {
+                $io->note('Email sent via production mailer');
+            }
 
         } catch (\Exception $e) {
             $io->error('Failed to send notification: ' . $e->getMessage());

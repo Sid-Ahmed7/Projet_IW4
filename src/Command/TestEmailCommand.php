@@ -35,8 +35,14 @@ class TestEmailCommand extends Command
 
             $this->mailer->send($email);
             
-            $output->writeln('✅ Email sent successfully to MailHog!');
-            $output->writeln('Check http://localhost:8025 to see the email.');
+            $output->writeln('✅ Email sent successfully!');
+            
+            // Afficher l'URL appropriée selon l'environnement
+            if ($_ENV['APP_ENV'] === 'dev') {
+                $output->writeln('Check http://localhost:8025 to see the email in MailHog.');
+            } else {
+                $output->writeln('Email sent via production mailer.');
+            }
             
             return Command::SUCCESS;
             
