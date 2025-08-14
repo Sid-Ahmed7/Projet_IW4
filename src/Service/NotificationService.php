@@ -162,6 +162,17 @@ class NotificationService
             $user = $invoice->getHubuser();
             
             if (!$company || !$user) {
+                $this->logger->warning('Cannot send notification: missing company or user', [
+                    'invoice_id' => $invoice->getId()
+                ]);
+                return;
+            }
+
+            if (!$user->getEmail()) {
+                $this->logger->warning('Cannot send notification: user has no email', [
+                    'invoice_id' => $invoice->getId(),
+                    'user_id' => $user->getId()
+                ]);
                 return;
             }
 
@@ -173,7 +184,8 @@ class NotificationService
                 ->context([
                     'invoice' => $invoice,
                     'company' => $company,
-                    'user' => $user
+                    'user' => $user,
+                    'subject' => 'Nouvelle facture - ' . $invoice->getNumber()
                 ]);
 
             $this->mailer->send($email);
@@ -188,6 +200,7 @@ class NotificationService
                 'invoice_id' => $invoice->getId(),
                 'error' => $e->getMessage()
             ]);
+            throw $e;
         }
     }
 
