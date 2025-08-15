@@ -98,6 +98,12 @@
                             </a>
                         </li>
                         <li>
+                            <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_wallet_dashboard') }}">
+                                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path></svg>
+                                <span>Mon Portefeuille</span>
+                            </a>
+                        </li>
+                        <li>
                             <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_account') }}">
                                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                                 <span>Retour au dashboard</span>
@@ -121,6 +127,12 @@
                             <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_account_invoices') }}">
                                 <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 2v4M16 2v4M4 10h16"/></svg>
                                 <span>Toutes mes factures</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_wallet_dashboard') }}">
+                                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path></svg>
+                                <span>Mon Portefeuille</span>
                             </a>
                         </li>
                     {% endif %}

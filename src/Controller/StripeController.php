@@ -17,6 +17,7 @@ use App\Repository\PlanRepository;
 use App\Repository\UserPlanRepository;
 use App\Repository\UserRepository;
 use App\Service\NotificationService;
+use App\Service\WalletService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\Plan as StripePlan;
@@ -465,10 +466,28 @@ public function sendStripeLinkByEmail(Devis $devis, MailerInterface $mailer): Re
     }
 
     #[Route('/stripe/invoice-success/{id}', name: 'stripe_invoice_success')]
-    public function invoiceSuccess(Invoice $invoice, EntityManagerInterface $entityManager, NotificationService $notificationService): Response
-    {
+    public function invoiceSuccess(
+        Invoice $invoice, 
+        EntityManagerInterface $entityManager, 
+        NotificationService $notificationService,
+        WalletService $walletService
+    ): Response {
         // Marquer la facture comme payée
         $invoice->setStatus('paid');
+        
+        // Créditer le wallet de l'entreprise
+        try {
+            $walletService->creditFromInvoicePayment($invoice, $invoice->getAmount());
+        } catch (\Exception $e) {
+            // Log l'erreur mais ne pas empêcher le paiement
+            $this->getLogger()->error('Erreur lors du crédit du wallet', [
+                'invoice_id' => $invoice->getId(),
+                'company_id' => $invoice->getCompany()->getId(),
+                'amount' => $invoice->getAmount(),
+                'error' => $e->getMessage()
+            ]);
+        }
+        
         $entityManager->flush();
 
         // Envoyer une notification de paiement

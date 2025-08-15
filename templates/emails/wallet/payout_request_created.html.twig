@@ -1,0 +1,66 @@
+{% extends 'emails/email_base.html.twig' %}
+
+{% block subject %}Demande de retrait créée{% endblock %}
+
+{% block preview %}Votre demande de retrait de {{ payoutRequest.amount|number_format(2, ',', ' ') }} € a été créée avec succès.{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h1>Demande de retrait créée</h1>
+    
+    <p>Bonjour {% if user.firstName %}{{ user.firstName }}{% else %}{{ user.email }}{% endif %},</p>
+    
+    <p>Votre demande de retrait a été créée avec succès et sera traitée dans les plus brefs délais.</p>
+    
+    <!-- Détails de la demande -->
+    <div class="info-box">
+        <h2>Détails de la demande</h2>
+        <div class="detail-row">
+            <span class="label">Montant demandé :</span>
+            <span class="value amount-positive">{{ payoutRequest.amount|number_format(2, ',', ' ') }} €</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Date de demande :</span>
+            <span class="value">{{ payoutRequest.requestedAt|date('d/m/Y à H:i') }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Compte bancaire :</span>
+            <span class="value">{{ payoutRequest.iban[:4] }}****{{ payoutRequest.iban[-4:] }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Titulaire :</span>
+            <span class="value">{{ payoutRequest.accountHolderName }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Statut :</span>
+            <span class="value">
+                <span class="status status-warning">{{ payoutRequest.statusLabel }}</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- Informations sur le traitement -->
+    <div class="info-box warning">
+        <h3>⏱️ Délai de traitement</h3>
+        <p>Les demandes de retrait sont traitées sous <strong>2 à 5 jours ouvrés</strong>. Vous recevrez un email de confirmation une fois le virement effectué sur votre compte bancaire.</p>
+    </div>
+    
+    {% if payoutRequest.notes %}
+    <div class="info-box">
+        <h3>Notes</h3>
+        <p>{{ payoutRequest.notes }}</p>
+    </div>
+    {% endif %}
+    
+    <p>Si vous avez des questions concernant votre demande de retrait, n'hésitez pas à nous contacter.</p>
+    
+    <p>
+        Cordialement,<br>
+        L'équipe FactuPro
+    </p>
+</div>
+{% endblock %}
+
+{% block action_button %}
+<!-- Pas de bouton d'action pour cette notification -->
+{% endblock %}

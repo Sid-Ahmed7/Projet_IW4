@@ -1,0 +1,82 @@
+{% extends 'emails/email_base.html.twig' %}
+
+{% block subject %}Problème avec votre retrait{% endblock %}
+
+{% block preview %}Il y a eu un problème avec votre demande de retrait de {{ payoutRequest.amount|number_format(2, ',', ' ') }} €.{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h1>⚠️ Problème avec votre retrait</h1>
+    
+    <p>Bonjour {% if user.firstName %}{{ user.firstName }}{% else %}{{ user.email }}{% endif %},</p>
+    
+    <p>Nous sommes désolés de vous informer qu'il y a eu un problème avec votre demande de retrait.</p>
+    
+    <!-- Détails de la demande -->
+    <div class="info-box error">
+        <h2>❌ Détails de la demande échouée</h2>
+        <div class="detail-row">
+            <span class="label">Montant demandé :</span>
+            <span class="value">{{ payoutRequest.amount|number_format(2, ',', ' ') }} €</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Date de demande :</span>
+            <span class="value">{{ payoutRequest.requestedAt|date('d/m/Y à H:i') }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Compte bancaire :</span>
+            <span class="value">{{ payoutRequest.iban[:4] }}****{{ payoutRequest.iban[-4:] }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Statut :</span>
+            <span class="value">
+                <span class="status status-error">{{ payoutRequest.statusLabel }}</span>
+            </span>
+        </div>
+    </div>
+    
+    <!-- Raison de l'échec -->
+    {% if payoutRequest.failureReason %}
+    <div class="info-box warning">
+        <h3>🔍 Raison de l'échec</h3>
+        <p><strong>{{ payoutRequest.failureReason }}</strong></p>
+    </div>
+    {% endif %}
+    
+    <!-- Que faire maintenant -->
+    <div class="info-box">
+        <h3>🛠️ Que faire maintenant ?</h3>
+        <ul>
+            <li><strong>Vérifiez vos informations bancaires</strong> : Assurez-vous que votre IBAN et BIC sont corrects</li>
+            <li><strong>Vérifiez le nom du titulaire</strong> : Il doit correspondre exactement au nom sur votre compte bancaire</li>
+            <li><strong>Créez une nouvelle demande</strong> : Une fois les informations corrigées, vous pouvez refaire une demande de retrait</li>
+            <li><strong>Contactez notre support</strong> : Si le problème persiste, notre équipe est là pour vous aider</li>
+        </ul>
+    </div>
+    
+    <!-- Votre solde reste disponible -->
+    <div class="info-box success">
+        <h3>💰 Votre argent est en sécurité</h3>
+        <p>Rassurez-vous, le montant de votre demande de retrait échouée a été automatiquement remis à disposition dans votre portefeuille.</p>
+        <p>Solde disponible : <strong>{{ wallet.balance|number_format(2, ',', ' ') }} €</strong></p>
+    </div>
+    
+    <p>Notre équipe support est disponible pour vous aider à résoudre ce problème. N'hésitez pas à nous contacter.</p>
+    
+    <p>
+        Cordialement,<br>
+        L'équipe FactuPro
+    </p>
+</div>
+{% endblock %}
+
+{% block action_button %}
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ url('app_wallet_payout_request') }}" class="btn btn-primary" style="margin-right: 15px;">
+        Nouvelle demande
+    </a>
+    <a href="mailto:support@factupro.com" class="btn btn-secondary">
+        Contacter le support
+    </a>
+</div>
+{% endblock %}

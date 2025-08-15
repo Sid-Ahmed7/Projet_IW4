@@ -1,0 +1,73 @@
+{% extends 'emails/email_base.html.twig' %}
+
+{% block subject %}Retrait effectué avec succès{% endblock %}
+
+{% block preview %}Votre retrait de {{ payoutRequest.amount|number_format(2, ',', ' ') }} € a été effectué avec succès.{% endblock %}
+
+{% block content %}
+<div class="content">
+    <h1>🎉 Retrait effectué avec succès</h1>
+    
+    <p>Bonjour {% if user.firstName %}{{ user.firstName }}{% else %}{{ user.email }}{% endif %},</p>
+    
+    <p>Excellente nouvelle ! Votre demande de retrait a été traitée avec succès et le virement a été effectué sur votre compte bancaire.</p>
+    
+    <!-- Détails du retrait -->
+    <div class="info-box success">
+        <h2>✅ Détails du retrait</h2>
+        <div class="detail-row">
+            <span class="label">Montant viré :</span>
+            <span class="value amount-positive"><strong>{{ payoutRequest.amount|number_format(2, ',', ' ') }} €</strong></span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Date de demande :</span>
+            <span class="value">{{ payoutRequest.requestedAt|date('d/m/Y à H:i') }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Date de traitement :</span>
+            <span class="value">{{ payoutRequest.completedAt|date('d/m/Y à H:i') }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Compte bancaire :</span>
+            <span class="value">{{ payoutRequest.iban[:4] }}****{{ payoutRequest.iban[-4:] }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Titulaire :</span>
+            <span class="value">{{ payoutRequest.accountHolderName }}</span>
+        </div>
+        {% if payoutRequest.stripeTransferId %}
+        <div class="detail-row">
+            <span class="label">Référence de transfert :</span>
+            <span class="value"><code>{{ payoutRequest.stripeTransferId }}</code></span>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Informations bancaires -->
+    <div class="info-box">
+        <h3>💰 Réception des fonds</h3>
+        <p>Les fonds devraient apparaître sur votre compte bancaire dans un délai de <strong>1 à 3 jours ouvrés</strong>, selon votre banque.</p>
+        <p>Le virement apparaîtra avec la mention <strong>"FactuPro"</strong> ou une référence similaire.</p>
+    </div>
+    
+    <!-- Nouveau solde -->
+    <div class="info-box">
+        <h3>💳 Votre portefeuille</h3>
+        <p>Solde disponible après ce retrait : <strong>{{ wallet.balance|number_format(2, ',', ' ') }} €</strong></p>
+        <p>Total des gains : <strong>{{ wallet.totalEarnings|number_format(2, ',', ' ') }} €</strong></p>
+    </div>
+    
+    <p>Merci de faire confiance à FactuPro pour la gestion de vos paiements !</p>
+    
+    <p>
+        Cordialement,<br>
+        L'équipe FactuPro
+    </p>
+</div>
+{% endblock %}
+
+{% block action_button %}
+<a href="{{ url('app_wallet_dashboard') }}" class="btn btn-primary">
+    Voir mon portefeuille
+</a>
+{% endblock %}

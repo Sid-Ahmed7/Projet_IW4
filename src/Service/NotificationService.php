@@ -374,4 +374,136 @@ class NotificationService
             ]);
         }
     }
+
+    /**
+     * Notification pour nouvelle demande de retrait
+     */
+    public function notifyPayoutRequestCreated(\App\Entity\PayoutRequest $payoutRequest): void
+    {
+        try {
+            $wallet = $payoutRequest->getWallet();
+            $company = $wallet->getCompany();
+            $requestedBy = $payoutRequest->getRequestedBy();
+            
+            if (!$requestedBy || !$requestedBy->getEmail()) {
+                $this->logger->warning('Cannot send payout request notification: missing user email', [
+                    'payout_request_id' => $payoutRequest->getId()
+                ]);
+                return;
+            }
+
+            $email = (new TemplatedEmail())
+                ->from($this->fromEmail)
+                ->to($requestedBy->getEmail())
+                ->subject('Demande de retrait créée - ' . number_format(floatval($payoutRequest->getAmount()), 2, ',', ' ') . ' €')
+                ->htmlTemplate('emails/wallet/payout_request_created.html.twig')
+                ->context([
+                    'payoutRequest' => $payoutRequest,
+                    'wallet' => $wallet,
+                    'company' => $company,
+                    'user' => $requestedBy
+                ]);
+
+            $this->mailer->send($email);
+            
+            $this->logger->info('Payout request notification sent', [
+                'payout_request_id' => $payoutRequest->getId(),
+                'user_email' => $requestedBy->getEmail()
+            ]);
+
+        } catch (\Exception $e) {
+            $this->logger->error('Failed to send payout request notification', [
+                'payout_request_id' => $payoutRequest->getId(),
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Notification pour retrait complété
+     */
+    public function notifyPayoutCompleted(\App\Entity\PayoutRequest $payoutRequest): void
+    {
+        try {
+            $wallet = $payoutRequest->getWallet();
+            $company = $wallet->getCompany();
+            $requestedBy = $payoutRequest->getRequestedBy();
+            
+            if (!$requestedBy || !$requestedBy->getEmail()) {
+                $this->logger->warning('Cannot send payout completed notification: missing user email', [
+                    'payout_request_id' => $payoutRequest->getId()
+                ]);
+                return;
+            }
+
+            $email = (new TemplatedEmail())
+                ->from($this->fromEmail)
+                ->to($requestedBy->getEmail())
+                ->subject('Retrait effectué - ' . number_format(floatval($payoutRequest->getAmount()), 2, ',', ' ') . ' €')
+                ->htmlTemplate('emails/wallet/payout_completed.html.twig')
+                ->context([
+                    'payoutRequest' => $payoutRequest,
+                    'wallet' => $wallet,
+                    'company' => $company,
+                    'user' => $requestedBy
+                ]);
+
+            $this->mailer->send($email);
+            
+            $this->logger->info('Payout completed notification sent', [
+                'payout_request_id' => $payoutRequest->getId(),
+                'user_email' => $requestedBy->getEmail()
+            ]);
+
+        } catch (\Exception $e) {
+            $this->logger->error('Failed to send payout completed notification', [
+                'payout_request_id' => $payoutRequest->getId(),
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Notification pour retrait échoué
+     */
+    public function notifyPayoutFailed(\App\Entity\PayoutRequest $payoutRequest): void
+    {
+        try {
+            $wallet = $payoutRequest->getWallet();
+            $company = $wallet->getCompany();
+            $requestedBy = $payoutRequest->getRequestedBy();
+            
+            if (!$requestedBy || !$requestedBy->getEmail()) {
+                $this->logger->warning('Cannot send payout failed notification: missing user email', [
+                    'payout_request_id' => $payoutRequest->getId()
+                ]);
+                return;
+            }
+
+            $email = (new TemplatedEmail())
+                ->from($this->fromEmail)
+                ->to($requestedBy->getEmail())
+                ->subject('Problème avec votre retrait - ' . number_format(floatval($payoutRequest->getAmount()), 2, ',', ' ') . ' €')
+                ->htmlTemplate('emails/wallet/payout_failed.html.twig')
+                ->context([
+                    'payoutRequest' => $payoutRequest,
+                    'wallet' => $wallet,
+                    'company' => $company,
+                    'user' => $requestedBy
+                ]);
+
+            $this->mailer->send($email);
+            
+            $this->logger->info('Payout failed notification sent', [
+                'payout_request_id' => $payoutRequest->getId(),
+                'user_email' => $requestedBy->getEmail()
+            ]);
+
+        } catch (\Exception $e) {
+            $this->logger->error('Failed to send payout failed notification', [
+                'payout_request_id' => $payoutRequest->getId(),
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
 }
