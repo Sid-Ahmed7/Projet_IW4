@@ -1,0 +1,92 @@
+{% extends 'emails/email_base.html.twig' %}
+
+{% block title %}Facture signée - {{ invoice.number }}{% endblock %}
+
+{% block content %}
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+    <div style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+        <h1 style="margin: 0; font-size: 28px;">✅ Facture signée</h1>
+        <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">{{ invoice.number }}</p>
+    </div>
+    
+    <div style="background: white; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <p style="font-size: 16px; line-height: 1.6; color: #333; margin: 0 0 20px 0;">
+            Bonjour {{ user.firstName ?: user.email }},
+        </p>
+        
+        <p style="font-size: 16px; line-height: 1.6; color: #333; margin: 0 0 20px 0;">
+            Bonne nouvelle ! Votre facture <strong>{{ invoice.number }}</strong> a été signée électroniquement par le client.
+        </p>
+        
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="margin: 0 0 15px 0; color: #495057;">Détails de la signature :</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="padding: 8px 0; color: #6c757d; width: 140px;">Signataire :</td>
+                    <td style="padding: 8px 0; font-weight: bold;">{{ signerName }}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 0; color: #6c757d;">Date de signature :</td>
+                    <td style="padding: 8px 0;">{{ signedAt|date('d/m/Y à H:i') }}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 0; color: #6c757d;">Statut :</td>
+                    <td style="padding: 8px 0; color: #28a745; font-weight: bold;">Signée ✓</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="margin: 0 0 15px 0; color: #495057;">Détails de la facture :</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="padding: 8px 0; color: #6c757d; width: 140px;">Numéro :</td>
+                    <td style="padding: 8px 0; font-weight: bold;">{{ invoice.number }}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 0; color: #6c757d;">Date de création :</td>
+                    <td style="padding: 8px 0;">{{ invoice.createdAt|date('d/m/Y') }}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 0; color: #6c757d;">Montant :</td>
+                    <td style="padding: 8px 0; font-weight: bold; color: #28a745;">{{ invoice.amount|number_format(2, ',', ' ') }} €</td>
+                </tr>
+                {% if invoice.description %}
+                <tr>
+                    <td style="padding: 8px 0; color: #6c757d; vertical-align: top;">Description :</td>
+                    <td style="padding: 8px 0;">{{ invoice.description }}</td>
+                </tr>
+                {% endif %}
+            </table>
+        </div>
+        
+        <div style="background: #d4edda; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #28a745;">
+            <p style="margin: 0; font-size: 14px; color: #155724;">
+                <strong>🎉 Félicitations !</strong> Cette facture est maintenant officiellement signée et peut être utilisée comme document légal.
+            </p>
+        </div>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="{{ app.request.schemeAndHttpHost }}/account/invoice/{{ invoice.id }}" 
+               style="background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); 
+                      color: white; 
+                      text-decoration: none; 
+                      padding: 12px 25px; 
+                      border-radius: 25px; 
+                      font-weight: bold; 
+                      font-size: 14px; 
+                      display: inline-block; 
+                      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);">
+                📄 Voir la facture
+            </a>
+        </div>
+        
+        <hr style="border: none; border-top: 1px solid #dee2e6; margin: 30px 0;">
+        
+        <p style="font-size: 14px; color: #6c757d; margin: 0; text-align: center;">
+            Cette notification a été envoyée automatiquement par FactuPro<br>
+            {{ company.name }}
+        </p>
+    </div>
+</div>
+{% endblock %}

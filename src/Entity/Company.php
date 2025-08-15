@@ -82,6 +82,9 @@ class Company implements \Stringable
     #[ORM\ManyToOne(inversedBy: 'companies')]
     private ?User $user = null;
 
+    #[ORM\OneToOne(mappedBy: 'company', cascade: ['persist', 'remove'])]
+    private ?Wallet $wallet = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -410,6 +413,23 @@ class Company implements \Stringable
     public function setUser(?User $user): static
     {
         $this->user = $user;
+        return $this;
+    }
+
+    public function getWallet(): ?Wallet
+    {
+        return $this->wallet;
+    }
+
+    public function setWallet(Wallet $wallet): static
+    {
+        // set the owning side of the relation if necessary
+        if ($wallet->getCompany() !== $this) {
+            $wallet->setCompany($this);
+        }
+
+        $this->wallet = $wallet;
+
         return $this;
     }
 }

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signature de facture - {{ invoice.number }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-2xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Signature électronique</h1>
+                <p class="text-gray-600">Facture {{ invoice.number }}</p>
+            </div>
+
+            <!-- Messages d'erreur -->
+            {% for message in app.flashes('error') %}
+                <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-6">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                        </svg>
+                        {{ message }}
+                    </div>
+                </div>
+            {% endfor %}
+
+            <!-- Carte principale -->
+            <div class="bg-white rounded-xl shadow-xl overflow-hidden">
+                <!-- Détails de la facture -->
+                <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6">
+                    <h2 class="text-xl font-semibold mb-4">Détails de la facture</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-blue-100 text-sm">Numéro</p>
+                            <p class="font-semibold">{{ invoice.number }}</p>
+                        </div>
+                        <div>
+                            <p class="text-blue-100 text-sm">Date</p>
+                            <p class="font-semibold">{{ invoice.createdAt|date('d/m/Y') }}</p>
+                        </div>
+                        <div>
+                            <p class="text-blue-100 text-sm">Montant</p>
+                            <p class="font-semibold text-xl">{{ invoice.amount|number_format(2, ',', ' ') }} €</p>
+                        </div>
+                        <div>
+                            <p class="text-blue-100 text-sm">Émetteur</p>
+                            <p class="font-semibold">{{ invoice.company.name }}</p>
+                        </div>
+                    </div>
+                    {% if invoice.description %}
+                    <div class="mt-4">
+                        <p class="text-blue-100 text-sm">Description</p>
+                        <p class="font-medium">{{ invoice.description }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Formulaire de signature -->
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Signer cette facture</h3>
+                    
+                    <form method="POST" class="space-y-4">
+                        <div>
+                            <label for="signer_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                Nom complet *
+                            </label>
+                            <input type="text" 
+                                   id="signer_name" 
+                                   name="signer_name" 
+                                   required
+                                   value="{{ invoice.signerName ?: '' }}"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                   placeholder="Votre nom complet">
+                        </div>
+                        
+                        <div>
+                            <label for="signer_email" class="block text-sm font-medium text-gray-700 mb-2">
+                                Adresse email *
+                            </label>
+                            <input type="email" 
+                                   id="signer_email" 
+                                   name="signer_email" 
+                                   required
+                                   value="{{ invoice.signerEmail ?: '' }}"
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                   placeholder="votre@email.com">
+                        </div>
+                        
+                        <!-- Confirmation -->
+                        <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                            <div class="flex items-start">
+                                <input type="checkbox" 
+                                       id="confirm_signature" 
+                                       required
+                                       class="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                <label for="confirm_signature" class="ml-3 text-sm text-gray-700">
+                                    Je confirme avoir lu et accepté cette facture. Ma signature électronique a la même valeur légale qu'une signature manuscrite.
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-4 pt-4">
+                            <button type="submit" 
+                                    class="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold py-3 px-6 rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-200 shadow-lg transform hover:scale-105">
+                                <span class="flex items-center justify-center">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                                    </svg>
+                                    Signer la facture
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Informations de sécurité -->
+            <div class="mt-6 text-center">
+                <div class="inline-flex items-center text-sm text-gray-600">
+                    <svg class="w-4 h-4 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    Processus de signature sécurisé et conforme RGPD
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

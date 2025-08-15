@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facture déjà signée - {{ invoice.number }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-2xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-orange-500 rounded-full mb-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Facture déjà signée</h1>
+                <p class="text-gray-600">Cette facture a déjà été signée électroniquement</p>
+            </div>
+
+            <!-- Carte principale -->
+            <div class="bg-white rounded-xl shadow-xl overflow-hidden">
+                <!-- Statut -->
+                <div class="bg-gradient-to-r from-green-600 to-green-700 text-white p-6">
+                    <div class="flex items-center mb-4">
+                        <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <h2 class="text-xl font-semibold">Facture {{ invoice.number }}</h2>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                            ✓ Signée
+                        </span>
+                        <span class="ml-3 text-green-100">
+                            le {{ invoice.signedAt|date('d/m/Y à H:i') }}
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Détails -->
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="space-y-4">
+                            <h3 class="font-semibold text-gray-900 text-lg">Informations de signature</h3>
+                            {% if invoice.signerName %}
+                            <div>
+                                <p class="text-sm text-gray-500">Signataire</p>
+                                <p class="font-medium text-gray-900">{{ invoice.signerName }}</p>
+                            </div>
+                            {% endif %}
+                            <div>
+                                <p class="text-sm text-gray-500">Date de signature</p>
+                                <p class="font-medium text-gray-900">{{ invoice.signedAt|date('d/m/Y à H:i:s') }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Statut</p>
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    Signée et validée
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <h3 class="font-semibold text-gray-900 text-lg">Détails de la facture</h3>
+                            <div>
+                                <p class="text-sm text-gray-500">Numéro</p>
+                                <p class="font-medium text-gray-900">{{ invoice.number }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Date de création</p>
+                                <p class="font-medium text-gray-900">{{ invoice.createdAt|date('d/m/Y') }}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Montant</p>
+                                <p class="font-medium text-gray-900 text-xl">{{ invoice.amount|number_format(2, ',', ' ') }} €</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Émetteur</p>
+                                <p class="font-medium text-gray-900">{{ invoice.company.name }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if invoice.description %}
+                    <div class="mb-6">
+                        <h4 class="font-medium text-gray-900 mb-2">Description</h4>
+                        <p class="text-gray-700 bg-gray-50 p-3 rounded-lg">{{ invoice.description }}</p>
+                    </div>
+                    {% endif %}
+
+                    <!-- Information importante -->
+                    <div class="bg-orange-50 border border-orange-200 p-4 rounded-lg">
+                        <div class="flex items-start">
+                            <svg class="w-5 h-5 text-orange-600 mr-3 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            <div>
+                                <p class="font-medium text-orange-900">Document déjà signé</p>
+                                <p class="text-sm text-orange-700 mt-1">
+                                    Cette facture a déjà été signée électroniquement. Il n'est plus possible de la modifier ou de la signer à nouveau.
+                                    Le lien de signature que vous avez utilisé n'est plus valide.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informations légales -->
+                    <div class="bg-gray-50 border border-gray-200 p-4 rounded-lg mt-4">
+                        <h4 class="font-medium text-gray-900 mb-2">Valeur légale</h4>
+                        <p class="text-sm text-gray-600">
+                            Cette signature électronique a la même valeur légale qu'une signature manuscrite. 
+                            Un certificat de signature horodaté a été généré et conservé de manière sécurisée.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="mt-8 text-center">
+                <button onclick="window.close()" 
+                        class="inline-flex items-center px-6 py-3 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                    Fermer cette page
+                </button>
+            </div>
+
+            <!-- Footer -->
+            <div class="mt-8 text-center">
+                <div class="inline-flex items-center text-sm text-gray-500">
+                    <svg class="w-4 h-4 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                    </svg>
+                    Signature sécurisée par FactuPro
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

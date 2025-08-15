@@ -1,0 +1,83 @@
+{% extends 'emails/email_base.html.twig' %}
+
+{% block title %}Signature requise - Facture {{ invoice.number }}{% endblock %}
+
+{% block content %}
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+        <h1 style="margin: 0; font-size: 28px;">Signature requise</h1>
+        <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">Facture {{ invoice.number }}</p>
+    </div>
+    
+    <div style="background: white; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <p style="font-size: 16px; line-height: 1.6; color: #333; margin: 0 0 20px 0;">
+            Bonjour {{ signerName }},
+        </p>
+        
+        <p style="font-size: 16px; line-height: 1.6; color: #333; margin: 0 0 20px 0;">
+            Vous avez reçu une facture de la part de <strong>{{ company.name }}</strong> qui nécessite votre signature électronique.
+        </p>
+        
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="margin: 0 0 15px 0; color: #495057;">Détails de la facture :</h3>
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="padding: 8px 0; color: #6c757d; width: 120px;">Numéro :</td>
+                    <td style="padding: 8px 0; font-weight: bold;">{{ invoice.number }}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 0; color: #6c757d;">Date :</td>
+                    <td style="padding: 8px 0;">{{ invoice.createdAt|date('d/m/Y') }}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 0; color: #6c757d;">Montant :</td>
+                    <td style="padding: 8px 0; font-weight: bold; color: #28a745;">{{ invoice.amount|number_format(2, ',', ' ') }} €</td>
+                </tr>
+                {% if invoice.description %}
+                <tr>
+                    <td style="padding: 8px 0; color: #6c757d; vertical-align: top;">Description :</td>
+                    <td style="padding: 8px 0;">{{ invoice.description }}</td>
+                </tr>
+                {% endif %}
+            </table>
+        </div>
+        
+        <p style="font-size: 16px; line-height: 1.6; color: #333; margin: 20px 0;">
+            Pour signer cette facture électroniquement, cliquez sur le bouton ci-dessous :
+        </p>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="{{ signatureUrl }}" 
+               style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); 
+                      color: white; 
+                      text-decoration: none; 
+                      padding: 15px 30px; 
+                      border-radius: 50px; 
+                      font-weight: bold; 
+                      font-size: 16px; 
+                      display: inline-block; 
+                      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);">
+                📝 Signer la facture
+            </a>
+        </div>
+        
+        <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2196f3;">
+            <p style="margin: 0; font-size: 14px; color: #1976d2;">
+                <strong>🔒 Sécurisé :</strong> Ce lien de signature est sécurisé et unique. Il expirera après signature.
+            </p>
+        </div>
+        
+        <p style="font-size: 14px; line-height: 1.6; color: #6c757d; margin: 20px 0 0 0;">
+            Si vous rencontrez des difficultés, vous pouvez aussi copier et coller ce lien dans votre navigateur :<br>
+            <span style="word-break: break-all; color: #007bff;">{{ signatureUrl }}</span>
+        </p>
+        
+        <hr style="border: none; border-top: 1px solid #dee2e6; margin: 30px 0;">
+        
+        <p style="font-size: 14px; color: #6c757d; margin: 0; text-align: center;">
+            Cette demande de signature a été envoyée par {{ company.name }}<br>
+            Si vous pensez avoir reçu cet email par erreur, veuillez l'ignorer.
+        </p>
+    </div>
+</div>
+{% endblock %}
