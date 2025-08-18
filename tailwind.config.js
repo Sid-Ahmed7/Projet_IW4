@@ -31,6 +31,11 @@ module.exports = {
     'hover:scale-105',
     'shadow-lg',
     'shadow-sm',
+    // Classes pour layout et spacing
+    'ml-60',
+    'w-60',
+    'fixed',
+    'min-h-screen',
     // Nouvelles classes pour le wallet dashboard
     'bg-gradient-to-br',
     'from-purple-100',
@@ -211,7 +216,20 @@ module.exports = {
     'text-blue-500',
     'text-green-500',
     'text-red-500',
-    'bg-gray-100'
+    'bg-gray-100',
+    // Classes Tailwind génériques importantes
+    'bg-white',
+    'text-white',
+    'text-black',
+    'text-gray-100',
+    'text-gray-200',
+    'text-gray-300',
+    'text-gray-400',
+    'text-gray-500',
+    'text-gray-600',
+    'text-gray-700',
+    'text-gray-800',
+    'text-gray-900'
   ],
   theme: {
     extend: {
