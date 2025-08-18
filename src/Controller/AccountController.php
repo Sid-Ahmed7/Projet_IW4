@@ -180,6 +180,7 @@ class AccountController extends AbstractController
         
         if ($user->getAccountType() === 'company' && $user->getCompany()) {
             // Pour un compte entreprise, récupérer toutes les factures de l'entreprise
+            // (pas seulement celles où il est hubuser)
             $invoices = $invoiceRepository->findBy(['company' => $user->getCompany()]);
         } else {
             // Pour un compte personnel, récupérer les factures de l'utilisateur
