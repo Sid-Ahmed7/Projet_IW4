@@ -375,8 +375,8 @@ class NotificationService
         }
     }
 
-    /**
-     * Notification pour nouvelle demande de retrait
+        /**
+     * Notification pour demande de retrait créée
      */
     public function notifyPayoutRequestCreated(\App\Entity\PayoutRequest $payoutRequest): void
     {
@@ -385,34 +385,91 @@ class NotificationService
             $company = $wallet->getCompany();
             $requestedBy = $payoutRequest->getRequestedBy();
             
-            if (!$requestedBy || !$requestedBy->getEmail()) {
-                $this->logger->warning('Cannot send payout request notification: missing user email', [
+            // 1. Notifier l'utilisateur qui a fait la demande
+            if ($requestedBy && $requestedBy->getEmail()) {
+                $email = (new TemplatedEmail())
+                    ->from($this->fromEmail)
+                    ->to($requestedBy->getEmail())
+                    ->subject('Demande de retrait reçue - ' . number_format(floatval($payoutRequest->getAmount()), 2, ',', ' ') . ' €')
+                    ->htmlTemplate('emails/wallet/payout_request_created.html.twig')
+                    ->context([
+                        'payoutRequest' => $payoutRequest,
+                        'wallet' => $wallet,
+                        'company' => $company,
+                        'user' => $requestedBy
+                    ]);
+
+                $this->mailer->send($email);
+            }
+
+            // 2. Notifier tous les administrateurs de la nouvelle demande
+            $this->notifyAdminsNewPayoutRequest($payoutRequest);
+            
+            $this->logger->info('Payout request created notification sent', [
+                'payout_request_id' => $payoutRequest->getId(),
+                'user_email' => $requestedBy?->getEmail(),
+                'amount' => $payoutRequest->getAmount()
+            ]);
+
+        } catch (\Exception $e) {
+            $this->logger->error('Failed to send payout request created notification', [
+                'payout_request_id' => $payoutRequest->getId(),
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Notification aux administrateurs pour nouvelle demande de retrait
+     */
+    public function notifyAdminsNewPayoutRequest(\App\Entity\PayoutRequest $payoutRequest): void
+    {
+        try {
+            $wallet = $payoutRequest->getWallet();
+            $company = $wallet->getCompany();
+            $requestedBy = $payoutRequest->getRequestedBy();
+            
+            // Récupérer tous les utilisateurs avec le rôle ADMIN
+            $admins = $this->userRepository->findByRole('ROLE_ADMIN');
+            
+            if (empty($admins)) {
+                $this->logger->warning('No admin users found to notify for payout request', [
                     'payout_request_id' => $payoutRequest->getId()
                 ]);
                 return;
             }
 
-            $email = (new TemplatedEmail())
-                ->from($this->fromEmail)
-                ->to($requestedBy->getEmail())
-                ->subject('Demande de retrait créée - ' . number_format(floatval($payoutRequest->getAmount()), 2, ',', ' ') . ' €')
-                ->htmlTemplate('emails/wallet/payout_request_created.html.twig')
-                ->context([
-                    'payoutRequest' => $payoutRequest,
-                    'wallet' => $wallet,
-                    'company' => $company,
-                    'user' => $requestedBy
-                ]);
+            foreach ($admins as $admin) {
+                if (!$admin->getEmail()) {
+                    continue;
+                }
 
-            $this->mailer->send($email);
-            
-            $this->logger->info('Payout request notification sent', [
-                'payout_request_id' => $payoutRequest->getId(),
-                'user_email' => $requestedBy->getEmail()
-            ]);
+                $email = (new TemplatedEmail())
+                    ->from($this->fromEmail)
+                    ->to($admin->getEmail())
+                    ->subject('🔔 Nouvelle demande de retrait à traiter - ' . $company->getName())
+                    ->htmlTemplate('emails/admin/new_payout_request.html.twig')
+                    ->context([
+                        'payoutRequest' => $payoutRequest,
+                        'wallet' => $wallet,
+                        'company' => $company,
+                        'requestedBy' => $requestedBy,
+                        'admin' => $admin,
+                        'adminUrl' => '/admin/payouts' // URL vers l'interface admin
+                    ]);
+
+                $this->mailer->send($email);
+                
+                $this->logger->info('Admin notification sent for new payout request', [
+                    'payout_request_id' => $payoutRequest->getId(),
+                    'admin_email' => $admin->getEmail(),
+                    'company' => $company->getName(),
+                    'amount' => $payoutRequest->getAmount()
+                ]);
+            }
 
         } catch (\Exception $e) {
-            $this->logger->error('Failed to send payout request notification', [
+            $this->logger->error('Failed to send admin notification for payout request', [
                 'payout_request_id' => $payoutRequest->getId(),
                 'error' => $e->getMessage()
             ]);
