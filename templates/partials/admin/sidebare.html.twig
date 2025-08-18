@@ -178,6 +178,29 @@
                     </a>
                 </li>
             </ul>
+            
+            {# Section Administration - Visible seulement pour les admins #}
+            {% if is_granted('ROLE_ADMIN') %}
+                <div class="px-6 mt-6 mb-2 text-xs text-neutral-400 tracking-widest font-semibold">ADMINISTRATION</div>
+                <ul class="space-y-1 px-2">
+                    <li>
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-red-900 transition text-sm font-medium" href="{{ path('admin_payouts') }}">
+                            <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                            <span>Gestion des Retraits</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-neutral-900 transition text-sm font-medium" href="{{ path('app_admin_users') }}">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+                            </svg>
+                            <span>Gestion des Utilisateurs</span>
+                        </a>
+                    </li>
+                </ul>
+            {% endif %}
         </nav>
     </div>
 
