@@ -69,9 +69,18 @@ class RegistrationController extends AbstractController
                 );
 
                 // --- Valeurs par défaut
+                $roles = ['ROLE_USER'];
+                
+                // Vérifier si l'utilisateur veut des privilèges admin (pour les comptes entreprise)
+                $isAdminUser = $form->get('isAdminUser')->getData();
+                if ($user->getAccountType() === 'company' && $isAdminUser) {
+                    $roles[] = 'ROLE_ADMIN';
+                    $this->logger->info('Utilisateur entreprise avec privilèges admin', ['email' => $user->getEmail()]);
+                }
+                
                 $user
                     ->setCreatedAt(new \DateTimeImmutable())
-                    ->setRoles(['ROLE_USER'])
+                    ->setRoles($roles)
                     ->setEmailVerificationToken(bin2hex(random_bytes(32)))
                     ->setIsVerified(false)
                     ->setPicture('no-user.jpg') // valeur par défaut si vous en avez besoin

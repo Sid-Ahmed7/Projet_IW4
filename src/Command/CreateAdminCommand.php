@@ -33,25 +33,14 @@ class CreateAdminCommand extends Command
         
         $io->title('🔐 Création d\'un Administrateur FactuPro');
 
-        // Vérifier s'il y a déjà un admin
-        $existingAdmin = $this->entityManager->getRepository(User::class)
-            ->createQueryBuilder('u')
-            ->where('u.roles LIKE :role')
-            ->setParameter('role', '%ROLE_ADMIN%')
-            ->getQuery()
-            ->getOneOrNullResult();
-
-        if ($existingAdmin) {
-            $io->warning(sprintf('Un administrateur existe déjà: %s', $existingAdmin->getEmail()));
-            if (!$io->confirm('Voulez-vous créer un autre administrateur ?')) {
-                return Command::SUCCESS;
-            }
-        }
-
         $email = $io->ask('Email de l\'administrateur', 'admin@factupro.com');
         $firstname = $io->ask('Prénom', 'Admin');
         $lastname = $io->ask('Nom', 'FactuPro');
-        $password = $io->askHidden('Mot de passe (laissez vide pour "admin123")', null, 'admin123');
+        $password = $io->askHidden('Mot de passe (laissez vide pour "admin123")');
+        
+        if (empty($password)) {
+            $password = 'admin123';
+        }
 
         // Vérifier que l'email n'existe pas déjà
         $existingUser = $this->entityManager->getRepository(User::class)
@@ -64,6 +53,7 @@ class CreateAdminCommand extends Command
 
         $admin = new User();
         $admin->setEmail($email);
+        $admin->setUsername($firstname . $lastname); // Username requis
         $admin->setFirstname($firstname);
         $admin->setLastname($lastname);
         $admin->setAccountType('personal'); // Type de compte par défaut

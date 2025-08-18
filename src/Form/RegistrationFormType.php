@@ -29,6 +29,25 @@ class RegistrationFormType extends AbstractType
                 'attr' => ['class' => 'mb-4'],
                 'label_attr' => ['class' => 'block text-sm font-medium text-gray-700 mb-2'],
             ])
+            ->add('isAdminUser', ChoiceType::class, [
+                'label' => 'Privilèges administrateur (Entreprise uniquement)',
+                'choices' => [
+                    'Utilisateur standard' => false,
+                    'Administrateur avec accès gestion retraits' => true,
+                ],
+                'expanded' => true,
+                'multiple' => false,
+                'data' => false,
+                'required' => false,
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'mb-4 admin-privileges',
+                    'style' => 'display: none;' // Caché par défaut
+                ],
+                'label_attr' => ['class' => 'block text-sm font-medium text-orange-600 mb-2'],
+                'help' => 'Les administrateurs peuvent valider les demandes de retrait des wallets entreprise',
+                'help_attr' => ['class' => 'text-xs text-orange-500']
+            ])
             ->add('email', EmailType::class, [
                 'constraints' => [
                     new NotBlank(),

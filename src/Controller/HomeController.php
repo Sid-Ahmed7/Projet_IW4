@@ -49,12 +49,13 @@ class HomeController extends AbstractController
     }
 
     #[Route('/admin', name: 'app_admin_dashboard', methods: ['GET'])]
-    #[IsGranted('ROLE_SUPER_ADMIN')]
+    #[IsGranted('ROLE_ADMIN')]
     public function adminDashboard(
         UserRepository $userRepository, 
         CompanyRepository $companyRepository, 
         DevisRepository $devisRepository, 
-        InvoiceRepository $invoiceRepository
+        InvoiceRepository $invoiceRepository,
+        EntityManagerInterface $entityManager
     ): Response
     {
         // Statistiques de base
@@ -62,6 +63,13 @@ class HomeController extends AbstractController
         $companiesCount = $companyRepository->count([]);
         $devisCount = $devisRepository->count([]);
         $invoicesCount = $invoiceRepository->count([]);
+
+        // Statistiques des retraits
+        $payoutRepo = $entityManager->getRepository(\App\Entity\PayoutRequest::class);
+        $payoutsPending = $payoutRepo->count(['status' => 'pending']);
+        $payoutsProcessing = $payoutRepo->count(['status' => 'processing']);
+        $payoutsCompleted = $payoutRepo->count(['status' => 'completed']);
+        $payoutsFailed = $payoutRepo->count(['status' => 'failed']);
 
         // Devis par statut
         $devisEnAttente = $devisRepository->count(['state' => 'en_attente']);
@@ -82,6 +90,10 @@ class HomeController extends AbstractController
             'companies_count' => $companiesCount,
             'devis_count' => $devisCount,
             'invoices_count' => $invoicesCount,
+            'payouts_pending' => $payoutsPending,
+            'payouts_processing' => $payoutsProcessing,
+            'payouts_completed' => $payoutsCompleted,
+            'payouts_failed' => $payoutsFailed,
             'devis_en_attente' => $devisEnAttente,
             'devis_acceptes' => $devisAcceptes,
             'devis_refuses' => $devisRefuses,
@@ -94,7 +106,7 @@ class HomeController extends AbstractController
     }
 
     #[Route('/admin/users', name: 'app_admin_users', methods: ['GET'])]
-    #[IsGranted('ROLE_SUPER_ADMIN')]
+    #[IsGranted('ROLE_ADMIN')]
     public function adminUsers(UserRepository $userRepository): Response
     {
         return $this->render('admin/users/index.html.twig', [

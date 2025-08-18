@@ -157,6 +157,61 @@
         maxDate: "today",
         locale: "fr"
     });
+
+    // Gestion de l'affichage des privilèges admin selon le type de compte
+    document.addEventListener('DOMContentLoaded', function() {
+        const accountTypeInputs = document.querySelectorAll('input[name="registration_form[accountType]"]');
+        const adminPrivilegesDiv = document.querySelector('.admin-privileges').closest('div');
+
+        function toggleAdminPrivileges() {
+            const selectedAccountType = document.querySelector('input[name="registration_form[accountType]"]:checked').value;
+            
+            if (selectedAccountType === 'company') {
+                adminPrivilegesDiv.style.display = 'block';
+                // Animation d'apparition
+                adminPrivilegesDiv.classList.add('animate-fade-in');
+            } else {
+                adminPrivilegesDiv.style.display = 'none';
+                // Reset la sélection admin si on change de type
+                const adminInputs = document.querySelectorAll('input[name="registration_form[isAdminUser]"]');
+                adminInputs.forEach(input => {
+                    if (input.value === '0' || input.value === '') {
+                        input.checked = true;
+                    }
+                });
+            }
+        }
+
+        // Contrôler l'affichage initial
+        toggleAdminPrivileges();
+
+        // Écouter les changements de type de compte
+        accountTypeInputs.forEach(input => {
+            input.addEventListener('change', toggleAdminPrivileges);
+        });
+    });
 </script>
+
+<style>
+.animate-fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.admin-privileges {
+    border: 2px solid #f59e0b;
+    border-radius: 8px;
+    padding: 12px;
+    background-color: #fef3c7;
+}
+
+.admin-privileges label {
+    color: #92400e !important;
+}
+</style>
 {% endblock %}
 
