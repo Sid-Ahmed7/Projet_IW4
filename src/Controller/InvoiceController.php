@@ -89,7 +89,7 @@ class InvoiceController extends AbstractController
         $invoice->setDevis($devis);
         $invoice->setAmount((float)$devis->getPrice());
         $invoice->setDescription($devis->getContent());
-        $invoice->setStatus('generated'); // Facture générée depuis un devis payé
+        $invoice->setStatus('paid'); // Facture payée et finalisée depuis un devis payé
         
         // Générer un numéro unique pour la facture (année + mois + ID)
         $invoice->setNumber(date('Ym') . '-' . uniqid());
