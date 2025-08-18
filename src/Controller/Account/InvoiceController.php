@@ -6,6 +6,7 @@ use App\Entity\Invoice;
 use App\Entity\Company;
 use App\Form\InvoiceType;
 use App\Repository\InvoiceRepository;
+use App\Repository\CompanyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,10 +17,33 @@ use Symfony\Component\Routing\Annotation\Route;
 class InvoiceController extends AbstractController
 {
     #[Route('/invoices', name: 'app_account_invoice_index', methods: ['GET'])]
-    public function index(InvoiceRepository $invoiceRepository): Response
+    public function index(InvoiceRepository $invoiceRepository, CompanyRepository $companyRepository): Response
     {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        
+        // Pour une entreprise, récupérer TOUTES les factures de toutes ses entreprises
+        if ($user->getAccountType() === 'company') {
+            // Récupérer toutes les companies de l'utilisateur
+            $companies = $companyRepository->findBy(['user' => $user]);
+            $invoices = [];
+            
+            foreach ($companies as $company) {
+                $companyInvoices = $invoiceRepository->findBy(['company' => $company], ['createdAt' => 'DESC']);
+                $invoices = array_merge($invoices, $companyInvoices);
+            }
+            
+            // Trier par date de création décroissante
+            usort($invoices, function($a, $b) {
+                return $b->getCreatedAt() <=> $a->getCreatedAt();
+            });
+        } else {
+            // Pour un compte personnel, récupérer les factures de l'utilisateur
+            $invoices = $invoiceRepository->findBy(['hubuser' => $user], ['createdAt' => 'DESC']);
+        }
+        
         return $this->render('account/invoice/index.html.twig', [
-            'invoices' => $invoiceRepository->findBy(['hubuser' => $this->getUser()]),
+            'invoices' => $invoices,
         ]);
     }
 

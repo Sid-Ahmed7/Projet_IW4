@@ -170,53 +170,6 @@ class AccountController extends AbstractController
         ]);
     }
 
-    #[Route('/invoices', name: 'app_account_invoices')]
-    public function invoices(InvoiceRepository $invoiceRepository, CompanyRepository $companyRepository): Response
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        
-        /** @var \App\Entity\User $user */
-        $user = $this->getUser();
-        
-        // Debug
-        error_log('User ID: ' . $user->getId());
-        error_log('Account Type: ' . $user->getAccountType());
-        
-        // Pour une entreprise, récupérer TOUTES les factures de cette entreprise
-        if ($user->getAccountType() === 'company') {
-            // Approche directe avec SQL brut
-            $connection = $this->getDoctrine()->getConnection();
-            $sql = 'SELECT i.* FROM invoice i 
-                    INNER JOIN company c ON i.company_id = c.id 
-                    WHERE c.user_id = :userId 
-                    ORDER BY i.created_at DESC';
-            $stmt = $connection->prepare($sql);
-            $result = $stmt->executeQuery(['userId' => $user->getId()]);
-            $invoiceData = $result->fetchAllAssociative();
-            
-            error_log('SQL Result count: ' . count($invoiceData));
-            error_log('SQL: ' . $sql);
-            
-            // Convertir les résultats en entités Invoice
-            $invoices = [];
-            foreach ($invoiceData as $data) {
-                $invoice = $invoiceRepository->find($data['id']);
-                if ($invoice) {
-                    $invoices[] = $invoice;
-                }
-            }
-            
-            error_log('Final invoices count: ' . count($invoices));
-        } else {
-            // Pour un compte personnel, récupérer les factures de l'utilisateur
-            $invoices = $invoiceRepository->findBy(['hubuser' => $user], ['createdAt' => 'DESC']);
-        }
-
-        return $this->render('account/invoice/index.html.twig', [
-            'invoices' => $invoices,
-        ]);
-    }
-
     #[Route('/organization/{companyId}/devis', name: 'app_account_organization_devis')]
     public function organizationDevis(
         int $companyId, 
