@@ -25,7 +25,7 @@
                     </div>
                     <div class="text-3xl font-bold text-gray-900 mb-2">{{ pending_devis|length }}</div>
                     <div class="text-sm text-orange-600 mb-3">Action requise</div>
-                    <a href="{{ path('app_account_devis_index') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Traiter les devis</a>
+                    <a href="{{ path('app_devis_index') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Traiter les devis</a>
                 </div>
 
                 <!-- Total Devis -->
@@ -40,7 +40,7 @@
                     </div>
                     <div class="text-3xl font-bold text-gray-900 mb-2">{{ devis|length }}</div>
                     <div class="text-sm text-gray-500 mb-3">{{ accepted_devis|length }} acceptés</div>
-                    <a href="{{ path('app_account_devis_index') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Voir tous les devis</a>
+                    <a href="{{ path('app_devis_index') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Voir tous les devis</a>
                 </div>
 
                 <!-- Revenus Potentiels -->

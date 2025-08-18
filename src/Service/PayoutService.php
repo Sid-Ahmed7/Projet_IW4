@@ -45,7 +45,7 @@ class PayoutService
         }
 
         // Vérifier le montant minimum (par exemple 10€)
-        if (bccomp($amount, '10.00', 2) < 0) {
+        if ((float)$amount < 10.00) {
             throw new \InvalidArgumentException('Le montant minimum de retrait est de 10€');
         }
 

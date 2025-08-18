@@ -156,8 +156,8 @@ class WalletService
      */
     public function adjustBalance(Wallet $wallet, string $amount, string $description, array $metadata = []): WalletTransaction
     {
-        $isCredit = bccomp($amount, '0', 2) > 0;
-        $absoluteAmount = $isCredit ? $amount : bcmul($amount, '-1', 2);
+        $isCredit = (float)$amount > 0;
+        $absoluteAmount = $isCredit ? $amount : number_format(abs((float)$amount), 2, '.', '');
 
         $transaction = new WalletTransaction();
         $transaction->setWallet($wallet);
@@ -211,7 +211,7 @@ class WalletService
         return [
             'total_credits' => $totalCredits,
             'total_debits' => $totalDebits,
-            'net_amount' => bcsub($totalCredits, $totalDebits, 2),
+            'net_amount' => number_format((float)$totalCredits - (float)$totalDebits, 2, '.', ''),
             'transaction_stats' => $transactionStats
         ];
     }

@@ -477,7 +477,7 @@ public function sendStripeLinkByEmail(Devis $devis, MailerInterface $mailer): Re
         
         // Créditer le wallet de l'entreprise
         try {
-            $walletService->creditFromInvoicePayment($invoice, $invoice->getAmount());
+            $walletService->creditFromInvoicePayment($invoice, (string)$invoice->getAmount());
         } catch (\Exception $e) {
             // Log l'erreur mais ne pas empêcher le paiement
             $this->getLogger()->error('Erreur lors du crédit du wallet', [

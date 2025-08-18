@@ -208,8 +208,8 @@ class Wallet
     // Méthodes utilitaires
     public function addToBalance(string $amount): static
     {
-        $this->balance = bcadd($this->balance, $amount, 2);
-        $this->totalEarnings = bcadd($this->totalEarnings, $amount, 2);
+        $this->balance = number_format((float)$this->balance + (float)$amount, 2, '.', '');
+        $this->totalEarnings = number_format((float)$this->totalEarnings + (float)$amount, 2, '.', '');
         $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
@@ -217,7 +217,7 @@ class Wallet
 
     public function subtractFromBalance(string $amount): static
     {
-        $this->balance = bcsub($this->balance, $amount, 2);
+        $this->balance = number_format((float)$this->balance - (float)$amount, 2, '.', '');
         $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
@@ -225,7 +225,7 @@ class Wallet
 
     public function addToPendingBalance(string $amount): static
     {
-        $this->pendingBalance = bcadd($this->pendingBalance, $amount, 2);
+        $this->pendingBalance = number_format((float)$this->pendingBalance + (float)$amount, 2, '.', '');
         $this->updatedAt = new \DateTimeImmutable();
 
         return $this;
@@ -233,7 +233,7 @@ class Wallet
 
     public function movePendingToBalance(string $amount): static
     {
-        $this->pendingBalance = bcsub($this->pendingBalance, $amount, 2);
+        $this->pendingBalance = number_format((float)$this->pendingBalance - (float)$amount, 2, '.', '');
         $this->addToBalance($amount);
 
         return $this;
@@ -246,6 +246,6 @@ class Wallet
 
     public function hasEnoughBalance(string $amount): bool
     {
-        return bccomp($this->balance, $amount, 2) >= 0;
+        return (float)$this->balance >= (float)$amount;
     }
 }

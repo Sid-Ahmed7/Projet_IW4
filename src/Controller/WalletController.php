@@ -111,7 +111,7 @@ class WalletController extends AbstractController
             // Validation de base
             if (empty($amount) || !is_numeric($amount)) {
                 $errors[] = 'Le montant est requis et doit être numérique';
-            } elseif (bccomp($amount, '10.00', 2) < 0) {
+            } elseif ((float)$amount < 10.00) {
                 $errors[] = 'Le montant minimum de retrait est de 10€';
             } elseif (!$wallet->hasEnoughBalance($amount)) {
                 $errors[] = 'Solde insuffisant pour effectuer ce retrait';

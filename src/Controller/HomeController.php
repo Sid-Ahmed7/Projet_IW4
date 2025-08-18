@@ -118,10 +118,10 @@ class HomeController extends AbstractController
         $devis = $devisRepository->findBy(['company' => $company]);
         
         // Organiser les devis par statut
-        $pendingDevis = array_filter($devis, fn($d) => $d->getState() === 'en_attente');
-        $acceptedDevis = array_filter($devis, fn($d) => $d->getState() === 'accepte');
-        $rejectedDevis = array_filter($devis, fn($d) => $d->getState() === 'refuse');
-        $finalizedDevis = array_filter($devis, fn($d) => $d->getState() === 'finalise');
+        $pendingDevis = array_filter($devis, fn($d) => in_array($d->getState(), ['En attente de validation', 'En attente']));
+        $acceptedDevis = array_filter($devis, fn($d) => $d->getState() === 'Validé');
+        $rejectedDevis = array_filter($devis, fn($d) => $d->getState() === 'Rejeté');
+        $finalizedDevis = array_filter($devis, fn($d) => in_array($d->getState(), ['Facturé', 'Payé']));
 
         // Récupérer toutes les factures liées aux devis de l'entreprise
         $invoices = [];
