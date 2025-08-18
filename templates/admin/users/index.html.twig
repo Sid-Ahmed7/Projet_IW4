@@ -6,62 +6,207 @@
 {% block body %}
 	{% include 'partials/admin/sidebare.html.twig' %}
 
-	<div class="min-h-screen bg-gray-50">
-		<div class="py-8">
-			<div
-				class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-				<!-- Header -->
-				<div class="bg-white shadow rounded-lg mb-6">
-					<div class="px-6 py-4 border-b border-gray-200">
+	<!-- Main Content avec marge pour éviter le sidebar -->
+	<div class="ml-60">
+		<div class="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50">
+			<div class="py-8">
+				<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+				<!-- Header avec statistiques -->
+				<div class="bg-white shadow-xl rounded-2xl mb-8 overflow-hidden">
+					<div class="bg-gradient-to-r from-indigo-600 to-blue-600 px-6 py-6 text-white">
 						<div class="flex items-center justify-between">
 							<div>
-								<h1 class="text-2xl font-bold text-gray-900">Gestion des Utilisateurs</h1>
-								<p class="mt-1 text-sm text-gray-600">Administration des comptes utilisateur</p>
+								<h1 class="text-3xl font-bold flex items-center">
+									<svg class="w-8 h-8 mr-3" fill="currentColor" viewBox="0 0 20 20">
+										<path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+									</svg>
+									Gestion des Utilisateurs
+								</h1>
+								<p class="mt-2 text-indigo-100">Administration des comptes utilisateur</p>
 							</div>
-							<div class="flex items-center space-x-4">
-								<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-									{{ users|length }}
-									utilisateur(s)
-								</span>
+							<div class="flex items-center space-x-6">
+								<div class="text-center">
+									<div class="text-3xl font-bold">{{ users|length }}</div>
+									<div class="text-sm text-indigo-200">Total</div>
+								</div>
+								<div class="text-center">
+									<div class="text-3xl font-bold">
+										{% set adminCount = 0 %}
+										{% for user in users %}
+											{% if 'ROLE_ADMIN' in user.roles %}
+												{% set adminCount = adminCount + 1 %}
+											{% endif %}
+										{% endfor %}
+										{{ adminCount }}
+									</div>
+									<div class="text-sm text-indigo-200">Admins</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- Stats Cards -->
+					<div class="px-6 py-4 bg-gray-50">
+						<div class="grid grid-cols-4 gap-4">
+							<div class="bg-green-50 rounded-xl p-4 border border-green-200">
+								<div class="flex items-center">
+									<div class="p-2 bg-green-500 rounded-lg">
+										<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+											<path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+											<path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+										</svg>
+									</div>
+									<div class="ml-3">
+										<div class="text-sm font-medium text-green-800">Personnel</div>
+										<div class="text-2xl font-bold text-green-900">
+											{% set personalCount = 0 %}
+											{% for user in users %}
+												{% if user.accountType == 'personal' %}
+													{% set personalCount = personalCount + 1 %}
+												{% endif %}
+											{% endfor %}
+											{{ personalCount }}
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="bg-blue-50 rounded-xl p-4 border border-blue-200">
+								<div class="flex items-center">
+									<div class="p-2 bg-blue-500 rounded-lg">
+										<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+											<path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-6a1 1 0 00-1-1H9a1 1 0 00-1 1v6a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd"/>
+										</svg>
+									</div>
+									<div class="ml-3">
+										<div class="text-sm font-medium text-blue-800">Entreprise</div>
+										<div class="text-2xl font-bold text-blue-900">
+											{% set companyCount = 0 %}
+											{% for user in users %}
+												{% if user.accountType == 'company' %}
+													{% set companyCount = companyCount + 1 %}
+												{% endif %}
+											{% endfor %}
+											{{ companyCount }}
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="bg-purple-50 rounded-xl p-4 border border-purple-200">
+								<div class="flex items-center">
+									<div class="p-2 bg-purple-500 rounded-lg">
+										<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+											<path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+										</svg>
+									</div>
+									<div class="ml-3">
+										<div class="text-sm font-medium text-purple-800">Vérifiés</div>
+										<div class="text-2xl font-bold text-purple-900">
+											{% set verifiedCount = 0 %}
+											{% for user in users %}
+												{% if user.isVerified %}
+													{% set verifiedCount = verifiedCount + 1 %}
+												{% endif %}
+											{% endfor %}
+											{{ verifiedCount }}
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="bg-red-50 rounded-xl p-4 border border-red-200">
+								<div class="flex items-center">
+									<div class="p-2 bg-red-500 rounded-lg">
+										<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+											<path fill-rule="evenodd" d="M3 6a3 3 0 013-3h10a1 1 0 01.8 1.6L14.25 8l2.55 3.4A1 1 0 0116 13H6a1 1 0 00-1 1v3a1 1 0 11-2 0V6z" clip-rule="evenodd"/>
+										</svg>
+									</div>
+									<div class="ml-3">
+										<div class="text-sm font-medium text-red-800">Admins</div>
+										<div class="text-2xl font-bold text-red-900">{{ adminCount }}</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 
 				<!-- Liste des utilisateurs -->
-				<div class="bg-white shadow rounded-lg">
-					<div class="px-6 py-4 border-b border-gray-200">
-						<h2 class="text-lg font-semibold text-gray-900">Tous les utilisateurs</h2>
+				<div class="bg-white shadow-xl rounded-2xl overflow-hidden">
+					<div class="bg-gradient-to-r from-gray-700 to-gray-800 px-6 py-4 text-white">
+						<h2 class="text-xl font-bold flex items-center">
+							<svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+								<path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+							</svg>
+							Tous les utilisateurs
+						</h2>
 					</div>
 					<div class="overflow-x-auto">
 						<table class="min-w-full divide-y divide-gray-200">
-							<thead class="bg-gray-50">
+							<thead class="bg-gradient-to-r from-gray-50 to-gray-100">
 								<tr>
-									<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Utilisateur</th>
-									<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type de compte</th>
-									<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rôles</th>
-									<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Inscription</th>
-									<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
-									<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+									<th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+										<div class="flex items-center">
+											<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+												<path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+											</svg>
+											Utilisateur
+										</div>
+									</th>
+									<th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+										<div class="flex items-center">
+											<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+												<path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd"/>
+											</svg>
+											Type de compte
+										</div>
+									</th>
+									<th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+										<div class="flex items-center">
+											<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+												<path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+											</svg>
+											Rôles
+										</div>
+									</th>
+									<th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Inscription</th>
+									<th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Statut</th>
+									<th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
 								</tr>
 							</thead>
-							<tbody class="bg-white divide-y divide-gray-200">
+							<tbody class="bg-white divide-y divide-gray-100">
 								{% for user in users %}
-									<tr>
+									<tr class="hover:bg-gray-50 transition-colors duration-200">
 										<td class="px-6 py-4 whitespace-nowrap">
 											<div class="flex items-center">
-												<div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
-													{{ user.firstname|first|upper }}{{ user.lastname|first|upper }}
+												<div class="relative">
+													<div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+														{{ user.firstname|first|upper }}{{ user.lastname|first|upper }}
+													</div>
+													{% if 'ROLE_ADMIN' in user.roles %}
+														<div class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
+															<svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+																<path fill-rule="evenodd" d="M3 6a3 3 0 013-3h10a1 1 0 01.8 1.6L14.25 8l2.55 3.4A1 1 0 0116 13H6a1 1 0 00-1 1v3a1 1 0 11-2 0V6z" clip-rule="evenodd"/>
+															</svg>
+														</div>
+													{% endif %}
 												</div>
 												<div class="ml-4">
-													<div class="text-sm font-medium text-gray-900">
-														{{ user.firstname }}
-														{{ user.lastname }}
+													<div class="text-sm font-bold text-gray-900">
+														{{ user.firstname }} {{ user.lastname }}
 													</div>
-													<div class="text-sm text-gray-500">
+													<div class="text-sm text-gray-500 flex items-center">
+														<svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+															<path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+															<path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+														</svg>
 														{{ user.email }}
 													</div>
-													<div class="text-xs text-gray-400">
+													<div class="text-xs text-gray-400 flex items-center mt-1">
+														<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+															<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+														</svg>
 														@{{ user.username }}
 													</div>
 												</div>
@@ -69,12 +214,18 @@
 										</td>
 										<td class="px-6 py-4 whitespace-nowrap">
 											{% if user.accountType == 'company' %}
-												<span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-													🏢 Entreprise
+												<span class="inline-flex items-center px-3 py-2 text-sm font-bold rounded-full bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border border-blue-300">
+													<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+														<path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-6a1 1 0 00-1-1H9a1 1 0 00-1 1v6a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd"/>
+													</svg>
+													Entreprise
 												</span>
 											{% else %}
-												<span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
-													👤 Personnel
+												<span class="inline-flex items-center px-3 py-2 text-sm font-bold rounded-full bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300">
+													<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+														<path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+													</svg>
+													Personnel
 												</span>
 											{% endif %}
 										</td>
@@ -82,34 +233,64 @@
 											<div class="flex flex-wrap gap-1">
 												{% for role in user.roles %}
 													{% if role == 'ROLE_ADMIN' %}
-														<span class="inline-flex px-2 py-1 text-xs font-semibold rounded bg-red-100 text-red-800">
-															🔥 Admin
+														<span class="inline-flex items-center px-2 py-1 text-xs font-bold rounded-lg bg-gradient-to-r from-red-500 to-red-600 text-white shadow-md">
+															<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+																<path fill-rule="evenodd" d="M3 6a3 3 0 013-3h10a1 1 0 01.8 1.6L14.25 8l2.55 3.4A1 1 0 0116 13H6a1 1 0 00-1 1v3a1 1 0 11-2 0V6z" clip-rule="evenodd"/>
+															</svg>
+															Admin
 														</span>
 													{% elseif role == 'ROLE_USER' %}
-														<span class="inline-flex px-2 py-1 text-xs font-semibold rounded bg-gray-100 text-gray-800">
-															👥 User
+														<span class="inline-flex items-center px-2 py-1 text-xs font-bold rounded-lg bg-gradient-to-r from-gray-500 to-gray-600 text-white shadow-md">
+															<svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+																<path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+															</svg>
+															User
 														</span>
 													{% endif %}
 												{% endfor %}
 											</div>
 										</td>
-										<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-											{{ user.createdAt|date('d/m/Y H:i') }}
+										<td class="px-6 py-4 whitespace-nowrap">
+											<div class="text-sm text-gray-900">
+												{{ user.createdAt|date('d/m/Y') }}
+											</div>
+											<div class="text-xs text-gray-500">
+												{{ user.createdAt|date('H:i') }}
+											</div>
 										</td>
 										<td class="px-6 py-4 whitespace-nowrap">
 											{% if user.isVerified %}
-												<span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
-													✅ Vérifié
+												<span class="inline-flex items-center px-3 py-2 text-sm font-bold rounded-full bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300">
+													<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+														<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+													</svg>
+													Vérifié
 												</span>
 											{% else %}
-												<span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
-													⏳ En attente
+												<span class="inline-flex items-center px-3 py-2 text-sm font-bold rounded-full bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 border border-yellow-300">
+													<svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+														<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+													</svg>
+													En attente
 												</span>
 											{% endif %}
 										</td>
-										<td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-											<button class="text-blue-600 hover:text-blue-900">Voir</button>
-											<button class="text-indigo-600 hover:text-indigo-900">Modifier</button>
+										<td class="px-6 py-4 whitespace-nowrap">
+											<div class="flex space-x-2">
+												<button class="inline-flex items-center px-3 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white text-xs font-medium rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+													<svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+														<path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+														<path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+													</svg>
+													Voir
+												</button>
+												<button class="inline-flex items-center px-3 py-2 bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white text-xs font-medium rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+													<svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+														<path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+													</svg>
+													Modifier
+												</button>
+											</div>
 										</td>
 									</tr>
 								{% endfor %}
@@ -120,4 +301,5 @@
 			</div>
 		</div>
 	</div>
+</div>
 {% endblock %}

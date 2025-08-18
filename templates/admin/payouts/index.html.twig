@@ -5,21 +5,118 @@
 {% block body %}
     {% include 'partials/admin/sidebare.html.twig' %}
 
-<div class="min-h-screen bg-gray-50">
-    <div class="py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Header -->
-            <div class="bg-white shadow rounded-lg mb-6">
-                <div class="px-6 py-4 border-b border-gray-200">
+    <!-- Main Content avec marge pour éviter le sidebar -->
+    <div class="ml-60">
+        <div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+            <div class="py-8">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Header avec statistiques -->
+            <div class="bg-white shadow-xl rounded-2xl mb-8 overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-6 text-white">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h1 class="text-2xl font-bold text-gray-900">Gestion des Retraits</h1>
-                            <p class="mt-1 text-sm text-gray-600">Administration des demandes de retrait</p>
+                            <h1 class="text-3xl font-bold flex items-center">
+                                <svg class="w-8 h-8 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"/>
+                                </svg>
+                                Gestion des Retraits
+                            </h1>
+                            <p class="mt-2 text-blue-100">Administration des demandes de retrait</p>
                         </div>
-                        <div class="flex items-center space-x-4">
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
-                                {{ pendingRequests|length }} en attente
-                            </span>
+                        <div class="flex items-center space-x-6">
+                            <div class="text-center">
+                                <div class="text-3xl font-bold">{{ pendingRequests|length }}</div>
+                                <div class="text-sm text-blue-200">En attente</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl font-bold">{{ allRequests|length }}</div>
+                                <div class="text-sm text-blue-200">Total</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stats Cards -->
+                <div class="px-6 py-4 bg-gray-50">
+                    <div class="grid grid-cols-4 gap-4">
+                        <div class="bg-yellow-50 rounded-xl p-4 border border-yellow-200">
+                            <div class="flex items-center">
+                                <div class="p-2 bg-yellow-500 rounded-lg">
+                                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <div class="text-sm font-medium text-yellow-800">Pending</div>
+                                    <div class="text-2xl font-bold text-yellow-900">{{ pendingRequests|length }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-blue-50 rounded-xl p-4 border border-blue-200">
+                            <div class="flex items-center">
+                                <div class="p-2 bg-blue-500 rounded-lg">
+                                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <div class="text-sm font-medium text-blue-800">Processing</div>
+                                    <div class="text-2xl font-bold text-blue-900">
+                                        {% set processing = 0 %}
+                                        {% for req in allRequests %}
+                                            {% if req.status == 'processing' %}
+                                                {% set processing = processing + 1 %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {{ processing }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-green-50 rounded-xl p-4 border border-green-200">
+                            <div class="flex items-center">
+                                <div class="p-2 bg-green-500 rounded-lg">
+                                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <div class="text-sm font-medium text-green-800">Completed</div>
+                                    <div class="text-2xl font-bold text-green-900">
+                                        {% set completed = 0 %}
+                                        {% for req in allRequests %}
+                                            {% if req.status == 'completed' %}
+                                                {% set completed = completed + 1 %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {{ completed }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-red-50 rounded-xl p-4 border border-red-200">
+                            <div class="flex items-center">
+                                <div class="p-2 bg-red-500 rounded-lg">
+                                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <div class="text-sm font-medium text-red-800">Failed</div>
+                                    <div class="text-2xl font-bold text-red-900">
+                                        {% set failed = 0 %}
+                                        {% for req in allRequests %}
+                                            {% if req.status == 'failed' %}
+                                                {% set failed = failed + 1 %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        {{ failed }}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -27,66 +124,119 @@
 
             {% if pendingRequests is not empty %}
                 <!-- Demandes en attente -->
-                <div class="bg-white shadow rounded-lg mb-6">
-                    <div class="px-6 py-4 border-b border-gray-200">
-                        <h2 class="text-lg font-semibold text-gray-900">Demandes en attente</h2>
+                <div class="bg-white shadow-xl rounded-2xl mb-8 overflow-hidden">
+                    <div class="bg-gradient-to-r from-yellow-500 to-orange-500 px-6 py-4 text-white">
+                        <h2 class="text-xl font-bold flex items-center">
+                            <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                            </svg>
+                            Demandes en attente - Action requise
+                        </h2>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
+                            <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
                                 <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entreprise</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Montant</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Demandé le</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IBAN</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        <div class="flex items-center">
+                                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                                                <path fill-rule="evenodd" d="M4 5a2 2 0 012-2v1a2 2 0 002 2h6a2 2 0 002-2V3a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                                            </svg>
+                                            ID
+                                        </div>
+                                    </th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        <div class="flex items-center">
+                                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-6a1 1 0 00-1-1H9a1 1 0 00-1 1v6a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd"/>
+                                            </svg>
+                                            Entreprise
+                                        </div>
+                                    </th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        <div class="flex items-center">
+                                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"/>
+                                            </svg>
+                                            Montant
+                                        </div>
+                                    </th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Date</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Coordonnées</th>
+                                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
+                            <tbody class="bg-white divide-y divide-gray-100">
                                 {% for request in pendingRequests %}
-                                    <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            #{{ request.id }}
-                                        </td>
+                                    <tr class="hover:bg-yellow-50 transition-colors duration-200">
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">
-                                                {{ request.wallet.company.name }}
-                                            </div>
-                                            <div class="text-sm text-gray-500">
-                                                {{ request.requestedBy.email }}
+                                            <div class="flex items-center">
+                                                <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-white text-sm font-bold">
+                                                    {{ request.id }}
+                                                </span>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-semibold text-gray-900">
+                                            <div class="flex items-center">
+                                                <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-lg">
+                                                    {{ request.wallet.company.name|first|upper }}
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-bold text-gray-900">
+                                                        {{ request.wallet.company.name }}
+                                                    </div>
+                                                    <div class="text-sm text-gray-500 flex items-center">
+                                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                                                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                                                        </svg>
+                                                        {{ request.requestedBy.email }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-lg font-bold text-gray-900 flex items-center">
+                                                <svg class="w-5 h-5 mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                                                </svg>
                                                 {{ request.amount|number_format(2, ',', ' ') }} €
                                             </div>
-                                            <div class="text-xs text-gray-500">
+                                            <div class="text-xs text-gray-500 bg-gray-100 inline-block px-2 py-1 rounded-full mt-1">
                                                 Solde: {{ request.wallet.balance|number_format(2, ',', ' ') }} €
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ request.requestedAt|date('d/m/Y H:i') }}
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-900">
+                                                {{ request.requestedAt|date('d/m/Y') }}
+                                            </div>
+                                            <div class="text-xs text-gray-500">
+                                                {{ request.requestedAt|date('H:i') }}
+                                            </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-xs font-mono text-gray-700">{{ request.iban }}</div>
+                                            <div class="text-xs font-mono bg-gray-100 px-2 py-1 rounded text-gray-700 mb-1">{{ request.iban }}</div>
                                             <div class="text-xs text-gray-500">{{ request.accountHolderName }}</div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                                            <form method="post" action="{{ path('admin_payout_process', {id: request.id}) }}" class="inline">
-                                                <button type="submit" 
-                                                        class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-white bg-blue-600 hover:bg-blue-700">
-                                                    Traiter
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex space-x-2">
+                                                <button onclick="completeModal({{ request.id }})"
+                                                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white text-sm font-medium rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                                                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                                    </svg>
+                                                    Accepter
                                                 </button>
-                                            </form>
-                                            <button onclick="completeModal({{ request.id }})"
-                                                    class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-white bg-green-600 hover:bg-green-700">
-                                                Compléter
-                                            </button>
-                                            <button onclick="failModal({{ request.id }})"
-                                                    class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-white bg-red-600 hover:bg-red-700">
-                                                Échec
-                                            </button>
+                                                <button onclick="failModal({{ request.id }})"
+                                                        class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white text-sm font-medium rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                                                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                                    </svg>
+                                                    Refuser
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -97,81 +247,151 @@
             {% endif %}
 
             <!-- Historique complet -->
-            <div class="bg-white shadow rounded-lg">
-                <div class="px-6 py-4 border-b border-gray-200">
-                    <h2 class="text-lg font-semibold text-gray-900">Historique complet</h2>
+            <div class="bg-white shadow-xl rounded-2xl overflow-hidden">
+                <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-4 text-white">
+                    <h2 class="text-xl font-bold flex items-center">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                        Historique complet
+                    </h2>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                        <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entreprise</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Montant</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dates</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">ID</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Statut</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Entreprise</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Montant</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Dates</th>
+                                <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody class="bg-white divide-y divide-gray-100">
                             {% for request in allRequests %}
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        #{{ request.id }}
-                                    </td>
+                                <tr class="hover:bg-gray-50 transition-colors duration-200">
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        {% set statusClass = request.status == 'pending' ? 'bg-yellow-100 text-yellow-800' : 
-                                                             (request.status == 'processing' ? 'bg-blue-100 text-blue-800' : 
-                                                             (request.status == 'completed' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800')) %}
-                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ statusClass }}">
-                                            {{ request.status|title }}
+                                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-gray-500 to-gray-600 text-white text-sm font-bold">
+                                            {{ request.id }}
                                         </span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">
-                                            {{ request.wallet.company.name }}
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                        {{ request.amount|number_format(2, ',', ' ') }} €
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500">
-                                        <div>Demandé: {{ request.requestedAt|date('d/m/Y H:i') }}</div>
-                                        {% if request.processedAt %}
-                                            <div>Traité: {{ request.processedAt|date('d/m/Y H:i') }}</div>
-                                        {% endif %}
-                                        {% if request.completedAt %}
-                                            <div>Complété: {{ request.completedAt|date('d/m/Y H:i') }}</div>
-                                        {% endif %}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                                        {% if request.status == 'processing' %}
-                                            <button onclick="completeModal({{ request.id }})"
-                                                    class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-white bg-green-600 hover:bg-green-700">
-                                                ✅ Compléter
-                                            </button>
-                                            <button onclick="failModal({{ request.id }})"
-                                                    class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-white bg-red-600 hover:bg-red-700">
-                                                ❌ Échec
-                                            </button>
-                                        {% elseif request.status == 'pending' %}
-                                            <form method="post" action="{{ path('admin_payout_process', {id: request.id}) }}" class="inline">
-                                                <button type="submit" 
-                                                        class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-white bg-blue-600 hover:bg-blue-700">
-                                                    🔄 Traiter
-                                                </button>
-                                            </form>
+                                        {% if request.status == 'pending' %}
+                                            <span class="inline-flex items-center px-3 py-2 text-sm font-bold rounded-full bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 border border-yellow-300">
+                                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                                                </svg>
+                                                En attente
+                                            </span>
+                                        {% elseif request.status == 'processing' %}
+                                            <span class="inline-flex items-center px-3 py-2 text-sm font-bold rounded-full bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border border-blue-300">
+                                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+                                                </svg>
+                                                En cours
+                                            </span>
+                                        {% elseif request.status == 'completed' %}
+                                            <span class="inline-flex items-center px-3 py-2 text-sm font-bold rounded-full bg-gradient-to-r from-green-100 to-green-200 text-green-800 border border-green-300">
+                                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                                </svg>
+                                                Complété
+                                            </span>
                                         {% else %}
-                                            <span class="text-xs text-gray-500">
-                                                {% if request.status == 'completed' %}
-                                                    ✅ Terminé
-                                                {% elseif request.status == 'failed' %}
-                                                    ❌ Échoué
-                                                {% else %}
-                                                    - {{ request.status }}
-                                                {% endif %}
+                                            <span class="inline-flex items-center px-3 py-2 text-sm font-bold rounded-full bg-gradient-to-r from-red-100 to-red-200 text-red-800 border border-red-300">
+                                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                                </svg>
+                                                Échoué
                                             </span>
                                         {% endif %}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold">
+                                                {{ request.wallet.company.name|first|upper }}
+                                            </div>
+                                            <div class="ml-3">
+                                                <div class="text-sm font-bold text-gray-900">
+                                                    {{ request.wallet.company.name }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-lg font-bold text-gray-900">
+                                            {{ request.amount|number_format(2, ',', ' ') }} €
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-600 space-y-1">
+                                        <div class="flex items-center">
+                                            <svg class="w-3 h-3 mr-1 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                                                <path fill-rule="evenodd" d="M4 5a2 2 0 012-2v1a2 2 0 002 2h6a2 2 0 002-2V3a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                                            </svg>
+                                            Demandé: {{ request.requestedAt|date('d/m/Y H:i') }}
+                                        </div>
+                                        {% if request.processedAt %}
+                                            <div class="flex items-center">
+                                                <svg class="w-3 h-3 mr-1 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+                                                </svg>
+                                                Traité: {{ request.processedAt|date('d/m/Y H:i') }}
+                                            </div>
+                                        {% endif %}
+                                        {% if request.completedAt %}
+                                            <div class="flex items-center">
+                                                <svg class="w-3 h-3 mr-1 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                                </svg>
+                                                Complété: {{ request.completedAt|date('d/m/Y H:i') }}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex space-x-2">
+                                            {% if request.status == 'processing' %}
+                                                <button onclick="completeModal({{ request.id }})"
+                                                        class="inline-flex items-center px-3 py-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white text-xs font-medium rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                                    </svg>
+                                                    Accepter
+                                                </button>
+                                                <button onclick="failModal({{ request.id }})"
+                                                        class="inline-flex items-center px-3 py-2 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white text-xs font-medium rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                                                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                                    </svg>
+                                                    Refuser
+                                                </button>
+                                            {% elseif request.status == 'pending' %}
+                                                <form method="post" action="{{ path('admin_payout_process', {id: request.id}) }}" class="inline">
+                                                    <button type="submit" 
+                                                            class="inline-flex items-center px-3 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white text-xs font-medium rounded-lg shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                                                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+                                                        </svg>
+                                                        Traiter
+                                                    </button>
+                                                </form>
+                                            {% else %}
+                                                <span class="inline-flex items-center text-sm text-gray-500 bg-gray-100 px-3 py-2 rounded-lg">
+                                                    {% if request.status == 'completed' %}
+                                                        <svg class="w-4 h-4 mr-1 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                                        </svg>
+                                                        <span class="text-green-700 font-medium">Terminé</span>
+                                                    {% elseif request.status == 'failed' %}
+                                                        <svg class="w-4 h-4 mr-1 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                                        </svg>
+                                                        <span class="text-red-700 font-medium">Échoué</span>
+                                                    {% endif %}
+                                                </span>
+                                            {% endif %}
+                                        </div>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -183,11 +403,11 @@
     </div>
 </div>
 
-<!-- Modal de complétion -->
+<!-- Modal d'acceptation -->
 <div id="completeModal" class="fixed inset-0 bg-black bg-opacity-50 hidden">
     <div class="flex items-center justify-center min-h-screen p-4">
         <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Compléter le retrait</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Accepter le retrait</h3>
             <form id="completeForm" method="post">
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">ID de transfert Stripe (optionnel)</label>
@@ -195,7 +415,7 @@
                 </div>
                 <div class="flex space-x-3">
                     <button type="submit" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded">
-                        Compléter
+                        Accepter
                     </button>
                     <button type="button" onclick="closeModal()" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded">
                         Annuler
@@ -206,19 +426,19 @@
     </div>
 </div>
 
-<!-- Modal d'échec -->
+<!-- Modal de refus -->
 <div id="failModal" class="fixed inset-0 bg-black bg-opacity-50 hidden">
     <div class="flex items-center justify-center min-h-screen p-4">
         <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Marquer comme échec</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Refuser le retrait</h3>
             <form id="failForm" method="post">
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Raison de l'échec</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Raison du refus</label>
                     <textarea name="failure_reason" rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2" required></textarea>
                 </div>
                 <div class="flex space-x-3">
                     <button type="submit" class="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded">
-                        Marquer comme échec
+                        Refuser
                     </button>
                     <button type="button" onclick="closeModal()" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded">
                         Annuler
