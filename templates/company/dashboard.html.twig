@@ -13,10 +13,10 @@
             
             <!-- Statistiques principales -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <!-- Devis En Attente -->
+                <!-- Devis À Traiter -->
                 <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-sm font-medium text-gray-600">Devis En Attente</h3>
+                        <h3 class="text-sm font-medium text-gray-600">Devis À Traiter</h3>
                         <div class="p-2 bg-yellow-100 rounded-lg">
                             <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <div class="text-3xl font-bold text-gray-900 mb-2">{{ pending_devis|length }}</div>
-                    <div class="text-sm text-orange-600 mb-3">Action requise</div>
+                    <div class="text-sm text-orange-600 mb-3">En attente de traitement</div>
                     <a href="{{ path('app_devis_index') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Traiter les devis</a>
                 </div>
 
@@ -39,7 +39,7 @@
                         </div>
                     </div>
                     <div class="text-3xl font-bold text-gray-900 mb-2">{{ devis|length }}</div>
-                    <div class="text-sm text-gray-500 mb-3">{{ accepted_devis|length }} acceptés</div>
+                    <div class="text-sm text-gray-500 mb-3">{{ finalized_devis|length }} finalisés</div>
                     <a href="{{ path('app_devis_index') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">Voir tous les devis</a>
                 </div>
 
