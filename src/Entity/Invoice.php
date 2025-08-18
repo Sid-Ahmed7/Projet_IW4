@@ -37,7 +37,7 @@ class Invoice
     private ?User $hubuser = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $status = 'pending';
+    private ?string $status = 'generated';
 
     #[ORM\ManyToOne(targetEntity: Devis::class, inversedBy: 'invoices')]
     #[ORM\JoinColumn(nullable: true)]

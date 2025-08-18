@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Devis;
 use App\Entity\Invoice;
 use App\Form\InvoiceType;
+use App\Repository\CompanyRepository;
 use App\Repository\DevisRepository;
 use App\Repository\InvoiceRepository;
 use App\Service\NotificationService;
@@ -34,17 +35,25 @@ class InvoiceController extends AbstractController
     }
 
     #[Route('/company/{companyId}/invoice', name: 'app_company_invoice')]
-    public function companyInvoices(int $companyId, InvoiceRepository $invoiceRepository): Response
+    public function companyInvoices(int $companyId, InvoiceRepository $invoiceRepository, CompanyRepository $companyRepository): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
-        $invoices = $invoiceRepository->findBy(['hubuser' => $user, 'company' => $companyId]);
+        
+        // Récupérer l'objet Company
+        $company = $companyRepository->find($companyId);
+        if (!$company) {
+            throw $this->createNotFoundException('Company not found');
+        }
+        
+        // Chercher les factures par company (objet entité)
+        $invoices = $invoiceRepository->findBy(['company' => $company]);
 
         return $this->render('invoice/company.html.twig', [
             'invoices' => $invoices,
-            'companyId' => $companyId,
+            'company' => $company,
         ]);
     }
 
@@ -61,9 +70,16 @@ class InvoiceController extends AbstractController
             throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce devis.');
         }
 
-        // Vérifier que le devis n'est pas déjà facturé
+        // Vérifier que le devis n'est pas déjà facturé (par état)
         if ($devis->getState() === 'Facturé') {
             $this->addFlash('error', 'Ce devis a déjà été facturé.');
+            return $this->redirectToRoute('app_devis_show', ['id' => $devis->getId()]);
+        }
+
+        // Vérification supplémentaire : s'assurer qu'aucune facture n'existe déjà pour ce devis
+        $existingInvoices = $entityManager->getRepository(Invoice::class)->findBy(['devis' => $devis]);
+        if (count($existingInvoices) > 0) {
+            $this->addFlash('error', 'Une facture existe déjà pour ce devis.');
             return $this->redirectToRoute('app_devis_show', ['id' => $devis->getId()]);
         }
 
