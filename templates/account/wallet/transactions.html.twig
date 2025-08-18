@@ -141,12 +141,11 @@
                                                     <div class="text-sm text-gray-600">
                                                         {{ transaction.createdAt|date('d/m/Y à H:i') }}
                                                         {% if transaction.metadata %}
-                                                            {% set metadata = transaction.metadata|json_decode %}
-                                                            {% if metadata.invoice_id %}
-                                                                • Facture #{{ metadata.invoice_id }}
+                                                            {% if transaction.metadata.invoice_id %}
+                                                                • Facture #{{ transaction.metadata.invoice_id }}
                                                             {% endif %}
-                                                            {% if metadata.payout_request_id %}
-                                                                • Demande #{{ metadata.payout_request_id }}
+                                                            {% if transaction.metadata.payout_request_id %}
+                                                                • Demande #{{ transaction.metadata.payout_request_id }}
                                                             {% endif %}
                                                         {% endif %}
                                                     </div>
@@ -171,10 +170,9 @@
                                                 </div>
                                                 
                                                 {% if transaction.metadata %}
-                                                    {% set metadata = transaction.metadata|json_decode %}
-                                                    {% if metadata.balance_after %}
+                                                    {% if transaction.metadata.balance_after %}
                                                         <div class="text-sm text-gray-500">
-                                                            Solde: {{ metadata.balance_after|number_format(2, ',', ' ') }} €
+                                                            Solde: {{ transaction.metadata.balance_after|number_format(2, ',', ' ') }} €
                                                         </div>
                                                     {% endif %}
                                                 {% endif %}
