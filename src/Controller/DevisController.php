@@ -202,6 +202,13 @@ class DevisController extends AbstractController
             throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce devis.');
         }
         
+        // Vérifier que le devis peut être modifié (pas dans un état final)
+        $finalStates = ['Validé', 'Payé', 'Facturé', 'Rejeté'];
+        if (in_array($devi->getState(), $finalStates)) {
+            $this->addFlash('error', sprintf('Impossible de modifier un devis avec le statut "%s".', $devi->getState()));
+            return $this->redirectToRoute('app_devis_show', ['id' => $devi->getId()]);
+        }
+        
         $form = $this->createForm(DevisType::class, $devi);
         $form->handleRequest($request);
 
@@ -290,6 +297,13 @@ class DevisController extends AbstractController
             throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce devis.');
         }
         
+        // Vérifier que le devis peut être modifié (pas dans un état final)
+        $finalStates = ['Validé', 'Payé', 'Facturé', 'Rejeté'];
+        if (in_array($devi->getState(), $finalStates)) {
+            $this->addFlash('error', sprintf('Impossible de modifier le prix d\'un devis avec le statut "%s".', $devi->getState()));
+            return $this->redirectToRoute('app_devis_show', ['id' => $devi->getId()]);
+        }
+        
         $devisAssets = $devi->getDevisAssets();
 
         $totalPrice = 0;
@@ -339,6 +353,13 @@ class DevisController extends AbstractController
         
         if (!$canEdit) {
             throw $this->createAccessDeniedException('Vous n\'avez pas accès à ce devis.');
+        }
+        
+        // Vérifier que le devis peut être recalculé (pas dans un état final)
+        $finalStates = ['Validé', 'Payé', 'Facturé', 'Rejeté'];
+        if (in_array($devi->getState(), $finalStates)) {
+            $this->addFlash('error', sprintf('Impossible de recalculer un devis avec le statut "%s".', $devi->getState()));
+            return $this->redirectToRoute('app_devis_show', ['id' => $devi->getId()]);
         }
         
         $devisAssets = $devi->getDevisAssets();

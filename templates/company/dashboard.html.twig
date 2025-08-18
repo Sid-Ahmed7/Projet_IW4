@@ -54,8 +54,8 @@
                         </div>
                     </div>
                     <div class="text-3xl font-bold text-gray-900 mb-2">{{ potential_revenue|number_format(0, ',', ' ') }}€</div>
-                    <div class="text-sm text-gray-500 mb-3">Devis en cours + acceptés</div>
-                    <span class="text-green-600 text-sm font-medium">{{ accepted_devis|length + finalized_devis|length }} devis</span>
+                    <div class="text-sm text-gray-500 mb-3">Facturés + Payés</div>
+                    <span class="text-green-600 text-sm font-medium">{{ finalized_devis|length }} devis</span>
                 </div>
 
                 <!-- Taux de Conversion -->
@@ -82,30 +82,30 @@
                         <div class="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
                             <div class="flex items-center">
                                 <div class="w-3 h-3 bg-yellow-500 rounded-full mr-3"></div>
-                                <span class="text-sm font-medium text-gray-700">En attente</span>
+                                <span class="text-sm font-medium text-gray-700">À traiter</span>
                             </div>
                             <span class="text-lg font-bold text-gray-900">{{ pending_devis|length }}</span>
                         </div>
                         <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
                             <div class="flex items-center">
                                 <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
-                                <span class="text-sm font-medium text-gray-700">Acceptés</span>
+                                <span class="text-sm font-medium text-gray-700">Facturés</span>
                             </div>
-                            <span class="text-lg font-bold text-gray-900">{{ accepted_devis|length }}</span>
-                        </div>
-                        <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
-                            <div class="flex items-center">
-                                <div class="w-3 h-3 bg-red-500 rounded-full mr-3"></div>
-                                <span class="text-sm font-medium text-gray-700">Refusés</span>
-                            </div>
-                            <span class="text-lg font-bold text-gray-900">{{ rejected_devis|length }}</span>
+                            <span class="text-lg font-bold text-gray-900">{{ factured_devis|length }}</span>
                         </div>
                         <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
                             <div class="flex items-center">
                                 <div class="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
-                                <span class="text-sm font-medium text-gray-700">Finalisés</span>
+                                <span class="text-sm font-medium text-gray-700">Payés</span>
                             </div>
-                            <span class="text-lg font-bold text-gray-900">{{ finalized_devis|length }}</span>
+                            <span class="text-lg font-bold text-gray-900">{{ paid_devis|length }}</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-red-500 rounded-full mr-3"></div>
+                                <span class="text-sm font-medium text-gray-700">Rejetés</span>
+                            </div>
+                            <span class="text-lg font-bold text-gray-900">{{ rejected_devis|length }}</span>
                         </div>
                     </div>
                 </div>

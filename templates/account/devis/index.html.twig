@@ -85,7 +85,7 @@
 											<a href="{{ path('app_devis_show', {'id': devi.id}) }}" class="text-blue-600 hover:text-blue-900">Voir</a>
 											
 											{# Boutons Modifier et Recalculer - seulement si le devis n'est pas dans un état final #}
-											{% if devi.state not in ['Validé', 'Payé', 'Facturé'] %}
+											{% if devi.state not in ['Validé', 'Payé', 'Facturé', 'Rejeté'] %}
 												<a href="{{ path('app_devis_edit', {'id': devi.id}) }}" class="text-gray-600 hover:text-gray-900">Modifier</a>
 												<a href="{{ path('app_devis_recalculate', {'id': devi.id}) }}" class="text-orange-600 hover:text-orange-900" title="Recalculer le prix">Recalc.</a>
 											{% endif %}

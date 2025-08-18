@@ -122,6 +122,8 @@ class HomeController extends AbstractController
         $acceptedDevis = array_filter($devis, fn($d) => $d->getState() === 'Validé');
         $rejectedDevis = array_filter($devis, fn($d) => $d->getState() === 'Rejeté');
         $finalizedDevis = array_filter($devis, fn($d) => in_array($d->getState(), ['Facturé', 'Payé']));
+        $facturedDevis = array_filter($devis, fn($d) => $d->getState() === 'Facturé');
+        $paidDevis = array_filter($devis, fn($d) => $d->getState() === 'Payé');
 
         // Récupérer toutes les factures liées aux devis de l'entreprise
         $invoices = [];
@@ -185,6 +187,8 @@ class HomeController extends AbstractController
             'accepted_devis' => $acceptedDevis,
             'rejected_devis' => $rejectedDevis,
             'finalized_devis' => $finalizedDevis,
+            'factured_devis' => $facturedDevis,
+            'paid_devis' => $paidDevis,
             'potential_revenue' => $potentialRevenue,
             'conversion_rate' => $conversionRate,
             'devis_by_company' => $devisByCompany,
