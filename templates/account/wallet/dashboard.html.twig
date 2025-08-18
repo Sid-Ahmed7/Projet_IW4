@@ -3,19 +3,19 @@
 {% block title %}Mon Portefeuille{% endblock %}
 
 {% block content %}
-	<div class="bg-gradient-to-br from-purple-100 via-pink-50 to-orange-100 -mx-6 -my-6 p-6 min-h-screen">
+	<div class="wallet-gradient-bg -mx-6 -my-6 p-6 min-h-screen" style="background: linear-gradient(135deg, #f3e8ff 0%, #fce7f3 50%, #fed7aa 100%);">
 		<!-- En-tête avec solde principal -->
 		<div class="mb-8">
 			<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
 				<div class="mb-4 lg:mb-0">
 					<div class="flex items-center mb-3">
-						<div class="w-12 h-12 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg mr-4 animate-pulse">
+						<div class="w-12 h-12 wallet-pulse rounded-2xl flex items-center justify-center shadow-lg mr-4" style="background: linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #f97316 100%);">
 							<svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
 							</svg>
 						</div>
 						<div>
-							<h1 class="text-4xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 bg-clip-text text-transparent">Mon Portefeuille</h1>
+							<h1 class="text-4xl font-bold text-transparent" style="background: linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #f97316 100%); background-clip: text; -webkit-background-clip: text;">Mon Portefeuille</h1>
 							<p class="text-gray-700 text-lg font-medium">Gérez vos gains et demandez vos retraits en toute sécurité</p>
 						</div>
 					</div>
@@ -39,18 +39,18 @@
 			<!-- Cartes de solde avec plus de couleurs -->
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
 				<!-- Solde disponible -->
-				<div class="group relative bg-gradient-to-br from-green-400 via-emerald-500 to-teal-600 text-white p-8 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-2 hover:rotate-1 cursor-pointer overflow-hidden">
-					<div class="absolute inset-0 bg-gradient-to-br from-yellow-300/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-					<div class="absolute -top-4 -right-4 w-24 h-24 bg-yellow-300/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500"></div>
-					<div class="absolute -bottom-4 -left-4 w-16 h-16 bg-green-300/30 rounded-full blur-lg group-hover:scale-125 transition-transform duration-500"></div>
+				<div class="group relative wallet-card-green wallet-hover-lift text-white p-8 rounded-3xl shadow-2xl cursor-pointer overflow-hidden" style="background: linear-gradient(135deg, #34d399 0%, #10b981 50%, #0d9488 100%);">
+					<div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style="background: linear-gradient(135deg, rgba(253, 224, 71, 0.2) 0%, transparent 100%);"></div>
+					<div class="absolute -top-4 -right-4 w-24 h-24 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500" style="background: rgba(253, 224, 71, 0.2);"></div>
+					<div class="absolute -bottom-4 -left-4 w-16 h-16 rounded-full blur-lg group-hover:scale-125 transition-transform duration-500" style="background: rgba(52, 211, 153, 0.3);"></div>
 					<div class="relative z-10">
 						<div class="flex items-center justify-between mb-6">
-							<div class="bg-green-300/30 p-4 rounded-2xl backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
+							<div class="p-4 rounded-2xl backdrop-blur-sm group-hover:scale-110 transition-transform duration-300" style="background: rgba(52, 211, 153, 0.3);">
 								<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
 								</svg>
 							</div>
-							<div class="text-green-100 text-xs font-bold uppercase tracking-widest bg-green-300/30 px-3 py-1 rounded-full backdrop-blur-sm">💰 Disponible</div>
+							<div class="text-green-100 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm" style="background: rgba(52, 211, 153, 0.3);">💰 Disponible</div>
 						</div>
 						<div class="text-5xl font-black mb-2 group-hover:scale-105 transition-transform duration-300">{{ wallet.balance|number_format(2, ',', ' ') }}€</div>
 						<div class="text-green-100 text-sm font-medium">✨ Prêt pour retrait immédiat</div>
@@ -58,18 +58,18 @@
 				</div>
 
 				<!-- Solde en attente -->
-				<div class="group relative bg-gradient-to-br from-orange-400 via-red-500 to-pink-600 text-white p-8 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-2 hover:-rotate-1 cursor-pointer overflow-hidden">
-					<div class="absolute inset-0 bg-gradient-to-br from-yellow-300/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-					<div class="absolute -top-4 -right-4 w-24 h-24 bg-yellow-300/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500"></div>
-					<div class="absolute -bottom-4 -left-4 w-16 h-16 bg-orange-300/30 rounded-full blur-lg group-hover:scale-125 transition-transform duration-500"></div>
+				<div class="group relative wallet-card-orange wallet-hover-lift text-white p-8 rounded-3xl shadow-2xl cursor-pointer overflow-hidden" style="background: linear-gradient(135deg, #fb923c 0%, #ef4444 50%, #ec4899 100%);">
+					<div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style="background: linear-gradient(135deg, rgba(253, 224, 71, 0.2) 0%, transparent 100%);"></div>
+					<div class="absolute -top-4 -right-4 w-24 h-24 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500" style="background: rgba(253, 224, 71, 0.2);"></div>
+					<div class="absolute -bottom-4 -left-4 w-16 h-16 rounded-full blur-lg group-hover:scale-125 transition-transform duration-500" style="background: rgba(251, 146, 60, 0.3);"></div>
 					<div class="relative z-10">
 						<div class="flex items-center justify-between mb-6">
-							<div class="bg-orange-300/30 p-4 rounded-2xl backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
+							<div class="p-4 rounded-2xl backdrop-blur-sm group-hover:scale-110 transition-transform duration-300" style="background: rgba(251, 146, 60, 0.3);">
 								<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
 								</svg>
 							</div>
-							<div class="text-orange-100 text-xs font-bold uppercase tracking-widest bg-orange-300/30 px-3 py-1 rounded-full backdrop-blur-sm">⏳ En attente</div>
+							<div class="text-orange-100 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm" style="background: rgba(251, 146, 60, 0.3);">⏳ En attente</div>
 						</div>
 						<div class="text-5xl font-black mb-2 group-hover:scale-105 transition-transform duration-300">{{ wallet.pendingBalance|number_format(2, ',', ' ') }}€</div>
 						<div class="text-orange-100 text-sm font-medium">🔄 En cours de traitement</div>
@@ -77,18 +77,18 @@
 				</div>
 
 				<!-- Total des gains -->
-				<div class="group relative bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-700 text-white p-8 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:-translate-y-2 hover:rotate-1 cursor-pointer overflow-hidden">
-					<div class="absolute inset-0 bg-gradient-to-br from-cyan-300/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-					<div class="absolute -top-4 -right-4 w-24 h-24 bg-cyan-300/20 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500"></div>
-					<div class="absolute -bottom-4 -left-4 w-16 h-16 bg-blue-300/30 rounded-full blur-lg group-hover:scale-125 transition-transform duration-500"></div>
+				<div class="group relative wallet-card-blue wallet-hover-lift text-white p-8 rounded-3xl shadow-2xl cursor-pointer overflow-hidden" style="background: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);">
+					<div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style="background: linear-gradient(135deg, rgba(34, 211, 238, 0.2) 0%, transparent 100%);"></div>
+					<div class="absolute -top-4 -right-4 w-24 h-24 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500" style="background: rgba(34, 211, 238, 0.2);"></div>
+					<div class="absolute -bottom-4 -left-4 w-16 h-16 rounded-full blur-lg group-hover:scale-125 transition-transform duration-500" style="background: rgba(59, 130, 246, 0.3);"></div>
 					<div class="relative z-10">
 						<div class="flex items-center justify-between mb-6">
-							<div class="bg-blue-300/30 p-4 rounded-2xl backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
+							<div class="p-4 rounded-2xl backdrop-blur-sm group-hover:scale-110 transition-transform duration-300" style="background: rgba(59, 130, 246, 0.3);">
 								<svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
 								</svg>
 							</div>
-							<div class="text-indigo-100 text-xs font-bold uppercase tracking-widest bg-indigo-300/30 px-3 py-1 rounded-full backdrop-blur-sm">🏆 Total gains</div>
+							<div class="text-indigo-100 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full backdrop-blur-sm" style="background: rgba(99, 102, 241, 0.3);">🏆 Total gains</div>
 						</div>
 						<div class="text-5xl font-black mb-2 group-hover:scale-105 transition-transform duration-300">{{ wallet.totalEarnings|number_format(2, ',', ' ') }}€</div>
 						<div class="text-indigo-100 text-sm font-medium">📈 Depuis le début</div>

@@ -1,0 +1,66 @@
+/* CSS personnalisé pour le wallet dashboard */
+
+/* Fallback pour les gradients au cas où Tailwind ne les charge pas */
+.wallet-gradient-bg {
+    background: linear-gradient(135deg, #f3e8ff 0%, #fce7f3 50%, #fed7aa 100%);
+}
+
+.wallet-card-green {
+    background: linear-gradient(135deg, #34d399 0%, #10b981 50%, #0d9488 100%);
+}
+
+.wallet-card-orange {
+    background: linear-gradient(135deg, #fb923c 0%, #ef4444 50%, #ec4899 100%);
+}
+
+.wallet-card-blue {
+    background: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
+}
+
+/* Animations personnalisées */
+.wallet-pulse {
+    animation: wallet-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes wallet-pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: .7;
+    }
+}
+
+.wallet-hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.wallet-hover-lift:hover {
+    transform: translateY(-8px) rotate(1deg);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Styles pour les badges colorés */
+.badge-pending {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    color: #92400e;
+    border: 2px solid #f59e0b;
+}
+
+.badge-processing {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    color: #1e40af;
+    border: 2px solid #3b82f6;
+}
+
+.badge-completed {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+    color: #047857;
+    border: 2px solid #10b981;
+}
+
+.badge-failed {
+    background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+    color: #dc2626;
+    border: 2px solid #ef4444;
+}
