@@ -141,11 +141,17 @@
                                                     <div class="text-sm text-gray-600">
                                                         {{ transaction.createdAt|date('d/m/Y à H:i') }}
                                                         {% if transaction.metadata %}
-                                                            {% if transaction.metadata.invoice_id %}
+                                                            {% if transaction.metadata.invoice_id is defined %}
                                                                 • Facture #{{ transaction.metadata.invoice_id }}
                                                             {% endif %}
-                                                            {% if transaction.metadata.payout_request_id %}
+                                                            {% if transaction.metadata.invoice_number is defined %}
+                                                                • N° {{ transaction.metadata.invoice_number }}
+                                                            {% endif %}
+                                                            {% if transaction.metadata.payout_request_id is defined %}
                                                                 • Demande #{{ transaction.metadata.payout_request_id }}
+                                                            {% endif %}
+                                                            {% if transaction.metadata.stripe_payment_intent_id is defined %}
+                                                                • Stripe: {{ transaction.metadata.stripe_payment_intent_id|slice(0, 15) }}...
                                                             {% endif %}
                                                         {% endif %}
                                                     </div>
@@ -170,7 +176,7 @@
                                                 </div>
                                                 
                                                 {% if transaction.metadata %}
-                                                    {% if transaction.metadata.balance_after %}
+                                                    {% if transaction.metadata.balance_after is defined %}
                                                         <div class="text-sm text-gray-500">
                                                             Solde: {{ transaction.metadata.balance_after|number_format(2, ',', ' ') }} €
                                                         </div>
