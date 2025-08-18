@@ -1,79 +1,110 @@
-{% extends 'layouts/app.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}Historique des transactions{% endblock %}
 
-{% block content %}
-<div class="bg-gradient-to-br from-blue-50 to-indigo-100 -mx-6 -my-8 p-8 min-h-screen">
-        <!-- En-tête -->
-        <div class="mb-8">
-            <div class="flex items-center mb-6">
-                <a href="{{ path('app_wallet_dashboard') }}" 
-                   class="mr-4 p-2 rounded-lg bg-white shadow-md hover:shadow-lg transition-shadow">
-                    <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                </a>
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-900 mb-2">📊 Historique des transactions</h1>
-                    <p class="text-gray-600">Consultez l'historique complet de votre portefeuille</p>
+{% block body %}
+    {% include 'partials/admin/sidebare.html.twig' %}
+
+    <main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-100 min-h-screen transition-all main">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center">
+                    <a href="{{ path('app_wallet_dashboard') }}" 
+                       class="mr-4 p-2 rounded-md border border-gray-300 bg-white hover:bg-gray-50">
+                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </a>
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900">Historique des transactions</h1>
+                        <p class="text-gray-600 mt-2">{{ company.name }} - Consultez l'historique complet de votre portefeuille</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="{{ path('app_wallet_stats') }}" 
+                       class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        Statistiques
+                    </a>
+                    <a href="{{ path('app_wallet_payout_request') }}" 
+                       class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Demander un retrait
+                    </a>
                 </div>
             </div>
-        </div>
 
-        <div class="max-w-6xl mx-auto">
             {% if transactions is empty %}
                 <!-- État vide -->
-                <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-12 text-center">
-                    <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="bg-white rounded-lg border border-gray-200 p-12 shadow-sm text-center">
+                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                         </svg>
                     </div>
                     <h3 class="text-xl font-semibold text-gray-900 mb-2">Aucune transaction</h3>
                     <p class="text-gray-600 mb-6">Vos transactions apparaîtront ici une fois que vous commencerez à recevoir des paiements.</p>
-                    <a href="{{ path('app_account_invoice_index') }}" 
-                       class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all transform hover:scale-105 shadow-lg">
+                    <a href="{{ path('app_devis_index') }}" 
+                       class="inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                         </svg>
-                        Créer une facture
+                        Créer un devis
                     </a>
                 </div>
             {% else %}
-                <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
                     <!-- Sidebar avec statistiques -->
                     <div class="lg:col-span-1">
                         <div class="space-y-6">
                             <!-- Solde actuel -->
-                            <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-6">
-                                <h3 class="text-lg font-bold text-gray-900 mb-4">💼 Solde actuel</h3>
-                                <div class="space-y-3">
-                                    <div class="text-center p-4 bg-green-50 rounded-xl">
-                                        <div class="text-2xl font-bold text-green-600">{{ wallet.balance|number_format(2, ',', ' ') }} €</div>
+                            <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                                <div class="flex items-center mb-4">
+                                    <div class="p-2 bg-blue-100 rounded-lg mr-3">
+                                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-lg font-semibold text-gray-900">Solde actuel</h3>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="text-center p-4 bg-green-50 rounded-lg">
+                                        <div class="text-2xl font-bold text-green-600 mb-1">{{ wallet.balance|number_format(2, ',', ' ') }} €</div>
                                         <div class="text-sm text-green-700">Disponible</div>
                                     </div>
-                                    <div class="text-center p-3 bg-orange-50 rounded-lg">
-                                        <div class="text-lg font-semibold text-orange-600">{{ wallet.pendingBalance|number_format(2, ',', ' ') }} €</div>
-                                        <div class="text-xs text-orange-700">En attente</div>
+                                    <div class="text-center p-4 bg-orange-50 rounded-lg">
+                                        <div class="text-2xl font-bold text-orange-600 mb-1">{{ wallet.pendingBalance|number_format(2, ',', ' ') }} €</div>
+                                        <div class="text-sm text-orange-700">En attente</div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Statistiques rapides -->
-                            <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-6">
-                                <h3 class="text-lg font-bold text-gray-900 mb-4">📈 Statistiques</h3>
-                                <div class="space-y-3">
-                                    <div class="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
-                                        <span class="text-sm text-gray-700">Total gains</span>
-                                        <span class="font-semibold text-blue-600">{{ wallet.totalEarnings|number_format(2, ',', ' ') }} €</span>
+                            <!-- Statistiques -->
+                            <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+                                <div class="flex items-center mb-4">
+                                    <div class="p-2 bg-purple-100 rounded-lg mr-3">
+                                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                        </svg>
                                     </div>
-                                    <div class="flex justify-between items-center p-3 bg-red-50 rounded-lg">
-                                        <span class="text-sm text-gray-700">Total retraits</span>
-                                        <span class="font-semibold text-red-600">{{ wallet.totalWithdrawn|number_format(2, ',', ' ') }} €</span>
+                                    <h3 class="text-lg font-semibold text-gray-900">Statistiques</h3>
+                                </div>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                        <div class="text-sm font-medium text-gray-700">Total gains</div>
+                                        <div class="text-lg font-bold text-blue-600">{{ (wallet.balance + wallet.pendingBalance)|number_format(2, ',', ' ') }} €</div>
                                     </div>
-                                    <div class="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                                        <span class="text-sm text-gray-700">Nb transactions</span>
-                                        <span class="font-semibold text-green-600">{{ transactions|length }}</span>
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                        <div class="text-sm font-medium text-gray-700">Total retraits</div>
+                                        <div class="text-lg font-bold text-gray-600">0,00 €</div>
+                                    </div>
+                                    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                        <div class="text-sm font-medium text-gray-700">Nb transactions</div>
+                                        <div class="text-lg font-bold text-gray-900">{{ transactions|length }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -82,62 +113,46 @@
 
                     <!-- Liste des transactions -->
                     <div class="lg:col-span-3">
-                        <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8">
-                            <div class="flex justify-between items-center mb-6">
-                                <h2 class="text-2xl font-bold text-gray-900">Transactions</h2>
-                                <div class="text-sm text-gray-600">
-                                    {{ transactions|length }} transaction(s)
+                        <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
+                            <div class="px-6 py-4 border-b border-gray-200">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-lg font-semibold text-gray-900">Transactions</h3>
+                                    <div class="text-sm text-gray-500">{{ transactions|length }} transaction{{ transactions|length > 1 ? 's' : '' }}</div>
                                 </div>
                             </div>
-
-                            <div class="space-y-4">
+                            <div class="divide-y divide-gray-200">
                                 {% for transaction in transactions %}
-                                    <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
+                                    <div class="px-6 py-4 hover:bg-gray-50">
                                         <div class="flex items-center justify-between">
                                             <div class="flex items-center">
-                                                <!-- Icône selon le type -->
-                                                <div class="mr-4 p-3 rounded-full 
+                                                <div class="w-10 h-10 {{ transaction.type == 'credit' ? 'bg-green-100' : 'bg-red-100' }} rounded-full flex items-center justify-center mr-4">
                                                     {% if transaction.type == 'credit' %}
-                                                        bg-green-100 text-green-600
-                                                    {% else %}
-                                                        bg-red-100 text-red-600
-                                                    {% endif %}">
-                                                    {% if transaction.type == 'credit' %}
-                                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                                                         </svg>
                                                     {% else %}
-                                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
                                                         </svg>
                                                     {% endif %}
                                                 </div>
-
                                                 <div>
-                                                    <div class="flex items-center gap-3 mb-1">
-                                                        <h4 class="font-semibold text-gray-900">
+                                                    <div class="flex items-center mb-1">
+                                                        <div class="text-base font-medium text-gray-900 mr-3">
                                                             {% if transaction.source == 'invoice_payment' %}
-                                                                💰 Paiement de facture
+                                                                💳 Paiement de facture
                                                             {% elseif transaction.source == 'payout' %}
-                                                                🏦 Retrait vers compte bancaire
-                                                            {% elseif transaction.source == 'adjustment' %}
-                                                                ⚙️ Ajustement administratif
+                                                                💸 Retrait
+                                                            {% elseif transaction.source == 'refund' %}
+                                                                🔄 Remboursement
                                                             {% else %}
                                                                 📋 {{ transaction.source|title }}
                                                             {% endif %}
-                                                        </h4>
-                                                        
-                                                        <!-- Badge du type -->
-                                                        <span class="px-2 py-1 text-xs font-medium rounded-full
-                                                            {% if transaction.type == 'credit' %}
-                                                                bg-green-100 text-green-800
-                                                            {% else %}
-                                                                bg-red-100 text-red-800
-                                                            {% endif %}">
+                                                        </div>
+                                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ transaction.type == 'credit' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                                             {{ transaction.type == 'credit' ? 'Crédit' : 'Débit' }}
                                                         </span>
                                                     </div>
-                                                    
                                                     <div class="text-sm text-gray-600">
                                                         {{ transaction.createdAt|date('d/m/Y à H:i') }}
                                                         {% if transaction.metadata %}
@@ -155,26 +170,15 @@
                                                             {% endif %}
                                                         {% endif %}
                                                     </div>
-                                                    
                                                     {% if transaction.description %}
-                                                        <div class="text-sm text-gray-500 mt-1">
-                                                            {{ transaction.description }}
-                                                        </div>
+                                                        <div class="text-sm text-gray-500 mt-1">{{ transaction.description }}</div>
                                                     {% endif %}
                                                 </div>
                                             </div>
-
-                                            <!-- Montant -->
                                             <div class="text-right">
-                                                <div class="text-xl font-bold
-                                                    {% if transaction.type == 'credit' %}
-                                                        text-green-600
-                                                    {% else %}
-                                                        text-red-600
-                                                    {% endif %}">
-                                                    {% if transaction.type == 'credit' %}+{% else %}-{% endif %}{{ transaction.amount|number_format(2, ',', ' ') }} €
+                                                <div class="text-xl font-bold {{ transaction.type == 'credit' ? 'text-green-600' : 'text-red-600' }} mb-1">
+                                                    {{ transaction.type == 'credit' ? '+' : '-' }}{{ transaction.amount|number_format(2, ',', ' ') }} €
                                                 </div>
-                                                
                                                 {% if transaction.metadata %}
                                                     {% if transaction.metadata.balance_after is defined %}
                                                         <div class="text-sm text-gray-500">
@@ -192,5 +196,5 @@
                 </div>
             {% endif %}
         </div>
-</div>
+    </main>
 {% endblock %}

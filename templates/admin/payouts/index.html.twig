@@ -1,0 +1,216 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration des Retraits{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gray-50">
+    <div class="py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Header -->
+            <div class="bg-white shadow rounded-lg mb-6">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-900">Gestion des Retraits</h1>
+                            <p class="mt-1 text-sm text-gray-600">Administration des demandes de retrait</p>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                                {{ pendingRequests|length }} en attente
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if pendingRequests is not empty %}
+                <!-- Demandes en attente -->
+                <div class="bg-white shadow rounded-lg mb-6">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-gray-900">Demandes en attente</h2>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entreprise</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Montant</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Demandé le</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IBAN</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                {% for request in pendingRequests %}
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            #{{ request.id }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">
+                                                {{ request.wallet.company.name }}
+                                            </div>
+                                            <div class="text-sm text-gray-500">
+                                                {{ request.requestedBy.email }}
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-semibold text-gray-900">
+                                                {{ request.amount|number_format(2, ',', ' ') }} €
+                                            </div>
+                                            <div class="text-xs text-gray-500">
+                                                Solde: {{ request.wallet.balance|number_format(2, ',', ' ') }} €
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {{ request.requestedAt|date('d/m/Y H:i') }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-xs font-mono text-gray-700">{{ request.iban }}</div>
+                                            <div class="text-xs text-gray-500">{{ request.accountHolderName }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                            <form method="post" action="{{ path('admin_payout_process', {id: request.id}) }}" class="inline">
+                                                <button type="submit" 
+                                                        class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-white bg-blue-600 hover:bg-blue-700">
+                                                    Traiter
+                                                </button>
+                                            </form>
+                                            <button onclick="completeModal({{ request.id }})"
+                                                    class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-white bg-green-600 hover:bg-green-700">
+                                                Compléter
+                                            </button>
+                                            <button onclick="failModal({{ request.id }})"
+                                                    class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-white bg-red-600 hover:bg-red-700">
+                                                Échec
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Historique complet -->
+            <div class="bg-white shadow rounded-lg">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-900">Historique complet</h2>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entreprise</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Montant</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dates</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for request in allRequests %}
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                        #{{ request.id }}
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        {% set statusClass = request.status == 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                                                             (request.status == 'processing' ? 'bg-blue-100 text-blue-800' : 
+                                                             (request.status == 'completed' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800')) %}
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ statusClass }}">
+                                            {{ request.status|title }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            {{ request.wallet.company.name }}
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                                        {{ request.amount|number_format(2, ',', ' ') }} €
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500">
+                                        <div>Demandé: {{ request.requestedAt|date('d/m/Y H:i') }}</div>
+                                        {% if request.processedAt %}
+                                            <div>Traité: {{ request.processedAt|date('d/m/Y H:i') }}</div>
+                                        {% endif %}
+                                        {% if request.completedAt %}
+                                            <div>Complété: {{ request.completedAt|date('d/m/Y H:i') }}</div>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de complétion -->
+<div id="completeModal" class="fixed inset-0 bg-black bg-opacity-50 hidden">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Compléter le retrait</h3>
+            <form id="completeForm" method="post">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">ID de transfert Stripe (optionnel)</label>
+                    <input type="text" name="stripe_transfer_id" class="w-full border border-gray-300 rounded-md px-3 py-2">
+                </div>
+                <div class="flex space-x-3">
+                    <button type="submit" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded">
+                        Compléter
+                    </button>
+                    <button type="button" onclick="closeModal()" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded">
+                        Annuler
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal d'échec -->
+<div id="failModal" class="fixed inset-0 bg-black bg-opacity-50 hidden">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Marquer comme échec</h3>
+            <form id="failForm" method="post">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Raison de l'échec</label>
+                    <textarea name="failure_reason" rows="3" class="w-full border border-gray-300 rounded-md px-3 py-2" required></textarea>
+                </div>
+                <div class="flex space-x-3">
+                    <button type="submit" class="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded">
+                        Marquer comme échec
+                    </button>
+                    <button type="button" onclick="closeModal()" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded">
+                        Annuler
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function completeModal(id) {
+    document.getElementById('completeForm').action = '{{ path('admin_payout_complete', {id: '__ID__'}) }}'.replace('__ID__', id);
+    document.getElementById('completeModal').classList.remove('hidden');
+}
+
+function failModal(id) {
+    document.getElementById('failForm').action = '{{ path('admin_payout_fail', {id: '__ID__'}) }}'.replace('__ID__', id);
+    document.getElementById('failModal').classList.remove('hidden');
+}
+
+function closeModal() {
+    document.getElementById('completeModal').classList.add('hidden');
+    document.getElementById('failModal').classList.add('hidden');
+}
+</script>
+{% endblock %}
